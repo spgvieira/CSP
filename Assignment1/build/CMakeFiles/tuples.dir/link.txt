@@ -1,1 +1,0 @@
-/usr/bin/c++ -std=c++20 -rdynamic -Wl,--dependency-file=CMakeFiles/tuples.dir/link.d CMakeFiles/tuples.dir/tuples.cpp.o -o tuples

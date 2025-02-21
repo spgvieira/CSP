@@ -1,5 +1,0 @@
-/home/sara/ITU/ComputerSystemPerformance/Week03/build/CMakeFiles/affinity.dir
-/home/sara/ITU/ComputerSystemPerformance/Week03/build/CMakeFiles/affinityperformanceexample.dir
-/home/sara/ITU/ComputerSystemPerformance/Week03/build/CMakeFiles/noaffinity.dir
-/home/sara/ITU/ComputerSystemPerformance/Week03/build/CMakeFiles/edit_cache.dir
-/home/sara/ITU/ComputerSystemPerformance/Week03/build/CMakeFiles/rebuild_cache.dir
