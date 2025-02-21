@@ -1,8 +1,3 @@
-// I have a list of tuples (key, value)
-// I will send the tuple to the hash function
-// The hash function will determine which partition the tuple will go to based
-// on the key
-
 #include <iostream>
 #include <tuple>
 #include <array>
@@ -43,21 +38,19 @@ void randomize (tuple<int64_t,int64_t> arr[], int n)
     } 
 } 
 
-int main() {
-    const size_t numTuples = 10; // std::size_t can store the maximum size of a theoretically possible object of any type 
-    std::tuple<int64_t,int64_t> input[numTuples];
+tuple<int64_t,int64_t>* makeInput(size_t numTuples) {
+    tuple<int64_t, int64_t>* input = new tuple<int64_t, int64_t>[numTuples];
     
     for (int i = 0; i <numTuples; i++) {
         input[i] = std::make_tuple(i,0);
     }
 
-    cout << "arr[0]: " << get<0>(input[0]) << endl;
-    cout << "arr[1]: " << get<0>(input[1]) << endl;
-    cout << "arr[2]: " << get<0>(input[2]) << endl;
-
     randomize(input, numTuples);
 
-    cout << "arr[0]: " << get<0>(input[0]) << endl;
-    cout << "arr[1]: " << get<0>(input[1]) << endl;
-    cout << "arr[2]: " << get<0>(input[2]) << endl;
+    return input;
+}
+
+// modular hash function
+int hashFunction(int64_t key, int hashBits ) {
+    return key % hashBits;
 }
