@@ -1,0 +1,3 @@
+/home/sara/ITU/CSP/Assignment1/build/CMakeFiles/tuples.dir
+/home/sara/ITU/CSP/Assignment1/build/CMakeFiles/edit_cache.dir
+/home/sara/ITU/CSP/Assignment1/build/CMakeFiles/rebuild_cache.dir
