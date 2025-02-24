@@ -8,16 +8,16 @@ using namespace std;
 // https://www.geeksforgeeks.org/shuffle-a-given-array-using-fisher-yates-shuffle-algorithm/
 
 // A utility function to swap to integers 
-void swap (tuple<int64_t,int64_t> *a, tuple<int64_t,int64_t> *b) 
+void swap (tuple<int8_t,int8_t> *a, tuple<int8_t,int8_t> *b) 
 { 
-    tuple<int64_t,int64_t> temp = *a; 
+    tuple<int8_t,int8_t> temp = *a; 
     *a = *b; 
     *b = temp; 
 } 
 
 // A function to generate a random 
 // permutation of arr[] 
-void randomize (tuple<int64_t,int64_t> arr[], int n) 
+void randomize (tuple<int8_t,int8_t> arr[], int n) 
 { 
     // Use a different seed value so that 
     // we don't get same result each time
@@ -38,8 +38,9 @@ void randomize (tuple<int64_t,int64_t> arr[], int n)
     } 
 } 
 
-tuple<int64_t,int64_t>* makeInput(size_t numTuples) {
-    tuple<int64_t, int64_t>* input = new tuple<int64_t, int64_t>[numTuples];
+// num_Tuples = 2^24
+tuple<int8_t,int8_t>* makeInput(size_t numTuples) {
+    tuple<int8_t, int8_t>* input = new tuple<int8_t, int8_t>[numTuples];
     
     for (int i = 0; i <numTuples; i++) {
         input[i] = std::make_tuple(i,0);
@@ -51,6 +52,6 @@ tuple<int64_t,int64_t>* makeInput(size_t numTuples) {
 }
 
 // modular hash function
-int hashFunction(int64_t key, int hashBits ) {
-    return key % hashBits;
+int hashFunction(int8_t key, int numPartitions ) {
+    return key % numPartitions;
 }
