@@ -3,3 +3,4 @@ project (assignment1)
 
 SET (CMAKE_CXX_FLAGS "-std=c++20")
 add_executable(independent independent.cpp)
+add_executable(concurrent concurrent.cpp)
