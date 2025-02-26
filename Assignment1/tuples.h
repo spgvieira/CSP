@@ -38,7 +38,6 @@ void randomize (tuple<int64_t,int64_t> arr[], int n)
     } 
 } 
 
-// num_Tuples = 2^24
 tuple<int64_t,int64_t>* makeInput(size_t numTuples) {
     tuple<int64_t, int64_t>* input = new tuple<int64_t, int64_t>[numTuples];
     

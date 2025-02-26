@@ -1,47 +1,86 @@
 #include <iostream>
 #include <cmath>
+#include <thread>
+#include <vector>
 #include "tuples.h"
 #include "includes/thread_pool.hpp"
 
-using namespace std;
+// TODO: 
+// re read code and clean not used
+// re evaluate which variables should be public
+// change parameters to input values
 
-// In the independent algorithm, each thread
-// has a buffer for every single outputBuffers
-// each thread reads 1/t of the input, each thread receives input[:,:] when initialized
-// iterated throught the portion of the array, sends tuple key to hash function
-// picks output buffer from result of hash function
-// writes on buffer
-// done!
 
-// question: Is threadpool good idea?
+tuple<int64_t, int64_t>* input;
 
-void partition() {
-    
-}
+void partitionInput(int numThread, int start, int end, int numPartitions, vector<vector<tuple<int64_t, int64_t>>>* partitions) {
+    for (int i = start; i < end; i++) {
+        tuple<int64_t, int64_t> t = input[i];
+        int partitionKey = hashFunction(get<0>(t), numPartitions);
 
-int main() {
-    const size_t numTuples = 10; // size_t can store the maximum size of a theoretically possible object of any type
-    tuple<int64_t,int64_t>* input = makeInput(numTuples);
-
-    cout << "arr[0]: " << get<0>(input[0]) << endl;
-    cout << "arr[1]: " << get<0>(input[1]) << endl;
-    cout << "arr[2]: " << get<0>(input[2]) << endl;
-
-    const int numThreads = 1;
-    const int numTuplesPerThread = numTuples/numThreads;
-
-    const int hashBits = 2;
-    const int outputBuffers = pow(2, hashBits);
-
-    for (int i=0; i<numThreads; i++) {
-        auto start = input + i*numTuplesPerThread;
-        auto end = input + i*(numTuplesPerThread + 1); // - 1 ?
-        // dataThread = 
-        partition();
+        if (partitionKey >= 0 && partitionKey < numPartitions) {
+            (*partitions)[partitionKey].push_back(t);
+        }
     }
 
-    // thread_pool pool(numThreads);
-    // pool.submit(partition);
-    // pool.wait_for_tasks();
-    
+    for (int p = 0; p < numPartitions; ++p) {
+        cout << "Thread " << numThread << " - Partition " << p << ": ";
+        for (const auto& tup : (*partitions)[p]) {
+            cout << "(" << get<0>(tup) << ", " << get<1>(tup) << ") ";
+        }
+        cout << "\n";
+    }
+}
+
+
+// void partitionInput(int numThread, int start, int end, int numPartitions, vector<vector<tuple<int64_t, int64_t>>>& partitions) {
+
+//     for (int i = start; i < end; i++) {
+//         tuple<int64_t, int64_t> t = input[i];
+//         int partitionKey = hashFunction(get<0>(t), numPartitions);
+//         partitions[partitionKey].push_back(t);
+//     }
+
+//     for (int i = 0; i < numPartitions; ++i) {
+//         std::cout << "Array " << i << ": ";
+//         for (size_t j = 0; j < partitions[i].size(); ++j) {
+//             cout << get<0>(partitions[i][j]) << " ";
+//         }
+//         std::cout << "\n";
+//     }
+// }
+
+int main() {
+    const size_t numTuples = 10;
+    input = makeInput(numTuples);
+
+    for (size_t j = 0; j < numTuples; ++j) {
+        cout << get<0>(input[j]) << " ";
+    }
+    cout << endl;
+
+    const int numThreads = 2;
+    const int numTuplesPerThread = numTuples / numThreads;
+
+    const int hashBits = 1;
+    const int numPartitions = pow(2, hashBits);
+
+    std::vector<std::thread> threads;
+    std::vector<std::vector<std::vector<std::tuple<int64_t, int64_t>>>> threadPartitions(numThreads, std::vector<std::vector<std::tuple<int64_t, int64_t>>>(numPartitions));
+
+    // std::vector<std::vector<std::tuple<int64_t, int64_t>>> partitions(numPartitions);
+
+    for (int i = 0; i < numThreads; i++) {
+        auto start = i * numTuplesPerThread;
+        auto end = (i + 1) * numTuplesPerThread;
+
+        // threads.emplace_back(partitionInput, i, start, end, numPartitions, std::ref(partitions));
+        threads.emplace_back(partitionInput, i, start, end, numPartitions, &threadPartitions[i]);
+    }
+
+    for (auto& t : threads) {
+        t.join();
+    }
+
+    return 0;
 }
