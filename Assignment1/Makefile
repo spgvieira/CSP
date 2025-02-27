@@ -5,6 +5,7 @@ EVENTS := cpu-cycles,cache-misses,page-faults,cpu-migrations,L1-dcache-load-miss
 REPEAT := 2
 THREADS := 1 2 3 4 5 
 HASHBITS := 1 2 3 4 5 
+PERF := /bin/perf
 
 
 # Phony targets
@@ -23,8 +24,8 @@ concurrent:
 	@echo "Concurrent"
 	@for threads in $(THREADS); do \
 		for hb in $(HASHBITS); do \
-			echo "Running: perf stat -e $(EVENTS) -o $(PATH) --append --repeat=$(REPEAT) ./build/concurrent $$threads $$hb";\
-			perf stat -e $(EVENTS) -o $(PATH) --append --repeat=$(REPEAT) ./build/concurrent $$threads $$hb & \
+			echo "Running: perf stat -e $(EVENTS) -o $(PATH) --append --repeat=$(REPEAT) ./build/concurrent $$threads $$hb"; \
+			$(PERF) stat -e $(EVENTS) -o $(PATH) --append --repeat=$(REPEAT) ./build/concurrent $$threads $$hb & \
 			perf_pid=$$!; \
 			wait $$perf_pid; \
 		done; \
