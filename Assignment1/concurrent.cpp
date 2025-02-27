@@ -8,8 +8,7 @@
 // TODO: 
 // re read code and clean not used
 // re evaluate which variables should be public
-// change parameters to input values
-
+// missing affinity
 
 tuple<int64_t, int64_t>* input;
 
@@ -25,8 +24,9 @@ void partitionInput(int numThread, int start, int end, int numPartitions, vector
 
 }
 
-int main() {
-    const size_t numTuples = 10;
+int main(int argc, char* argv[]) {
+    const size_t numTuples = 8;
+    // const size_t numTuples = 16777216;
     input = makeInput(numTuples);
 
     for (size_t j = 0; j < numTuples; ++j) {
@@ -34,12 +34,15 @@ int main() {
     }
     cout << endl;
 
-    const int numThreads = 2;
+    const int numThreads = atoi(argv[1]);
+    cout << numThreads << endl;
     const int numTuplesPerThread = numTuples / numThreads;
 
-    const int hashBits = 1;
+    const int hashBits = atoi(argv[2]);
+    cout << hashBits << endl;
     const int numPartitions = pow(2, hashBits);
     const int sizePartition = numTuples/numPartitions * 1.5;
+    cout << sizePartition << endl;
 
     std::vector<std::thread> threads;
     std::vector<std::vector<std::tuple<int64_t, int64_t>>> partitions(numPartitions,std::vector<std::tuple<int64_t, int64_t>>(sizePartition));
