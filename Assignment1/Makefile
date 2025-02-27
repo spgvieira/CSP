@@ -1,10 +1,10 @@
 # Variables
 PATH := result.txt
-EVENTS := cpu-cycles,cache-misses,page-faults,cpu-migrations,L1-dcache-load-misses,dTLB-load-misses,LLC-load-misses
-# EVENTS := cpu-cycles,cache-misses,page-faults,cpu-migrations,L1-dcache-load-misses,dTLB-load-misses,LLC-load-misses,power/energy-pkg/,power/energy-ram/
-REPEAT := 2
-THREADS := 1 2 3 4 5 
-HASHBITS := 1 2 3 4 5 
+# EVENTS := cpu-cycles,cache-misses,page-faults,cpu-migrations,L1-dcache-load-misses,dTLB-load-misses,LLC-load-misses
+EVENTS := cpu-cycles,cache-misses,page-faults,cpu-migrations,L1-dcache-load-misses,dTLB-load-misses,LLC-load-misses,power/energy-pkg/,power/energy-ram/
+REPEAT := 5
+THREADS := 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32
+HASHBITS := 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18
 PERF := /bin/perf
 
 
