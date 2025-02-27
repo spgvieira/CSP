@@ -29,20 +29,17 @@ int main(int argc, char* argv[]) {
     const size_t numTuples = 16777216;
     input = makeInput(numTuples);
 
-    for (size_t j = 0; j < numTuples; ++j) {
-        cout << get<0>(input[j]) << " ";
-    }
-    cout << endl;
+    // for (size_t j = 0; j < numTuples; ++j) {
+    //     cout << get<0>(input[j]) << " ";
+    // }
+    // cout << endl;
 
     const int numThreads = atoi(argv[1]);
-    cout << numThreads << endl;
     const int numTuplesPerThread = numTuples / numThreads;
 
     const int hashBits = atoi(argv[2]);
-    cout << hashBits << endl;
     const int numPartitions = pow(2, hashBits);
     const int sizePartition = numTuples/numPartitions * 1.5;
-    cout << sizePartition << endl;
 
     std::vector<std::thread> threads;
     std::vector<std::vector<std::tuple<int64_t, int64_t>>> partitions(numPartitions,std::vector<std::tuple<int64_t, int64_t>>(sizePartition));
@@ -59,13 +56,13 @@ int main(int argc, char* argv[]) {
         t.join();
     }
 
-    for (int i = 0; i < numPartitions; ++i) {
-        std::cout << "Array " << i << ": ";
-        for (size_t j = 0; j < partitions[i].size(); ++j) {
-            cout << get<0>(partitions[i][j]) << " ";
-        }
-        std::cout << "\n";
-    }
+    // for (int i = 0; i < numPartitions; ++i) {
+    //     std::cout << "Array " << i << ": ";
+    //     for (size_t j = 0; j < partitions[i].size(); ++j) {
+    //         cout << get<0>(partitions[i][j]) << " ";
+    //     }
+    //     std::cout << "\n";
+    // }
 
     return 0;
 }

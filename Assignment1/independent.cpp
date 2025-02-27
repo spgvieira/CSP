@@ -21,23 +21,23 @@ void partitionInput(int numThread, int start, int end, int numPartitions, vector
         }
     }
 
-    for (int p = 0; p < numPartitions; ++p) {
-        cout << "Thread " << numThread << " - Partition " << p << ": ";
-        for (const auto& tup : (*partitions)[p]) {
-            cout << "(" << get<0>(tup) << ", " << get<1>(tup) << ") ";
-        }
-        cout << "\n";
-    }
+    // for (int p = 0; p < numPartitions; ++p) {
+    //     cout << "Thread " << numThread << " - Partition " << p << ": ";
+    //     for (const auto& tup : (*partitions)[p]) {
+    //         cout << "(" << get<0>(tup) << ", " << get<1>(tup) << ") ";
+    //     }
+    //     cout << "\n";
+    // }
 }
 
 int main(int argc, char* argv[]) {
     const size_t numTuples = 16777216;
     input = makeInput(numTuples);
 
-    for (size_t j = 0; j < numTuples; ++j) {
-        cout << get<0>(input[j]) << " ";
-    }
-    cout << endl;
+    // for (size_t j = 0; j < numTuples; ++j) {
+    //     cout << get<0>(input[j]) << " ";
+    // }
+    // cout << endl;
 
     const int numThreads = atoi(argv[0]);
     const int numTuplesPerThread = numTuples / numThreads;
