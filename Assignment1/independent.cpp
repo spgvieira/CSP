@@ -39,10 +39,10 @@ int main(int argc, char* argv[]) {
     // }
     // cout << endl;
 
-    const int numThreads = atoi(argv[0]);
+    const int numThreads = atoi(argv[1]);
     const int numTuplesPerThread = numTuples / numThreads;
 
-    const int hashBits = atoi(argv[1]);
+    const int hashBits = atoi(argv[2]);
     const int numPartitions = pow(2, hashBits);
 
     std::vector<std::thread> threads;
