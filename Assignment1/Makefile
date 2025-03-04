@@ -1,24 +1,16 @@
 # Variables
-#PATH := result.txt
 RESULTS_FILE := result.txt
-# EVENTS := cpu-cycles,cache-misses,page-faults,cpu-migrations,L1-dcache-load-misses,dTLB-load-misses,LLC-load-misses
-EVENTS := cpu-cycles,cache-misses,page-faults,cpu-migrations,L1-dcache-load-misses,dTLB-load-misses,LLC-load-misses #,power/energy-pkg/,power/energy-ram/
+EVENTS := cpu-cycles,cache-misses,page-faults,cpu-migrations,dTLB-load-misses,context-switches
 REPEAT := 5
-# THREADS := 1 2 3 4 5
-# HASHBITS := 1 2 3 4 5
-# THREADS := 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32
-THREADSCONC := 4 8 16 32
-THREADSINDEP := 1 2 4 8 16 32
+THREADS := 1 2 4 8 16 32
 HASHBITS := 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18
 PERF := /usr/bin/perf
-
-
 
 # Phony targets
 .PHONY: all clean concurrent independent 
 
 # Default target
-all: concurrent independent test
+all: concurrent independent
 
 # Clean target
 clean:
