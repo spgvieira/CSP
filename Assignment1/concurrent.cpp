@@ -26,8 +26,8 @@ void partitionInput(int numThread, int start, int end, int numPartitions, vector
 }
 
 int main(int argc, char* argv[]) {
-    const size_t numTuples = 8;
-    // const size_t numTuples = 16777216;
+    // const size_t numTuples = 8;
+    const size_t numTuples = 16777216;
     input = makeInput(numTuples);
 
     // for (size_t j = 0; j < numTuples; ++j) {
