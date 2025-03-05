@@ -26,14 +26,8 @@ void partitionInput(int numThread, int start, int end, int numPartitions, vector
 }
 
 int main(int argc, char* argv[]) {
-    // const size_t numTuples = 8;
     const size_t numTuples = 16777216;
     input = makeInput(numTuples);
-
-    // for (size_t j = 0; j < numTuples; ++j) {
-    //     cout << get<0>(input[j]) << " ";
-    // }
-    // cout << endl;
 
     const int numThreads = atoi(argv[1]);
     const int numTuplesPerThread = numTuples / numThreads;
@@ -55,7 +49,7 @@ int main(int argc, char* argv[]) {
         auto start = i * numTuplesPerThread;
         auto end = (i + 1) * numTuplesPerThread;
 
-        threads.emplace_back(partitionInput, i, start, end, numPartitions, std::ref(partitions), std::ref(locks));
+        threads[i] = std::thread(partitionInput, i, start, end, numPartitions, std::ref(partitions), std::ref(locks));
     }
 
     for (auto& t : threads) {
@@ -65,13 +59,6 @@ int main(int argc, char* argv[]) {
     end = clock();
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
     printf("no threads %d no hash bits %d time:%f\n", numThreads, hashBits, cpu_time_used);
-    // for (int i = 0; i < numPartitions; ++i) {
-    //     std::cout << "Array " << i << ": ";
-    //     for (size_t j = 0; j < partitions[i].size(); ++j) {
-    //         cout << get<0>(partitions[i][j]) << " ";
-    //     }
-    //     std::cout << "\n";
-    // }
 
     return 0;
 }

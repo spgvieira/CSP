@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
     const int hashBits = atoi(argv[2]);
     const int numPartitions = pow(2, hashBits);
 
-    std::vector<std::thread> threads(numThreads);
+    std::vector<std::thread> threads;
     std::vector<std::vector<std::vector<std::tuple<int64_t, int64_t>>>> threadPartitions(numThreads, std::vector<std::vector<std::tuple<int64_t, int64_t>>>(numPartitions));
 
     clock_t start, end;
@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
         auto start = i * numTuplesPerThread;
         auto end = (i + 1) * numTuplesPerThread;
 
-        threads.emplace_back(partitionInput, i, start, end, numPartitions, &threadPartitions[i]);
+        threads[i] = std::thread(partitionInput, i, start, end, numPartitions, &threadPartitions[i]);
     }
 
     for (auto& t : threads) {
