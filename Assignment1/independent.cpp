@@ -3,6 +3,7 @@
 #include <thread>
 #include <vector>
 #include "tuples.h"
+#include <time.h>
 
 // TODO: 
 // re read code and clean not used
@@ -48,6 +49,11 @@ int main(int argc, char* argv[]) {
     std::vector<std::thread> threads;
     std::vector<std::vector<std::vector<std::tuple<int64_t, int64_t>>>> threadPartitions(numThreads, std::vector<std::vector<std::tuple<int64_t, int64_t>>>(numPartitions));
 
+    clock_t start, end;
+    double cpu_time_used;
+
+    start = clock();
+
     for (int i = 0; i < numThreads; i++) {
         auto start = i * numTuplesPerThread;
         auto end = (i + 1) * numTuplesPerThread;
@@ -58,6 +64,10 @@ int main(int argc, char* argv[]) {
     for (auto& t : threads) {
         t.join();
     }
+
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("%f\n", cpu_time_used);
 
     return 0;
 }

@@ -4,6 +4,7 @@
 #include <mutex>
 #include <vector>
 #include "tuples.h"
+#include <time.h>
 
 // TODO: 
 // re read code and clean not used
@@ -25,8 +26,8 @@ void partitionInput(int numThread, int start, int end, int numPartitions, vector
 }
 
 int main(int argc, char* argv[]) {
-    // const size_t numTuples = 8;
-    const size_t numTuples = 16777216;
+    const size_t numTuples = 8;
+    // const size_t numTuples = 16777216;
     input = makeInput(numTuples);
 
     // for (size_t j = 0; j < numTuples; ++j) {
@@ -45,6 +46,11 @@ int main(int argc, char* argv[]) {
     std::vector<std::vector<std::tuple<int64_t, int64_t>>> partitions(numPartitions,std::vector<std::tuple<int64_t, int64_t>>(sizePartition));
     std::vector<std::mutex> locks(numPartitions);
 
+    clock_t start, end;
+    double cpu_time_used;
+
+    start = clock();
+    
     for (int i = 0; i < numThreads; i++) {
         auto start = i * numTuplesPerThread;
         auto end = (i + 1) * numTuplesPerThread;
@@ -56,6 +62,9 @@ int main(int argc, char* argv[]) {
         t.join();
     }
 
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("%f\n", cpu_time_used);
     // for (int i = 0; i < numPartitions; ++i) {
     //     std::cout << "Array " << i << ": ";
     //     for (size_t j = 0; j < partitions[i].size(); ++j) {

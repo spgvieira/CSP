@@ -20,10 +20,10 @@ clean:
 # Concurrent target
 concurrent:
 	@echo "Concurrent"
-	@for threads in $(THREADSCONC); do \
+	@for threads in $(THREADS); do \
 		for hb in $(HASHBITS); do \
-			echo "Running: perf stat -e $(EVENTS) -o $(RESULTS_FILE) --append --repeat=$(REPEAT) ./build/concurrent $$threads $$hb"; \
-			$(PERF) stat -e $(EVENTS) -o $(RESULTS_FILE) --append --repeat=$(REPEAT) ./build/concurrent $$threads $$hb & \
+			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/concurrent $$threads $$hb"; \
+			$(PERF) stat -e $(EVENTS) -o concurrent_results.txt --append --repeat=$(REPEAT) ./build/concurrent $$threads $$hb | tee -a concurrent_time.txt & \
 			perf_pid=$$!; \
 			wait $$perf_pid; \
 		done; \
@@ -33,10 +33,12 @@ concurrent:
 # Independent target
 independent:
 	@echo "Independent"
-	@for threads in  $(THREADSINDEP); do \
+	@for threads in  $(THREADS); do \
 		for hb in $(HASHBITS); do \
-			perf stat -e $(EVENTS) -o $(RESULTS_FILE) --append --repeat=$(REPEAT) ./build/independent $$threads $$hb & \
+			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/independent $$threads $$hb"; \
+			perf stat -e $(EVENTS) -o independent_results.txt --append --repeat=$(REPEAT) ./build/independent $$threads $$hb | tee -a independent_time.txt & \
 			perf_pid=$$!; \
 			wait $$perf_pid; \
 		done; \
 	done
+	@echo "Done"
