@@ -1,0 +1,13 @@
+no threads 0.838700 no hash bits 1000000.000000 time:0.000000
+no threads 0.939020 no hash bits 1000000.000000 time:0.000000
+no threads 0.952453 no hash bits 1000000.000000 time:0.000000
+no threads 0.928515 no hash bits 1000000.000000 time:0.000000
+no threads 0.860521 no hash bits 1000000.000000 time:0.000000
+no threads 0.984502 no hash bits 1000000.000000 time:0.000000
+no threads 0.997605 no hash bits 1000000.000000 time:0.000000
+no threads 0.953524 no hash bits 1000000.000000 time:0.000000
+no threads 0.868847 no hash bits 1000000.000000 time:0.000000
+no threads 1 no hash bits 1 time:0.833339
+no threads 1 no hash bits 1 time:0.891702
+no threads 1 no hash bits 1 time:0.902419
+no threads 1 no hash bits 1 time:0.908646

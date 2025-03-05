@@ -1,0 +1,42 @@
+# started on Wed Mar  5 14:25:10 2025
+
+
+ Performance counter stats for './build/concurrent 1 1' (5 runs):
+
+    14,738,889,584      cpu-cycles:u                                                            ( +-  0.77% )
+        62,463,114      cache-misses:u                                                          ( +-  0.38% )
+             3,633      page-faults:u                                                           ( +-  3.41% )
+                 0      cpu-migrations:u                                                      
+            14,419      dTLB-load-misses:u                                                      ( +- 29.50% )
+                 0      context-switches:u                                                    
+
+            4.0389 +- 0.0363 seconds time elapsed  ( +-  0.90% )
+
+# started on Wed Mar  5 14:25:30 2025
+
+
+ Performance counter stats for './build/concurrent 1 2' (5 runs):
+
+    12,535,073,861      cpu-cycles:u                                                            ( +- 22.20% )
+        50,947,676      cache-misses:u                                                          ( +- 24.45% )
+             3,540      page-faults:u                                                           ( +- 19.83% )
+                 0      cpu-migrations:u                                                      
+            18,980      dTLB-load-misses:u                                                      ( +- 49.19% )
+                 0      context-switches:u                                                    
+
+             3.523 +- 0.804 seconds time elapsed  ( +- 22.81% )
+
+# started on Wed Mar  5 14:26:41 2025
+
+
+ Performance counter stats for './build/concurrent 1 1' (5 runs):
+
+    14,138,913,349      cpu-cycles:u                                                            ( +-  7.06% )
+        62,495,646      cache-misses:u                                                          ( +-  2.40% )
+             2,925      page-faults:u                                                           ( +- 18.18% )
+                 0      cpu-migrations:u                                                      
+            11,848      dTLB-load-misses:u                                                      ( +- 33.60% )
+                 0      context-switches:u                                                    
+
+             3.847 +- 0.255 seconds time elapsed  ( +-  6.63% )
+
