@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
     const int numPartitions = pow(2, hashBits);
     const int sizePartition = numTuples/numPartitions * 1.5;
 
-    std::vector<std::thread> threads;
+    std::vector<std::thread> threads(numThreads);
     std::vector<std::vector<std::tuple<int64_t, int64_t>>> partitions(numPartitions,std::vector<std::tuple<int64_t, int64_t>>(sizePartition));
     std::vector<std::mutex> locks(numPartitions);
 

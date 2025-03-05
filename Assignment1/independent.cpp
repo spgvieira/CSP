@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
     const int hashBits = atoi(argv[2]);
     const int numPartitions = pow(2, hashBits);
 
-    std::vector<std::thread> threads;
+    std::vector<std::thread> threads(numThreads);
     std::vector<std::vector<std::vector<std::tuple<int64_t, int64_t>>>> threadPartitions(numThreads, std::vector<std::vector<std::tuple<int64_t, int64_t>>>(numPartitions));
 
     clock_t start, end;
