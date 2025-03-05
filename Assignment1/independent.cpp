@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
 
     end = clock();
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("%f\n", cpu_time_used);
+    printf("no threads %d no hash bits %d time:%f\n", numThreads, hashBits, cpu_time_used);
 
     return 0;
 }
