@@ -15,14 +15,16 @@
 tuple<int64_t, int64_t>* input;
 
 void partitionInput(int numThread, int start, int end, int numPartitions, 
-    vector<vector<tuple<int64_t, int64_t>>>& partitions, std::vector<std::mutex>& locks) {
+    vector<vector<tuple<int64_t, int64_t>>>& partitions, std::vector<std::atomic<size_t>>& locks) {
 
     for (int i = start; i < end; i++) {
         tuple<int64_t, int64_t> t = input[i];
         int partitionKey = hashFunction(get<0>(t), numPartitions);
-        locks[partitionKey].lock();
-        partitions[partitionKey].push_back(t);
-        locks[partitionKey].unlock();
+        // locks[partitionKey].lock();
+        size_t index = locks[partitionKey].fetch_add(1, memory_order_relaxed);
+        partitions[partitionKey][index] = t;
+        // partitions[partitionKey].push_back(t);
+        // locks[partitionKey].unlock();
     }
 }
 
@@ -38,11 +40,14 @@ int main(int argc, char* argv[]) {
     const int sizePartition = numTuples/numPartitions * 1.5;
 
     std::vector<std::thread> threads(numThreads);
-    std::vector<std::vector<std::tuple<int64_t, int64_t>>> partitions(numPartitions,
-        std::vector<std::tuple<int64_t, int64_t>>(sizePartition));
-    std::vector<std::mutex> locks(numPartitions);
+    std::vector<std::vector<std::tuple<int64_t, int64_t>>> partitions(numPartitions);
+    // std::vector<std::mutex> locks(numPartitions);
 
-    // std::vector<std::atomic<size_t>> partitionIndices(numPartitions);
+    // Pre-allocate memory to prevent dynamic resizing overhead
+    for (auto& partition : partitions)
+        partition.reserve(sizePartition);  
+
+    std::vector<std::atomic<size_t>> partitionIndices(numPartitions);
     
     clock_t start_clock, end_clock;
     double cpu_time_used;
@@ -53,7 +58,7 @@ int main(int argc, char* argv[]) {
         auto thread_start = i * numTuplesPerThread;
         auto thread_end = (i + 1) * numTuplesPerThread;
 
-        threads[i] = std::thread(partitionInput, i, thread_start, thread_end, numPartitions, std::ref(partitions), std::ref(locks));
+        threads[i] = std::thread(partitionInput, i, thread_start, thread_end, numPartitions, std::ref(partitions), std::ref(partitionIndices));
     }
 
     for (auto& t : threads) {
