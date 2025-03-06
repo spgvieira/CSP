@@ -17,10 +17,7 @@ void partitionInput(int numThread, int start, int end, int numPartitions,
     for (int i = start; i < end; i++) {
         tuple<int64_t, int64_t> t = input[i];
         int partitionKey = hashFunction(get<0>(t), numPartitions);
-
-        if (partitionKey >= 0 && partitionKey < numPartitions) {
-            partitions[partitionKey].push_back(std::move(t));
-        }
+        partitions[partitionKey].push_back(std::move(t));
     }
 }
 
@@ -39,13 +36,13 @@ int main(int argc, char* argv[]) {
     std::vector<std::vector<std::vector<std::tuple<int64_t, int64_t>>>> threadPartitions(numThreads, 
         std::vector<std::vector<std::tuple<int64_t, int64_t>>>(numPartitions));
 
-    clock_t start_clock, end_clock;
-    double cpu_time_used;
-
     // Pre-allocate memory to prevent dynamic resizing overhead
     for (auto& threadPartition : threadPartitions)
         for (auto& partition : threadPartition)
             partition.reserve(sizePartition);  
+
+    clock_t start_clock, end_clock;
+    double cpu_time_used;
 
 
     start_clock = clock();
