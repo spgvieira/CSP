@@ -1,6 +1,8 @@
 #include <iostream>
 #include <tuple>
 #include <array>
+#include <cstdint>
+#include <cmath>
 using namespace std;
 
 
@@ -50,7 +52,19 @@ tuple<int64_t,int64_t>* makeInput(size_t numTuples) {
     return input;
 }
 
-// modular hash function
-int hashFunction(int64_t key, int numPartitions ) {
-    return key % numPartitions;
+// // modular hash function
+// int hashFunction(int64_t key, int numPartitions ) {
+//     return key % numPartitions;
+// }
+
+// multiplicative hash function
+// int multiplicativeHash(int64_t key, int numPartitions) {
+//     const double A = 0.6180339887; // Knuth's constant
+//     double fractionalPart = fmod(key * A, 1.0); 
+//     return static_cast<int>(numPartitions * fractionalPart);
+// }
+
+int hashFunction(int64_t key, int hashBits) {
+    const uint64_t A = 2654435769; // Large prime close to Knuth's constant * 2^32
+    return (key * A) >> (32 - hashBits); 
 }
