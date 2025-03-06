@@ -33,6 +33,7 @@ int main(int argc, char* argv[]) {
 
     const int hashBits = atoi(argv[2]);
     const int numPartitions = 1 << hashBits;
+    const int sizePartition = numTuples/numPartitions * 1.5;
 
     std::vector<std::thread> threads(numThreads);
     std::vector<std::vector<std::vector<std::tuple<int64_t, int64_t>>>> threadPartitions(numThreads, 
@@ -44,7 +45,7 @@ int main(int argc, char* argv[]) {
     // Pre-allocate memory to prevent dynamic resizing overhead
     for (auto& threadPartition : threadPartitions)
         for (auto& partition : threadPartition)
-            partition.reserve(numTuplesPerThread / numPartitions);  
+            partition.reserve(sizePartition);  
 
 
     start_clock = clock();
