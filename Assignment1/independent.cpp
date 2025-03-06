@@ -17,7 +17,9 @@ void partitionInput(int numThread, int start, int end, int numPartitions,
     for (int i = start; i < end; i++) {
         tuple<int64_t, int64_t> t = input[i];
         int partitionKey = hashFunction(get<0>(t), numPartitions);
-        partitions[partitionKey].push_back(std::move(t));
+        // partitions[partitionKey].push_back(std::move(t));
+        auto& partition = partitions[partitionKey];
+        partition[partition.size()] = t;
     }
 }
 
