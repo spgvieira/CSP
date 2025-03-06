@@ -1,7 +1,7 @@
 # Variables
 RESULTS_FILE := result.txt
 EVENTS := cpu-cycles,cache-misses,page-faults,cpu-migrations,dTLB-load-misses,context-switches
-REPEAT := 5
+REPEAT := 2
 THREADS := 1 2 4 8 16 32
 HASHBITS := 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18
 PERF := /usr/bin/perf
