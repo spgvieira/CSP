@@ -40,10 +40,10 @@ int main(int argc, char* argv[]) {
     std::vector<std::vector<std::tuple<int64_t, int64_t>>> partitions(numPartitions,std::vector<std::tuple<int64_t, int64_t>>(sizePartition));
     std::vector<std::mutex> locks(numPartitions);
 
-    clock_t start, end;
+    clock_t start_clock, end_clock;
     double cpu_time_used;
 
-    start = clock();
+    start_clock = clock();
     
     for (int i = 0; i < numThreads; i++) {
         auto start = i * numTuplesPerThread;
@@ -56,8 +56,8 @@ int main(int argc, char* argv[]) {
         t.join();
     }
 
-    end = clock();
-    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    end _clok= clock();
+    cpu_time_used = ((double)(end_clock - start_clock)) / CLOCKS_PER_SEC;
     printf("no threads %d no hash bits %d time:%f\n", numThreads, hashBits, cpu_time_used);
 
     return 0;
