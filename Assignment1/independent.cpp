@@ -12,13 +12,14 @@
 
 tuple<int64_t, int64_t>* input;
 
-void partitionInput(int numThread, int start, int end, int numPartitions, vector<vector<tuple<int64_t, int64_t>>>* partitions) {
+void partitionInput(int numThread, int start, int end, int numPartitions, 
+    vector<vector<tuple<int64_t, int64_t>>>& partitions) {
     for (int i = start; i < end; i++) {
         tuple<int64_t, int64_t> t = input[i];
         int partitionKey = hashFunction(get<0>(t), numPartitions);
 
         if (partitionKey >= 0 && partitionKey < numPartitions) {
-            (*partitions)[partitionKey].push_back(t);
+            partitions[partitionKey].push_back(std::move(t));
         }
     }
 }
@@ -31,13 +32,20 @@ int main(int argc, char* argv[]) {
     const int numTuplesPerThread = numTuples / numThreads;
 
     const int hashBits = atoi(argv[2]);
-    const int numPartitions = pow(2, hashBits);
+    const int numPartitions = 1 << hashBits;
 
     std::vector<std::thread> threads(numThreads);
-    std::vector<std::vector<std::vector<std::tuple<int64_t, int64_t>>>> threadPartitions(numThreads, std::vector<std::vector<std::tuple<int64_t, int64_t>>>(numPartitions));
+    std::vector<std::vector<std::vector<std::tuple<int64_t, int64_t>>>> threadPartitions(numThreads, 
+        std::vector<std::vector<std::tuple<int64_t, int64_t>>>(numPartitions));
 
     clock_t start_clock, end_clock;
     double cpu_time_used;
+
+    // Pre-allocate memory to prevent dynamic resizing overhead
+    for (auto& threadPartition : threadPartitions)
+        for (auto& partition : threadPartition)
+            partition.reserve(numTuplesPerThread / numPartitions);  
+
 
     start_clock = clock();
 
@@ -45,7 +53,7 @@ int main(int argc, char* argv[]) {
         auto start = i * numTuplesPerThread;
         auto end = (i + 1) * numTuplesPerThread;
 
-        threads[i] = std::thread(partitionInput, i, start, end, numPartitions, &threadPartitions[i]);
+        threads[i] = std::thread(partitionInput, i, start, end, numPartitions, std::ref(threadPartitions[i]));
     }
 
     for (auto& t : threads) {
