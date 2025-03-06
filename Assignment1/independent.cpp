@@ -21,24 +21,11 @@ void partitionInput(int numThread, int start, int end, int numPartitions, vector
             (*partitions)[partitionKey].push_back(t);
         }
     }
-
-    // for (int p = 0; p < numPartitions; ++p) {
-    //     cout << "Thread " << numThread << " - Partition " << p << ": ";
-    //     for (const auto& tup : (*partitions)[p]) {
-    //         cout << "(" << get<0>(tup) << ", " << get<1>(tup) << ") ";
-    //     }
-    //     cout << "\n";
-    // }
 }
 
 int main(int argc, char* argv[]) {
     const size_t numTuples = 16777216;
     input = makeInput(numTuples);
-
-    // for (size_t j = 0; j < numTuples; ++j) {
-    //     cout << get<0>(input[j]) << " ";
-    // }
-    // cout << endl;
 
     const int numThreads = atoi(argv[1]);
     const int numTuplesPerThread = numTuples / numThreads;
@@ -46,13 +33,13 @@ int main(int argc, char* argv[]) {
     const int hashBits = atoi(argv[2]);
     const int numPartitions = pow(2, hashBits);
 
-    std::vector<std::thread> threads;
+    std::vector<std::thread> threads(numThreads);
     std::vector<std::vector<std::vector<std::tuple<int64_t, int64_t>>>> threadPartitions(numThreads, std::vector<std::vector<std::tuple<int64_t, int64_t>>>(numPartitions));
 
-    clock_t start, end;
+    clock_t start_clock, end_clock;
     double cpu_time_used;
 
-    start = clock();
+    start_clock = clock();
 
     for (int i = 0; i < numThreads; i++) {
         auto start = i * numTuplesPerThread;
@@ -65,8 +52,8 @@ int main(int argc, char* argv[]) {
         t.join();
     }
 
-    end = clock();
-    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    end_clock = clock();
+    cpu_time_used = ((double)(end_clock - start_clock)) / CLOCKS_PER_SEC;
     printf("no threads %d no hash bits %d time:%f\n", numThreads, hashBits, cpu_time_used);
 
     return 0;
