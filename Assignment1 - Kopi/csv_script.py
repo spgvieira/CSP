@@ -1,6 +1,9 @@
 import csv
+import argparse
+from collections import defaultdict
 
-def parse_results(file_path, output_csv):
+def parse_performance(file_path):
+    """Parse the performance counter stats file"""
     entries = []
     current_entry = None
 
@@ -37,11 +40,15 @@ def parse_results(file_path, output_csv):
                         metric_value = int(first_part)
                         metric_name = parts[1]
                         current_entry[metric_name] = metric_value
+    return entries
 
-    # Determine CSV headers based on the first entry's keys
+def parse_time_results(time_file):
+    #Parse time results file and return
+
+
+    # Determine CSV headers
     if entries:
         headers = ['threads', 'hashbits']
-        # Preserve the order of metrics as they appear, excluding special fields
         first_entry_keys = list(entries[0].keys())
         for key in first_entry_keys:
             if key not in headers and key != 'time_elapsed':
@@ -58,4 +65,10 @@ def parse_results(file_path, output_csv):
             writer.writerow(entry)
 
 if __name__ == "__main__":
-    parse_results('results.txt', 'output.csv')
+    parser = argparse.ArgumentParser(description='Parse performance results into CSV')
+    parser.add_argument('input', help='Input text file (e.g., results.txt)')
+    parser.add_argument('-o', '--output', default='output.csv',
+                       help='Output CSV file (default: output.csv)')
+    args = parser.parse_args()
+    
+    parse_results(args.input, args.output)
