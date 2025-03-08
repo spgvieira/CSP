@@ -10,10 +10,10 @@
 // re evaluate which variables should be public
 // missing affinity setting
 
+using Partition = std::vector<std::tuple<int64_t, int64_t>>;
 tuple<int64_t, int64_t>* input;
 
-void partitionInput(int numThread, int start, int end, int numPartitions, 
-    vector<vector<tuple<int64_t, int64_t>>>& partitions) {
+void partitionInput(int numThread, int start, int end, int numPartitions, vector<Partition>& partitions) {
     for (int i = start; i < end; i++) {
         tuple<int64_t, int64_t> t = input[i];
         int partitionKey = hashFunction(get<0>(t), numPartitions);
@@ -21,7 +21,7 @@ void partitionInput(int numThread, int start, int end, int numPartitions,
     }
 }
 
-void cleanup(std::vector<std::vector<std::vector<std::tuple<int64_t, int64_t>>>>& threadPartitions) {
+void cleanup(std::vector<std::vector<Partition>>& threadPartitions) {
     for (auto& threadPartition : threadPartitions) {
         for (auto& partition : threadPartition) {
             partition.clear();
@@ -40,9 +40,9 @@ int main(int argc, char* argv[]) {
     const int numPartitions = 1 << hashBits;
     const int sizePartition = numTuples/numPartitions * 1.5;
 
-    std::vector<std::thread> threads(numThreads);
-    std::vector<std::vector<std::vector<std::tuple<int64_t, int64_t>>>> threadPartitions(numThreads, 
-        std::vector<std::vector<std::tuple<int64_t, int64_t>>>(numPartitions));
+    std::vector<std::thread> threads;
+    std::vector<std::vector<Partition>> threadPartitions(numThreads, 
+        std::vector<Partition>(numPartitions));
 
     // Pre-allocate memory to prevent dynamic resizing overhead
     for (auto& threadPartition : threadPartitions)
@@ -58,8 +58,9 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < numThreads; i++) {
         auto start = i * numTuplesPerThread;
         auto end = (i + 1) * numTuplesPerThread;
-
-        threads[i] = std::thread(partitionInput, i, start, end, numPartitions, std::ref(threadPartitions[i]));
+        std::vector<Partition> partitionsOfThisThread(numPartitions);
+        std::thread thread(partitionInput, i, start, end, numPartitions, std::ref(threadPartitions[i]));
+        threads.push_back(std::move(thread));
     }
 
     for (auto& t : threads) {
