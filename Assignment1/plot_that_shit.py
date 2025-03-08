@@ -7,7 +7,7 @@ import argparse
 
 
 #read the csv data
-csvData = pd.read_csv("C:\computer systems performance\CSP\Assignment1\output.csv")
+csvData = pd.read_csv("/home/sara/ITU/CSP/Assignment1/output_conc.csv")
 
 #here we filter the stuff we want from csv
 sel_threads = [1, 2, 4, 8, 16, 32]
