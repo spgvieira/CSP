@@ -57,7 +57,7 @@ def parse_time(file_path):
 
     csv_rows = []
     for (threads, hash_bits), times in data.items():
-        avg_time = sum(times) / len(times)
+        avg_time = sum(times) / 1
         csv_rows.append([threads, hash_bits, round(avg_time, 6)])
 
     return csv_rows
