@@ -48,11 +48,8 @@ int main(int argc, char* argv[]) {
         partition.reserve(sizePartition);  
 
     std::vector<std::atomic<size_t>> partitionIndices(numPartitions);
-    
-    clock_t start_clock, end_clock;
-    double cpu_time_used;
 
-    start_clock = clock();
+    auto start_clock = std::chrono::steady_clock::now();
     
     for (int i = 0; i < numThreads; i++) {
         auto thread_start = i * numTuplesPerThread;
@@ -65,8 +62,8 @@ int main(int argc, char* argv[]) {
         t.join();
     }
 
-    end_clock = clock();
-    cpu_time_used = ((double)(end_clock - start_clock)) / CLOCKS_PER_SEC;
+    auto end_clock = std::chrono::steady_clock::now();
+    std::chrono::duration<double> cpu_time_used = end_clock - start_clock;
     printf("no threads %d no hash bits %d time:%f\n", numThreads, hashBits, cpu_time_used);
 
     return 0;
