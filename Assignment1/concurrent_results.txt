@@ -2882,3 +2882,143 @@
 
             9.1102 +- 0.0144 seconds time elapsed  ( +-  0.16% )
 
+# started on Mon Mar 10 10:45:45 2025
+
+
+ Performance counter stats for './build/concurrent 32 9' (2 runs):
+
+    31,456,856,382      cpu-cycles                                                              ( +-  0.08% )
+        60,357,312      cache-misses                                                            ( +-  0.10% )
+           166,660      page-faults                                                             ( +-  0.08% )
+                 2      cpu-migrations                                                          ( +- 50.00% )
+        16,310,424      dTLB-load-misses                                                        ( +-  0.63% )
+               118      context-switches                                                        ( +-  1.27% )
+
+            9.0682 +- 0.0197 seconds time elapsed  ( +-  0.22% )
+
+# started on Mon Mar 10 10:46:04 2025
+
+
+ Performance counter stats for './build/concurrent 32 10' (2 runs):
+
+    30,536,581,754      cpu-cycles                                                              ( +-  0.00% )
+        52,842,519      cache-misses                                                            ( +-  0.16% )
+           150,757      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                        
+        16,210,497      dTLB-load-misses                                                        ( +-  0.11% )
+               102      context-switches                                                        ( +-  1.47% )
+
+           9.03727 +- 0.00544 seconds time elapsed  ( +-  0.06% )
+
+# started on Mon Mar 10 10:46:22 2025
+
+
+ Performance counter stats for './build/concurrent 32 11' (2 runs):
+
+    30,449,679,939      cpu-cycles                                                              ( +-  0.05% )
+        45,986,533      cache-misses                                                            ( +-  0.07% )
+           142,408      page-faults                                                             ( +-  0.01% )
+                 1      cpu-migrations                                                          ( +- 50.00% )
+        16,007,893      dTLB-load-misses                                                        ( +-  0.10% )
+               138      context-switches                                                        ( +- 13.41% )
+
+           9.09692 +- 0.00696 seconds time elapsed  ( +-  0.08% )
+
+# started on Mon Mar 10 10:46:40 2025
+
+
+ Performance counter stats for './build/concurrent 32 12' (2 runs):
+
+    30,557,632,095      cpu-cycles                                                              ( +-  0.19% )
+        45,713,434      cache-misses                                                            ( +-  0.00% )
+           140,355      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                          ( +- 25.00% )
+        16,126,121      dTLB-load-misses                                                        ( +-  0.43% )
+               167      context-switches                                                        ( +- 22.46% )
+
+            9.0797 +- 0.0320 seconds time elapsed  ( +-  0.35% )
+
+# started on Mon Mar 10 10:46:58 2025
+
+
+ Performance counter stats for './build/concurrent 32 13' (2 runs):
+
+    30,843,209,105      cpu-cycles                                                              ( +-  0.00% )
+        46,320,306      cache-misses                                                            ( +-  0.07% )
+           141,983      page-faults                                                             ( +-  0.01% )
+                 1      cpu-migrations                                                        
+        16,118,594      dTLB-load-misses                                                        ( +-  0.16% )
+               149      context-switches                                                        ( +-  0.34% )
+
+           9.07440 +- 0.00119 seconds time elapsed  ( +-  0.01% )
+
+# started on Mon Mar 10 10:47:16 2025
+
+
+ Performance counter stats for './build/concurrent 32 14' (2 runs):
+
+    31,180,114,127      cpu-cycles                                                              ( +-  0.09% )
+        46,975,630      cache-misses                                                            ( +-  0.11% )
+           149,080      page-faults                                                             ( +-  0.01% )
+                 1      cpu-migrations                                                          ( +- 50.00% )
+        16,490,169      dTLB-load-misses                                                        ( +-  0.42% )
+                96      context-switches                                                        ( +-  8.33% )
+
+           9.11698 +- 0.00355 seconds time elapsed  ( +-  0.04% )
+
+# started on Mon Mar 10 10:47:35 2025
+
+
+ Performance counter stats for './build/concurrent 32 15' (2 runs):
+
+    31,608,512,386      cpu-cycles                                                              ( +-  0.15% )
+        47,989,510      cache-misses                                                            ( +-  0.03% )
+           164,876      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                        
+        18,501,399      dTLB-load-misses                                                        ( +-  0.14% )
+               124      context-switches                                                        ( +-  6.85% )
+
+            9.2493 +- 0.0136 seconds time elapsed  ( +-  0.15% )
+
+# started on Mon Mar 10 10:47:53 2025
+
+
+ Performance counter stats for './build/concurrent 32 16' (2 runs):
+
+    31,668,535,428      cpu-cycles                                                              ( +-  0.16% )
+        48,996,114      cache-misses                                                            ( +-  0.05% )
+           164,966      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                        
+        23,777,719      dTLB-load-misses                                                        ( +-  0.01% )
+               122      context-switches                                                        ( +-  2.46% )
+
+            9.3615 +- 0.0271 seconds time elapsed  ( +-  0.29% )
+
+# started on Mon Mar 10 10:48:12 2025
+
+
+ Performance counter stats for './build/concurrent 32 17' (2 runs):
+
+    31,899,854,974      cpu-cycles                                                              ( +-  0.08% )
+        50,572,771      cache-misses                                                            ( +-  0.14% )
+           165,577      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                          ( +- 50.00% )
+        31,648,393      dTLB-load-misses                                                        ( +-  0.16% )
+               146      context-switches                                                        ( +- 21.58% )
+
+           9.52611 +- 0.00995 seconds time elapsed  ( +-  0.10% )
+
+# started on Mon Mar 10 10:48:31 2025
+
+
+ Performance counter stats for './build/concurrent 32 18' (2 runs):
+
+    32,753,090,705      cpu-cycles                                                              ( +-  0.11% )
+        54,002,234      cache-misses                                                            ( +-  0.12% )
+           167,113      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                        
+        39,276,688      dTLB-load-misses                                                        ( +-  0.06% )
+               128      context-switches                                                        ( +-  2.73% )
+
+           9.64897 +- 0.00383 seconds time elapsed  ( +-  0.04% )
+
