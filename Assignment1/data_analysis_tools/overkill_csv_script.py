@@ -49,10 +49,10 @@ def parse_time(file_path):
     data = defaultdict(list)
     with open(file_path, 'r') as f:
         for line in f:
-            parts = line.strip().split()
-            threads = int(parts[2])
-            hash_bits = int(parts[6])
-            time = float(parts[7].split(':')[1])
+            parts = line.strip().split(',')
+            threads = int(parts[0])
+            hash_bits = int(parts[1])
+            time = float(parts[2])
             data[(threads, hash_bits)].append(time)
 
     csv_rows = []
