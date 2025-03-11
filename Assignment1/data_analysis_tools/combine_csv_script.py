@@ -1,3 +1,5 @@
+#This script takes our perf and wall time textfiles, outputting a combined csv.
+
 import csv
 import argparse
 from collections import defaultdict

@@ -1,3 +1,6 @@
+#This script takes a csv and plots tuples per second vs nr of hashbits, comparing thread counts. 
+#Change the name of output plot in line 51 
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import csv
