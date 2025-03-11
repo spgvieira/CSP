@@ -17,6 +17,8 @@ clean:
 	@echo "Cleaning up..."
 	@rm -f $(RESULTS_FILE)
 
+#TODO: add warmup 
+
 # Concurrent target
 concurrent:
 	@echo "Concurrent"
