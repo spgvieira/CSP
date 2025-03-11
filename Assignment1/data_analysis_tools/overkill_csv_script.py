@@ -62,7 +62,7 @@ def parse_time(file_path):
 
     return csv_rows
 
-def convert_to_CSV (perf_results, time_results):
+def convert_to_CSV (perf_results, time_results, output_csv):
     # Create a dictionary from time_results for easy lookup
     time_dict = {}
     for t, h, time in time_results:
@@ -90,7 +90,7 @@ def convert_to_CSV (perf_results, time_results):
         headers = []
 
     # Write to CSV
-    with open('output.csv', 'w', newline='') as csvfile:
+    with open(output_csv, 'w', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=headers)
         writer.writeheader()
         for entry in perf_results:
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Parse performance results and wall times into CSV')
     parser.add_argument('perf_file', help='Input text file for performance results (e.g., perf_results.txt)')
     parser.add_argument('time_file', help='Input text file for wall times (e.g., time_results.txt)')
-    parser.add_argument('-o', '--output', default='output.csv',
+    parser.add_argument('output_csv', default='output.csv',
                        help='Output CSV file (default: output.csv)')
     args = parser.parse_args()
 
@@ -111,7 +111,7 @@ if __name__ == "__main__":
     time_results = parse_time(args.time_file)
 
     # Convert and merge the results into a CSV
-    convert_to_CSV(perf_results, time_results)
+    convert_to_CSV(perf_results, time_results, args.output_csv)
 
     print(f"Results have been saved to {args.output}")
 #def plotting (results_perf, results_time):
