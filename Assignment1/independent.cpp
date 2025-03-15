@@ -14,7 +14,7 @@
 using Partition = std::vector<std::tuple<int64_t, int64_t>>;
 tuple<int64_t, int64_t>* input;
 
-void partitionInput(int numThread, int start, int end, int numPartitions, vector<Partition>& partitions) {
+void partitionInput(int start, int end, int numPartitions, vector<Partition>& partitions) {
     for (int i = start; i < end; i++) {
         tuple<int64_t, int64_t> t = input[i];
         int partitionKey = hashFunction(get<0>(t), numPartitions);
@@ -39,13 +39,13 @@ int main(int argc, char* argv[]) {
 
     const int hashBits = atoi(argv[2]);
     const int numPartitions = 1 << hashBits;
-    const int sizePartition = numTuples/numPartitions * 1.5;
+    const int sizePartition = numTuplesPerThread/numPartitions * 1.5;
 
     std::vector<std::thread> threads;
     std::vector<std::vector<Partition>> threadPartitions(numThreads, 
         std::vector<Partition>(numPartitions));
 
-    // Pre-allocate memory to prevent dynamic resizing overhead
+    // Pre-allocate memory to prevent dynacdmic resizing overhead
     for (auto& threadPartition : threadPartitions)
         for (auto& partition : threadPartition)
             partition.reserve(sizePartition);  
@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < numThreads; i++) {
         auto start = i * numTuplesPerThread;
         auto end = (i + 1) * numTuplesPerThread;
-        std::thread thread(partitionInput, i, start, end, numPartitions, std::ref(threadPartitions[i]));
+        std::thread thread(partitionInput, start, end, numPartitions, std::ref(threadPartitions[i]));
         threads.push_back(std::move(thread));
     }
 
