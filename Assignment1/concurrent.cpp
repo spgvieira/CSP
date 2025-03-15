@@ -14,7 +14,7 @@
 
 tuple<int64_t, int64_t>* input;
 
-void partitionInput(int numThread, int start, int end, int numPartitions, 
+void partitionInput(int start, int end, int numPartitions, 
     vector<vector<tuple<int64_t, int64_t>>>& partitions, std::vector<std::atomic<size_t>>& locks) {
 
     for (int i = start; i < end; i++) {
@@ -54,8 +54,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < numThreads; i++) {
         auto thread_start = i * numTuplesPerThread;
         auto thread_end = (i + 1) * numTuplesPerThread;
-
-        threads[i] = std::thread(partitionInput, i, thread_start, thread_end, numPartitions, std::ref(partitions), std::ref(partitionIndices));
+        threads[i] = std::thread(partitionInput, thread_start, thread_end, numPartitions, std::ref(partitions), std::ref(partitionIndices));
     }
 
     for (auto& t : threads) {
