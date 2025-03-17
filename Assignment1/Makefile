@@ -7,10 +7,10 @@ HASHBITS := 1 2 3 #4 5 6 7 8 9 10 11 12 13 14 15 16 17 18
 PERF := /usr/bin/perf
 
 EXECUTABLES = \
-	concurrent independent indep_core_aff_1
+	concurrent independent indep_core_aff_1 indep_core_aff_2
 
 # Phony targets
-.PHONY: all clean concurrent independent 
+.PHONY: all clean concurrent independent #indep_core_aff_1 indep_core_aff_2
 
 # Default target
 all: $(EXECUTABLES)
@@ -49,13 +49,27 @@ indep_core_aff_1:
 	done
 	@echo "Done"
 
-# First core affinity test
+# First core affinity target
 indep_core_aff_1:
 	@echo "Independent core affinity 1"
 	@for threads in  $(THREADS); do \
 		for hb in $(HASHBITS); do \
 			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/indep_core_aff_1 $$threads $$hb"; \
 			perf stat -e $(EVENTS) -o indep_core_aff_1.txt --append --repeat=$(REPEAT) ./build/indep_core_aff_1 $$threads $$hb | tee -a indep_core_aff_1_time.txt & \
+			perf_pid=$$!; \
+			wait $$perf_pid; \
+		done; \
+	done
+	@echo "Done"
+
+# Second core affinity target
+# TODO: add loop to compute the cpu id for each thread
+indep_core_aff_2:
+	@echo "Independent core affinity 2"
+	@for threads in  $(THREADS); do \
+		for hb in $(HASHBITS); do \
+			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/indep_core_aff_2 $$threads $$hb"; \
+			perf stat -e $(EVENTS) -o indep_core_aff_2.txt --append --repeat=$(REPEAT) ./build/indep_core_aff_2 $$threads $$hb | tee -a indep_core_aff_2_time.txt & \
 			perf_pid=$$!; \
 			wait $$perf_pid; \
 		done; \
