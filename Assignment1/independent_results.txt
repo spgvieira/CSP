@@ -1,0 +1,1512 @@
+# started on Mon Mar 17 17:51:38 2025
+
+
+ Performance counter stats for './build/independent 1 1' (2 runs):
+
+    21,117,106,410      cpu-cycles                                                              ( +-  0.05% )
+        28,565,627      cache-misses                                                            ( +-  0.02% )
+           131,208      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                        
+        15,372,997      dTLB-load-misses                                                        ( +-  0.01% )
+                28      context-switches                                                        ( +-  3.57% )
+
+           10.5999 +- 0.0113 seconds time elapsed  ( +-  0.11% )
+
+# started on Mon Mar 17 17:51:59 2025
+
+
+ Performance counter stats for './build/independent 1 2' (2 runs):
+
+    21,108,139,546      cpu-cycles                                                              ( +-  0.13% )
+        28,504,811      cache-misses                                                            ( +-  0.16% )
+           131,211      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                          ( +-150.00% )
+        15,391,486      dTLB-load-misses                                                        ( +-  0.21% )
+                23      context-switches                                                        ( +- 15.22% )
+
+           10.5995 +- 0.0137 seconds time elapsed  ( +-  0.13% )
+
+# started on Mon Mar 17 17:52:21 2025
+
+
+ Performance counter stats for './build/independent 1 3' (2 runs):
+
+    21,151,185,943      cpu-cycles                                                              ( +-  0.13% )
+        28,773,370      cache-misses                                                            ( +-  0.90% )
+           131,216      page-faults                                                           
+                 0      cpu-migrations                                                        
+        15,354,977      dTLB-load-misses                                                        ( +-  0.13% )
+                31      context-switches                                                      
+
+           10.6219 +- 0.0140 seconds time elapsed  ( +-  0.13% )
+
+# started on Mon Mar 17 17:52:42 2025
+
+
+ Performance counter stats for './build/independent 1 4' (2 runs):
+
+    21,150,140,845      cpu-cycles                                                              ( +-  0.12% )
+        28,732,968      cache-misses                                                            ( +-  0.07% )
+           131,223      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,366,880      dTLB-load-misses                                                        ( +-  0.24% )
+                27      context-switches                                                        ( +- 42.59% )
+
+           10.6156 +- 0.0178 seconds time elapsed  ( +-  0.17% )
+
+# started on Mon Mar 17 17:53:03 2025
+
+
+ Performance counter stats for './build/independent 1 5' (2 runs):
+
+    21,188,360,001      cpu-cycles                                                              ( +-  0.21% )
+        28,517,751      cache-misses                                                            ( +-  0.09% )
+           131,239      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,402,412      dTLB-load-misses                                                        ( +-  0.14% )
+                28      context-switches                                                        ( +- 12.50% )
+
+           10.6395 +- 0.0220 seconds time elapsed  ( +-  0.21% )
+
+# started on Mon Mar 17 17:53:24 2025
+
+
+ Performance counter stats for './build/independent 1 6' (2 runs):
+
+    21,186,296,059      cpu-cycles                                                              ( +-  0.01% )
+        27,973,699      cache-misses                                                            ( +-  0.31% )
+           131,271      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,387,933      dTLB-load-misses                                                        ( +-  0.01% )
+                29      context-switches                                                        ( +-  3.45% )
+
+          10.63361 +- 0.00602 seconds time elapsed  ( +-  0.06% )
+
+# started on Mon Mar 17 17:53:46 2025
+
+
+ Performance counter stats for './build/independent 1 7' (2 runs):
+
+    21,155,307,672      cpu-cycles                                                              ( +-  0.09% )
+        27,986,916      cache-misses                                                            ( +-  0.19% )
+           131,335      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                        
+        15,439,383      dTLB-load-misses                                                        ( +-  0.05% )
+                29      context-switches                                                        ( +- 17.24% )
+
+          10.62314 +- 0.00929 seconds time elapsed  ( +-  0.09% )
+
+# started on Mon Mar 17 17:54:07 2025
+
+
+ Performance counter stats for './build/independent 1 8' (2 runs):
+
+    21,154,898,184      cpu-cycles                                                              ( +-  0.04% )
+        28,115,548      cache-misses                                                            ( +-  0.02% )
+           131,465      page-faults                                                           
+                 0      cpu-migrations                                                        
+        15,596,091      dTLB-load-misses                                                        ( +-  0.92% )
+                41      context-switches                                                        ( +- 14.63% )
+
+          10.62396 +- 0.00462 seconds time elapsed  ( +-  0.04% )
+
+# started on Mon Mar 17 17:54:28 2025
+
+
+ Performance counter stats for './build/independent 1 9' (2 runs):
+
+    21,213,604,669      cpu-cycles                                                              ( +-  0.25% )
+        28,288,983      cache-misses                                                            ( +-  0.14% )
+           131,722      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,520,342      dTLB-load-misses                                                        ( +-  0.08% )
+                31      context-switches                                                        ( +-  3.23% )
+
+           10.6527 +- 0.0268 seconds time elapsed  ( +-  0.25% )
+
+# started on Mon Mar 17 17:54:50 2025
+
+
+ Performance counter stats for './build/independent 1 10' (2 runs):
+
+    21,173,062,190      cpu-cycles                                                              ( +-  0.07% )
+        28,874,811      cache-misses                                                            ( +-  0.09% )
+           132,238      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                        
+        15,691,657      dTLB-load-misses                                                        ( +-  0.86% )
+                32      context-switches                                                        ( +-  6.25% )
+
+          10.63144 +- 0.00819 seconds time elapsed  ( +-  0.08% )
+
+# started on Mon Mar 17 17:55:11 2025
+
+
+ Performance counter stats for './build/independent 1 11' (2 runs):
+
+    21,399,756,846      cpu-cycles                                                              ( +-  0.53% )
+        30,063,757      cache-misses                                                            ( +-  0.25% )
+           133,267      page-faults                                                           
+                 0      cpu-migrations                                                        
+        15,570,227      dTLB-load-misses                                                        ( +-  0.27% )
+                51      context-switches                                                        ( +-  7.84% )
+
+           10.7469 +- 0.0570 seconds time elapsed  ( +-  0.53% )
+
+# started on Mon Mar 17 17:55:33 2025
+
+
+ Performance counter stats for './build/independent 1 12' (2 runs):
+
+    21,350,822,636      cpu-cycles                                                              ( +-  0.02% )
+        31,481,116      cache-misses                                                            ( +-  0.16% )
+           135,328      page-faults                                                           
+                 0      cpu-migrations                                                        
+        15,501,788      dTLB-load-misses                                                        ( +-  0.00% )
+                24      context-switches                                                        ( +-  2.08% )
+
+          10.72000 +- 0.00298 seconds time elapsed  ( +-  0.03% )
+
+# started on Mon Mar 17 17:55:54 2025
+
+
+ Performance counter stats for './build/independent 1 13' (2 runs):
+
+    21,584,269,066      cpu-cycles                                                              ( +-  0.24% )
+        32,372,845      cache-misses                                                            ( +-  0.04% )
+           139,448      page-faults                                                           
+                 0      cpu-migrations                                                        
+        15,589,397      dTLB-load-misses                                                        ( +-  0.03% )
+                31      context-switches                                                        ( +- 19.35% )
+
+           10.8383 +- 0.0264 seconds time elapsed  ( +-  0.24% )
+
+# started on Mon Mar 17 17:56:16 2025
+
+
+ Performance counter stats for './build/independent 1 14' (2 runs):
+
+    21,827,667,749      cpu-cycles                                                              ( +-  0.26% )
+        32,945,758      cache-misses                                                            ( +-  0.03% )
+           147,689      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,628,653      dTLB-load-misses                                                        ( +-  0.07% )
+                29      context-switches                                                        ( +-  1.72% )
+
+           10.9601 +- 0.0295 seconds time elapsed  ( +-  0.27% )
+
+# started on Mon Mar 17 17:56:38 2025
+
+
+ Performance counter stats for './build/independent 1 15' (2 runs):
+
+    22,290,538,355      cpu-cycles                                                              ( +-  0.06% )
+        33,838,812      cache-misses                                                            ( +-  0.03% )
+           207,774      page-faults                                                             ( +-  0.01% )
+                 0      cpu-migrations                                                        
+        15,943,053      dTLB-load-misses                                                        ( +-  0.10% )
+                29      context-switches                                                        ( +- 22.41% )
+
+          11.19074 +- 0.00634 seconds time elapsed  ( +-  0.06% )
+
+# started on Mon Mar 17 17:57:00 2025
+
+
+ Performance counter stats for './build/independent 1 16' (2 runs):
+
+    22,645,072,190      cpu-cycles                                                              ( +-  0.29% )
+        35,559,029      cache-misses                                                            ( +-  0.16% )
+           226,322      page-faults                                                             ( +-  0.40% )
+                 0      cpu-migrations                                                        
+        17,047,301      dTLB-load-misses                                                        ( +-  0.06% )
+                30      context-switches                                                        ( +- 15.00% )
+
+           11.3703 +- 0.0324 seconds time elapsed  ( +-  0.29% )
+
+# started on Mon Mar 17 17:57:23 2025
+
+
+ Performance counter stats for './build/independent 1 17' (2 runs):
+
+    22,965,096,409      cpu-cycles                                                              ( +-  0.11% )
+        39,491,569      cache-misses                                                            ( +-  0.05% )
+           230,996      page-faults                                                             ( +-  0.08% )
+                 0      cpu-migrations                                                        
+        20,556,420      dTLB-load-misses                                                        ( +-  0.03% )
+                31      context-switches                                                        ( +-  9.68% )
+
+           11.5297 +- 0.0133 seconds time elapsed  ( +-  0.12% )
+
+# started on Mon Mar 17 17:57:46 2025
+
+
+ Performance counter stats for './build/independent 1 18' (2 runs):
+
+    23,532,135,170      cpu-cycles                                                              ( +-  0.27% )
+        46,215,239      cache-misses                                                            ( +-  0.55% )
+           232,220      page-faults                                                             ( +-  0.04% )
+                 1      cpu-migrations                                                          ( +-100.00% )
+        25,285,673      dTLB-load-misses                                                        ( +-  0.01% )
+                34      context-switches                                                        ( +- 27.94% )
+
+           11.8149 +- 0.0313 seconds time elapsed  ( +-  0.27% )
+
+# started on Mon Mar 17 17:58:10 2025
+
+
+ Performance counter stats for './build/independent 2 1' (2 runs):
+
+    25,719,267,291      cpu-cycles                                                              ( +-  0.15% )
+        65,454,631      cache-misses                                                            ( +-  0.34% )
+           132,143      page-faults                                                             ( +-  0.09% )
+                 0      cpu-migrations                                                        
+        15,365,944      dTLB-load-misses                                                        ( +-  0.00% )
+                41      context-switches                                                        ( +-  3.66% )
+
+         10.932026 +- 0.000156 seconds time elapsed  ( +-  0.00% )
+
+# started on Mon Mar 17 17:58:32 2025
+
+
+ Performance counter stats for './build/independent 2 2' (2 runs):
+
+    23,226,057,609      cpu-cycles                                                              ( +-  0.03% )
+        47,250,485      cache-misses                                                            ( +-  0.76% )
+           131,213      page-faults                                                           
+                 0      cpu-migrations                                                        
+        15,359,859      dTLB-load-misses                                                        ( +-  0.04% )
+                32      context-switches                                                        ( +- 17.19% )
+
+           10.2903 +- 0.0141 seconds time elapsed  ( +-  0.14% )
+
+# started on Mon Mar 17 17:58:52 2025
+
+
+ Performance counter stats for './build/independent 2 3' (2 runs):
+
+    21,780,470,423      cpu-cycles                                                              ( +-  0.20% )
+        33,577,951      cache-misses                                                            ( +-  0.78% )
+           131,218      page-faults                                                           
+                 0      cpu-migrations                                                        
+        15,380,596      dTLB-load-misses                                                        ( +-  0.03% )
+                34      context-switches                                                        ( +- 17.65% )
+
+            9.9265 +- 0.0306 seconds time elapsed  ( +-  0.31% )
+
+# started on Mon Mar 17 17:59:12 2025
+
+
+ Performance counter stats for './build/independent 2 4' (2 runs):
+
+    21,557,880,365      cpu-cycles                                                              ( +-  0.23% )
+        31,101,212      cache-misses                                                            ( +-  0.11% )
+           131,227      page-faults                                                           
+                 0      cpu-migrations                                                        
+        15,367,008      dTLB-load-misses                                                        ( +-  0.02% )
+                33      context-switches                                                        ( +- 30.30% )
+
+            9.9044 +- 0.0266 seconds time elapsed  ( +-  0.27% )
+
+# started on Mon Mar 17 17:59:32 2025
+
+
+ Performance counter stats for './build/independent 2 5' (2 runs):
+
+    21,318,197,612      cpu-cycles                                                              ( +-  0.08% )
+        29,717,796      cache-misses                                                            ( +-  0.36% )
+           131,241      page-faults                                                           
+                 0      cpu-migrations                                                        
+        15,380,660      dTLB-load-misses                                                        ( +-  0.02% )
+                26      context-switches                                                        ( +-  9.62% )
+
+           9.80696 +- 0.00745 seconds time elapsed  ( +-  0.08% )
+
+# started on Mon Mar 17 17:59:52 2025
+
+
+ Performance counter stats for './build/independent 2 6' (2 runs):
+
+    21,302,737,794      cpu-cycles                                                              ( +-  0.09% )
+        28,380,958      cache-misses                                                            ( +-  0.01% )
+           131,273      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,453,499      dTLB-load-misses                                                        ( +-  0.26% )
+                29      context-switches                                                        ( +-  6.90% )
+
+            9.8033 +- 0.0103 seconds time elapsed  ( +-  0.11% )
+
+# started on Mon Mar 17 18:00:11 2025
+
+
+ Performance counter stats for './build/independent 2 7' (2 runs):
+
+    21,283,238,924      cpu-cycles                                                              ( +-  0.22% )
+        28,285,492      cache-misses                                                            ( +-  0.06% )
+           131,338      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,458,025      dTLB-load-misses                                                        ( +-  0.01% )
+                38      context-switches                                                        ( +-  9.21% )
+
+            9.8036 +- 0.0238 seconds time elapsed  ( +-  0.24% )
+
+# started on Mon Mar 17 18:00:31 2025
+
+
+ Performance counter stats for './build/independent 2 8' (2 runs):
+
+    21,218,755,880      cpu-cycles                                                              ( +-  0.02% )
+        28,386,856      cache-misses                                                            ( +-  0.14% )
+           131,468      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,496,830      dTLB-load-misses                                                        ( +-  0.14% )
+                37      context-switches                                                        ( +-  9.46% )
+
+          9.780321 +- 0.000475 seconds time elapsed  ( +-  0.00% )
+
+# started on Mon Mar 17 18:00:51 2025
+
+
+ Performance counter stats for './build/independent 2 9' (2 runs):
+
+    21,216,360,533      cpu-cycles                                                              ( +-  0.06% )
+        28,626,433      cache-misses                                                            ( +-  0.16% )
+           131,728      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,552,144      dTLB-load-misses                                                        ( +-  0.22% )
+                34      context-switches                                                        ( +-  1.47% )
+
+           9.78005 +- 0.00486 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 17 18:01:10 2025
+
+
+ Performance counter stats for './build/independent 2 10' (2 runs):
+
+    21,268,765,207      cpu-cycles                                                              ( +-  0.17% )
+        29,130,788      cache-misses                                                            ( +-  0.07% )
+           132,251      page-faults                                                           
+                 0      cpu-migrations                                                        
+        15,454,675      dTLB-load-misses                                                        ( +-  0.03% )
+                38      context-switches                                                        ( +-  3.95% )
+
+            9.8061 +- 0.0130 seconds time elapsed  ( +-  0.13% )
+
+# started on Mon Mar 17 18:01:30 2025
+
+
+ Performance counter stats for './build/independent 2 11' (2 runs):
+
+    21,379,647,763      cpu-cycles                                                              ( +-  0.08% )
+        30,409,644      cache-misses                                                            ( +-  0.05% )
+           133,301      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                          ( +- 50.00% )
+        15,557,898      dTLB-load-misses                                                        ( +-  0.01% )
+                46      context-switches                                                        ( +- 16.30% )
+
+           9.84379 +- 0.00762 seconds time elapsed  ( +-  0.08% )
+
+# started on Mon Mar 17 18:01:50 2025
+
+
+ Performance counter stats for './build/independent 2 12' (2 runs):
+
+    21,442,994,438      cpu-cycles                                                              ( +-  0.00% )
+        31,720,586      cache-misses                                                            ( +-  0.03% )
+           139,450      page-faults                                                             ( +-  0.02% )
+                 0      cpu-migrations                                                        
+        15,535,932      dTLB-load-misses                                                        ( +-  0.03% )
+                27      context-switches                                                        ( +-  9.26% )
+
+          9.856223 +- 0.000229 seconds time elapsed  ( +-  0.00% )
+
+# started on Mon Mar 17 18:02:09 2025
+
+
+ Performance counter stats for './build/independent 2 13' (2 runs):
+
+    21,658,099,690      cpu-cycles                                                              ( +-  0.11% )
+        32,735,784      cache-misses                                                            ( +-  0.02% )
+           147,684      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,614,540      dTLB-load-misses                                                        ( +-  0.01% )
+                32      context-switches                                                        ( +-  1.56% )
+
+           9.92638 +- 0.00753 seconds time elapsed  ( +-  0.08% )
+
+# started on Mon Mar 17 18:02:29 2025
+
+
+ Performance counter stats for './build/independent 2 14' (2 runs):
+
+    22,105,953,560      cpu-cycles                                                              ( +-  0.59% )
+        33,602,455      cache-misses                                                            ( +-  0.63% )
+           164,145      page-faults                                                             ( +-  0.02% )
+                 0      cpu-migrations                                                        
+        15,654,513      dTLB-load-misses                                                        ( +-  0.06% )
+                29      context-switches                                                        ( +- 22.41% )
+
+           10.0997 +- 0.0413 seconds time elapsed  ( +-  0.41% )
+
+# started on Mon Mar 17 18:02:50 2025
+
+
+ Performance counter stats for './build/independent 2 15' (2 runs):
+
+    22,544,762,720      cpu-cycles                                                              ( +-  0.14% )
+        34,285,024      cache-misses                                                            ( +-  0.07% )
+           197,175      page-faults                                                             ( +-  0.01% )
+                 0      cpu-migrations                                                        
+        15,907,690      dTLB-load-misses                                                        ( +-  0.03% )
+                28      context-switches                                                        ( +-  7.14% )
+
+           10.3025 +- 0.0176 seconds time elapsed  ( +-  0.17% )
+
+# started on Mon Mar 17 18:03:10 2025
+
+
+ Performance counter stats for './build/independent 2 16' (2 runs):
+
+    23,501,040,860      cpu-cycles                                                              ( +-  0.01% )
+        36,931,094      cache-misses                                                            ( +-  0.03% )
+           261,647      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        17,313,419      dTLB-load-misses                                                        ( +-  0.04% )
+                35      context-switches                                                        ( +- 21.43% )
+
+         10.739196 +- 0.000492 seconds time elapsed  ( +-  0.00% )
+
+# started on Mon Mar 17 18:03:32 2025
+
+
+ Performance counter stats for './build/independent 2 17' (2 runs):
+
+    23,982,879,839      cpu-cycles                                                              ( +-  0.06% )
+        40,551,021      cache-misses                                                            ( +-  0.10% )
+           264,844      page-faults                                                           
+                 0      cpu-migrations                                                        
+        20,629,649      dTLB-load-misses                                                        ( +-  0.06% )
+                36      context-switches                                                        ( +-  2.78% )
+
+          11.03717 +- 0.00388 seconds time elapsed  ( +-  0.04% )
+
+# started on Mon Mar 17 18:03:54 2025
+
+
+ Performance counter stats for './build/independent 2 18' (2 runs):
+
+    25,244,783,047      cpu-cycles                                                              ( +-  0.23% )
+        48,166,086      cache-misses                                                            ( +-  0.06% )
+           333,194      page-faults                                                             ( +-  0.03% )
+                 0      cpu-migrations                                                        
+        25,521,093      dTLB-load-misses                                                        ( +-  0.06% )
+                40      context-switches                                                        ( +-  7.50% )
+
+           11.3789 +- 0.0267 seconds time elapsed  ( +-  0.23% )
+
+# started on Mon Mar 17 18:04:17 2025
+
+
+ Performance counter stats for './build/independent 4 1' (2 runs):
+
+    23,932,463,568      cpu-cycles                                                              ( +-  0.44% )
+        49,371,887      cache-misses                                                            ( +-  1.34% )
+           131,219      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,334,586      dTLB-load-misses                                                        ( +-  0.04% )
+                35      context-switches                                                        ( +-  1.43% )
+
+            9.7475 +- 0.0231 seconds time elapsed  ( +-  0.24% )
+
+# started on Mon Mar 17 18:04:36 2025
+
+
+ Performance counter stats for './build/independent 4 2' (2 runs):
+
+    21,757,740,283      cpu-cycles                                                              ( +-  0.02% )
+        33,577,072      cache-misses                                                            ( +-  0.27% )
+           131,223      page-faults                                                           
+                 0      cpu-migrations                                                        
+        15,388,616      dTLB-load-misses                                                        ( +-  0.01% )
+                44      context-switches                                                      
+
+           9.51144 +- 0.00552 seconds time elapsed  ( +-  0.06% )
+
+# started on Mon Mar 17 18:04:55 2025
+
+
+ Performance counter stats for './build/independent 4 3' (2 runs):
+
+    21,554,325,558      cpu-cycles                                                              ( +-  0.22% )
+        33,215,160      cache-misses                                                            ( +-  0.74% )
+           131,230      page-faults                                                           
+                 1      cpu-migrations                                                        
+        15,436,330      dTLB-load-misses                                                        ( +-  0.18% )
+                33      context-switches                                                        ( +-  4.55% )
+
+            9.4185 +- 0.0197 seconds time elapsed  ( +-  0.21% )
+
+# started on Mon Mar 17 18:05:14 2025
+
+
+ Performance counter stats for './build/independent 4 4' (2 runs):
+
+    21,778,932,507      cpu-cycles                                                              ( +-  0.05% )
+        39,931,354      cache-misses                                                            ( +-  0.58% )
+           131,244      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,401,923      dTLB-load-misses                                                        ( +-  0.01% )
+                34      context-switches                                                        ( +- 11.76% )
+
+           9.41629 +- 0.00559 seconds time elapsed  ( +-  0.06% )
+
+# started on Mon Mar 17 18:05:33 2025
+
+
+ Performance counter stats for './build/independent 4 5' (2 runs):
+
+    21,546,712,993      cpu-cycles                                                              ( +-  0.01% )
+        36,671,873      cache-misses                                                            ( +-  1.36% )
+           131,281      page-faults                                                             ( +-  0.01% )
+                 0      cpu-migrations                                                        
+        15,440,777      dTLB-load-misses                                                        ( +-  0.09% )
+                36      context-switches                                                        ( +-  9.72% )
+
+          9.376311 +- 0.000377 seconds time elapsed  ( +-  0.00% )
+
+# started on Mon Mar 17 18:05:52 2025
+
+
+ Performance counter stats for './build/independent 4 6' (2 runs):
+
+    21,276,429,052      cpu-cycles                                                              ( +-  0.06% )
+        28,327,321      cache-misses                                                            ( +-  0.04% )
+           131,340      page-faults                                                             ( +-  0.01% )
+                 0      cpu-migrations                                                        
+        15,632,834      dTLB-load-misses                                                        ( +-  1.16% )
+                38      context-switches                                                        ( +- 15.79% )
+
+           9.35114 +- 0.00654 seconds time elapsed  ( +-  0.07% )
+
+# started on Mon Mar 17 18:06:11 2025
+
+
+ Performance counter stats for './build/independent 4 7' (2 runs):
+
+    21,217,648,248      cpu-cycles                                                              ( +-  0.02% )
+        28,357,455      cache-misses                                                            ( +-  0.13% )
+           131,475      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,478,779      dTLB-load-misses                                                        ( +-  0.05% )
+                36      context-switches                                                        ( +-  9.72% )
+
+           9.32588 +- 0.00582 seconds time elapsed  ( +-  0.06% )
+
+# started on Mon Mar 17 18:06:29 2025
+
+
+ Performance counter stats for './build/independent 4 8' (2 runs):
+
+    21,233,906,288      cpu-cycles                                                              ( +-  0.01% )
+        28,666,129      cache-misses                                                            ( +-  0.18% )
+           131,728      page-faults                                                             ( +-  0.01% )
+                 0      cpu-migrations                                                        
+        15,575,383      dTLB-load-misses                                                        ( +-  0.29% )
+                38      context-switches                                                        ( +-  3.95% )
+
+           9.34620 +- 0.00187 seconds time elapsed  ( +-  0.02% )
+
+# started on Mon Mar 17 18:06:48 2025
+
+
+ Performance counter stats for './build/independent 4 9' (2 runs):
+
+    21,347,108,837      cpu-cycles                                                              ( +-  0.16% )
+        29,328,689      cache-misses                                                            ( +-  0.02% )
+           132,259      page-faults                                                             ( +-  0.01% )
+                 0      cpu-migrations                                                        
+        15,498,796      dTLB-load-misses                                                        ( +-  0.08% )
+                52      context-switches                                                        ( +- 10.58% )
+
+            9.4039 +- 0.0172 seconds time elapsed  ( +-  0.18% )
+
+# started on Mon Mar 17 18:07:07 2025
+
+
+ Performance counter stats for './build/independent 4 10' (2 runs):
+
+    21,374,425,617      cpu-cycles                                                              ( +-  0.04% )
+        30,227,232      cache-misses                                                            ( +-  0.05% )
+           133,293      page-faults                                                             ( +-  0.01% )
+                 0      cpu-migrations                                                        
+        15,509,121      dTLB-load-misses                                                        ( +-  0.02% )
+                57      context-switches                                                        ( +-  2.63% )
+
+           9.41203 +- 0.00482 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 17 18:07:26 2025
+
+
+ Performance counter stats for './build/independent 4 11' (2 runs):
+
+    21,548,261,887      cpu-cycles                                                              ( +-  0.13% )
+        31,664,864      cache-misses                                                            ( +-  0.23% )
+           135,408      page-faults                                                             ( +-  0.01% )
+                 2      cpu-migrations                                                          ( +-100.00% )
+        15,537,216      dTLB-load-misses                                                        ( +-  0.01% )
+                58      context-switches                                                        ( +- 11.21% )
+
+           9.47918 +- 0.00657 seconds time elapsed  ( +-  0.07% )
+
+# started on Mon Mar 17 18:07:45 2025
+
+
+ Performance counter stats for './build/independent 4 12' (2 runs):
+
+    21,666,779,749      cpu-cycles                                                              ( +-  0.23% )
+        32,375,034      cache-misses                                                            ( +-  0.07% )
+           147,671      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,580,372      dTLB-load-misses                                                        ( +-  0.13% )
+                33      context-switches                                                        ( +-  4.55% )
+
+            9.4848 +- 0.0176 seconds time elapsed  ( +-  0.19% )
+
+# started on Mon Mar 17 18:08:04 2025
+
+
+ Performance counter stats for './build/independent 4 13' (2 runs):
+
+    21,907,595,965      cpu-cycles                                                              ( +-  0.09% )
+        33,040,899      cache-misses                                                            ( +-  0.08% )
+           164,185      page-faults                                                             ( +-  0.01% )
+                 1      cpu-migrations                                                          ( +-100.00% )
+        15,693,224      dTLB-load-misses                                                        ( +-  0.20% )
+                41      context-switches                                                        ( +- 17.07% )
+
+           9.56978 +- 0.00232 seconds time elapsed  ( +-  0.02% )
+
+# started on Mon Mar 17 18:08:23 2025
+
+
+ Performance counter stats for './build/independent 4 14' (2 runs):
+
+    22,453,588,918      cpu-cycles                                                              ( +-  0.08% )
+        34,196,784      cache-misses                                                            ( +-  0.04% )
+           197,148      page-faults                                                             ( +-  0.01% )
+                 0      cpu-migrations                                                        
+        15,734,705      dTLB-load-misses                                                        ( +-  0.07% )
+                41      context-switches                                                        ( +- 17.07% )
+
+           9.75017 +- 0.00217 seconds time elapsed  ( +-  0.02% )
+
+# started on Mon Mar 17 18:08:43 2025
+
+
+ Performance counter stats for './build/independent 4 15' (2 runs):
+
+    23,484,491,760      cpu-cycles                                                              ( +-  0.02% )
+        36,870,332      cache-misses                                                            ( +-  0.10% )
+           263,071      page-faults                                                             ( +-  0.01% )
+                 1      cpu-migrations                                                        
+        16,033,538      dTLB-load-misses                                                        ( +-  0.08% )
+                38      context-switches                                                        ( +-  1.32% )
+
+          10.13719 +- 0.00195 seconds time elapsed  ( +-  0.02% )
+
+# started on Mon Mar 17 18:09:03 2025
+
+
+ Performance counter stats for './build/independent 4 16' (2 runs):
+
+    25,236,367,060      cpu-cycles                                                              ( +-  0.19% )
+        42,736,454      cache-misses                                                            ( +-  0.06% )
+           394,910      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                          ( +-100.00% )
+        17,602,706      dTLB-load-misses                                                        ( +-  0.30% )
+                38      context-switches                                                        ( +- 18.42% )
+
+           10.8582 +- 0.0136 seconds time elapsed  ( +-  0.13% )
+
+# started on Mon Mar 17 18:09:25 2025
+
+
+ Performance counter stats for './build/independent 4 17' (2 runs):
+
+    26,629,844,553      cpu-cycles                                                              ( +-  0.04% )
+        50,040,923      cache-misses                                                            ( +-  0.70% )
+           464,017      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        21,069,642      dTLB-load-misses                                                        ( +-  0.15% )
+                64      context-switches                                                        ( +- 42.97% )
+
+          11.53380 +- 0.00947 seconds time elapsed  ( +-  0.08% )
+
+# started on Mon Mar 17 18:09:48 2025
+
+
+ Performance counter stats for './build/independent 4 18' (2 runs):
+
+    28,117,949,735      cpu-cycles                                                              ( +-  0.18% )
+        61,711,470      cache-misses                                                            ( +-  0.52% )
+           469,138      page-faults                                                           
+                 0      cpu-migrations                                                        
+        25,880,149      dTLB-load-misses                                                        ( +-  0.07% )
+                48      context-switches                                                        ( +-  9.38% )
+
+           11.9835 +- 0.0234 seconds time elapsed  ( +-  0.20% )
+
+# started on Mon Mar 17 18:10:12 2025
+
+
+ Performance counter stats for './build/independent 8 1' (2 runs):
+
+    21,117,818,185      cpu-cycles                                                              ( +-  0.02% )
+        28,937,057      cache-misses                                                            ( +-  0.09% )
+           131,229      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,392,151      dTLB-load-misses                                                        ( +-  0.18% )
+                36      context-switches                                                        ( +- 13.89% )
+
+            9.0986 +- 0.0147 seconds time elapsed  ( +-  0.16% )
+
+# started on Mon Mar 17 18:10:30 2025
+
+
+ Performance counter stats for './build/independent 8 2' (2 runs):
+
+    22,730,732,567      cpu-cycles                                                              ( +-  0.22% )
+        44,005,863      cache-misses                                                            ( +-  1.25% )
+           131,237      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,459,147      dTLB-load-misses                                                        ( +-  0.14% )
+                35      context-switches                                                        ( +-  8.57% )
+
+            9.2814 +- 0.0288 seconds time elapsed  ( +-  0.31% )
+
+# started on Mon Mar 17 18:10:49 2025
+
+
+ Performance counter stats for './build/independent 8 3' (2 runs):
+
+    22,152,734,028      cpu-cycles                                                              ( +-  0.06% )
+        41,128,652      cache-misses                                                            ( +-  0.39% )
+           131,251      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                        
+        15,400,812      dTLB-load-misses                                                        ( +-  0.01% )
+                35      context-switches                                                        ( +- 18.57% )
+
+            9.2224 +- 0.0157 seconds time elapsed  ( +-  0.17% )
+
+# started on Mon Mar 17 18:11:07 2025
+
+
+ Performance counter stats for './build/independent 8 4' (2 runs):
+
+    21,848,203,892      cpu-cycles                                                              ( +-  0.13% )
+        40,717,330      cache-misses                                                            ( +-  3.15% )
+           131,286      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,440,718      dTLB-load-misses                                                        ( +-  0.02% )
+                37      context-switches                                                        ( +- 22.97% )
+
+            9.1919 +- 0.0120 seconds time elapsed  ( +-  0.13% )
+
+# started on Mon Mar 17 18:11:26 2025
+
+
+ Performance counter stats for './build/independent 8 5' (2 runs):
+
+    21,783,612,370      cpu-cycles                                                              ( +-  0.32% )
+        42,105,636      cache-misses                                                            ( +-  4.61% )
+           131,355      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                          ( +- 50.00% )
+        15,677,937      dTLB-load-misses                                                        ( +-  0.87% )
+                51      context-switches                                                        ( +- 11.76% )
+
+            9.1766 +- 0.0138 seconds time elapsed  ( +-  0.15% )
+
+# started on Mon Mar 17 18:11:44 2025
+
+
+ Performance counter stats for './build/independent 8 6' (2 runs):
+
+    21,301,638,501      cpu-cycles                                                              ( +-  0.05% )
+        28,801,122      cache-misses                                                            ( +-  0.35% )
+           131,468      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                          ( +-100.00% )
+        15,494,322      dTLB-load-misses                                                        ( +-  0.01% )
+                37      context-switches                                                      
+
+            9.1469 +- 0.0143 seconds time elapsed  ( +-  0.16% )
+
+# started on Mon Mar 17 18:12:02 2025
+
+
+ Performance counter stats for './build/independent 8 7' (2 runs):
+
+    21,281,436,391      cpu-cycles                                                              ( +-  0.18% )
+        28,800,273      cache-misses                                                            ( +-  0.06% )
+           131,750      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,557,534      dTLB-load-misses                                                        ( +-  0.14% )
+                47      context-switches                                                        ( +-  3.19% )
+
+            9.1547 +- 0.0101 seconds time elapsed  ( +-  0.11% )
+
+# started on Mon Mar 17 18:12:21 2025
+
+
+ Performance counter stats for './build/independent 8 8' (2 runs):
+
+    21,283,752,519      cpu-cycles                                                              ( +-  0.04% )
+        29,434,162      cache-misses                                                            ( +-  0.04% )
+           132,279      page-faults                                                             ( +-  0.01% )
+                 1      cpu-migrations                                                          ( +-100.00% )
+        15,560,465      dTLB-load-misses                                                        ( +-  0.01% )
+                47      context-switches                                                        ( +- 10.64% )
+
+            9.1436 +- 0.0122 seconds time elapsed  ( +-  0.13% )
+
+# started on Mon Mar 17 18:12:39 2025
+
+
+ Performance counter stats for './build/independent 8 9' (2 runs):
+
+    21,416,545,181      cpu-cycles                                                              ( +-  0.03% )
+        30,382,474      cache-misses                                                            ( +-  0.03% )
+           133,262      page-faults                                                             ( +-  0.01% )
+                 0      cpu-migrations                                                        
+        15,567,612      dTLB-load-misses                                                        ( +-  0.04% )
+                53      context-switches                                                        ( +-  5.66% )
+
+           9.20403 +- 0.00327 seconds time elapsed  ( +-  0.04% )
+
+# started on Mon Mar 17 18:12:58 2025
+
+
+ Performance counter stats for './build/independent 8 10' (2 runs):
+
+    21,503,704,120      cpu-cycles                                                              ( +-  0.01% )
+        31,338,498      cache-misses                                                            ( +-  0.04% )
+           135,391      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                        
+        15,556,188      dTLB-load-misses                                                        ( +-  0.02% )
+                72      context-switches                                                        ( +-  1.39% )
+
+           9.24663 +- 0.00545 seconds time elapsed  ( +-  0.06% )
+
+# started on Mon Mar 17 18:13:16 2025
+
+
+ Performance counter stats for './build/independent 8 11' (2 runs):
+
+    21,849,280,619      cpu-cycles                                                              ( +-  0.06% )
+        32,823,397      cache-misses                                                            ( +-  0.04% )
+           139,591      page-faults                                                             ( +-  0.02% )
+                 2      cpu-migrations                                                          ( +- 50.00% )
+        15,841,600      dTLB-load-misses                                                        ( +-  1.22% )
+                75      context-switches                                                        ( +-  6.67% )
+
+            9.3862 +- 0.0148 seconds time elapsed  ( +-  0.16% )
+
+# started on Mon Mar 17 18:13:35 2025
+
+
+ Performance counter stats for './build/independent 8 12' (2 runs):
+
+    21,816,114,437      cpu-cycles                                                              ( +-  0.17% )
+        33,005,208      cache-misses                                                            ( +-  0.07% )
+           164,189      page-faults                                                             ( +-  0.01% )
+                 0      cpu-migrations                                                        
+        15,665,978      dTLB-load-misses                                                        ( +-  0.18% )
+                39      context-switches                                                        ( +- 15.38% )
+
+            9.3193 +- 0.0110 seconds time elapsed  ( +-  0.12% )
+
+# started on Mon Mar 17 18:13:54 2025
+
+
+ Performance counter stats for './build/independent 8 13' (2 runs):
+
+    23,105,986,977      cpu-cycles                                                              ( +-  3.32% )
+        34,247,839      cache-misses                                                            ( +-  1.11% )
+           197,138      page-faults                                                             ( +-  0.02% )
+                 1      cpu-migrations                                                          ( +-100.00% )
+        15,744,113      dTLB-load-misses                                                        ( +-  0.17% )
+                35      context-switches                                                        ( +- 27.14% )
+
+             9.886 +- 0.382 seconds time elapsed  ( +-  3.86% )
+
+# started on Mon Mar 17 18:14:13 2025
+
+
+ Performance counter stats for './build/independent 8 14' (2 runs):
+
+    23,511,904,667      cpu-cycles                                                              ( +-  0.18% )
+        37,038,337      cache-misses                                                            ( +-  0.03% )
+           263,042      page-faults                                                             ( +-  0.01% )
+                 0      cpu-migrations                                                        
+        15,937,571      dTLB-load-misses                                                        ( +-  0.36% )
+                40      context-switches                                                        ( +-  7.50% )
+
+            9.9036 +- 0.0239 seconds time elapsed  ( +-  0.24% )
+
+# started on Mon Mar 17 18:14:33 2025
+
+
+ Performance counter stats for './build/independent 8 15' (2 runs):
+
+    25,353,628,604      cpu-cycles                                                              ( +-  0.12% )
+        43,405,358      cache-misses                                                            ( +-  0.31% )
+           394,879      page-faults                                                             ( +-  0.01% )
+                 0      cpu-migrations                                                        
+        16,539,527      dTLB-load-misses                                                        ( +-  1.20% )
+                34      context-switches                                                        ( +- 29.41% )
+
+          10.55655 +- 0.00539 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 17 18:14:54 2025
+
+
+ Performance counter stats for './build/independent 8 16' (2 runs):
+
+    28,694,145,312      cpu-cycles                                                              ( +-  0.04% )
+        54,352,814      cache-misses                                                            ( +-  0.03% )
+           658,587      page-faults                                                             ( +-  0.01% )
+                 1      cpu-migrations                                                          ( +-150.00% )
+        18,169,104      dTLB-load-misses                                                        ( +-  0.02% )
+                51      context-switches                                                        ( +- 20.59% )
+
+           11.8845 +- 0.0125 seconds time elapsed  ( +-  0.11% )
+
+# started on Mon Mar 17 18:15:18 2025
+
+
+ Performance counter stats for './build/independent 8 17' (2 runs):
+
+    31,791,539,513      cpu-cycles                                                              ( +-  0.07% )
+        66,537,329      cache-misses                                                            ( +-  0.03% )
+           862,366      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        21,984,644      dTLB-load-misses                                                        ( +-  0.08% )
+                89      context-switches                                                        ( +-  7.30% )
+
+           13.3369 +- 0.0162 seconds time elapsed  ( +-  0.12% )
+
+# started on Mon Mar 17 18:15:45 2025
+
+
+ Performance counter stats for './build/independent 8 18' (2 runs):
+
+    33,443,827,330      cpu-cycles                                                              ( +-  0.02% )
+        77,075,681      cache-misses                                                            ( +-  0.03% )
+           872,605      page-faults                                                           
+                 0      cpu-migrations                                                        
+        27,211,825      dTLB-load-misses                                                        ( +-  2.00% )
+                69      context-switches                                                        ( +-  0.72% )
+
+          13.91405 +- 0.00934 seconds time elapsed  ( +-  0.07% )
+
+# started on Mon Mar 17 18:16:13 2025
+
+
+ Performance counter stats for './build/independent 16 1' (2 runs):
+
+    21,229,804,172      cpu-cycles                                                              ( +-  0.32% )
+        29,315,325      cache-misses                                                            ( +-  0.26% )
+           131,255      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,369,203      dTLB-load-misses                                                        ( +-  0.03% )
+                39      context-switches                                                        ( +- 11.54% )
+
+            9.0161 +- 0.0368 seconds time elapsed  ( +-  0.41% )
+
+# started on Mon Mar 17 18:16:31 2025
+
+
+ Performance counter stats for './build/independent 16 2' (2 runs):
+
+    23,731,732,360      cpu-cycles                                                              ( +-  0.21% )
+        51,231,557      cache-misses                                                            ( +-  0.59% )
+           131,271      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,399,708      dTLB-load-misses                                                        ( +-  0.07% )
+                32      context-switches                                                        ( +- 21.88% )
+
+            9.1287 +- 0.0170 seconds time elapsed  ( +-  0.19% )
+
+# started on Mon Mar 17 18:16:49 2025
+
+
+ Performance counter stats for './build/independent 16 3' (2 runs):
+
+    23,385,865,231      cpu-cycles                                                              ( +-  3.20% )
+        38,796,496      cache-misses                                                            ( +- 19.44% )
+           131,308      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                          ( +-100.00% )
+        15,606,188      dTLB-load-misses                                                        ( +-  0.32% )
+                51      context-switches                                                        ( +- 17.65% )
+
+             9.458 +- 0.355 seconds time elapsed  ( +-  3.75% )
+
+# started on Mon Mar 17 18:17:08 2025
+
+
+ Performance counter stats for './build/independent 16 4' (2 runs):
+
+    21,975,677,799      cpu-cycles                                                              ( +-  0.27% )
+        39,087,963      cache-misses                                                            ( +-  1.22% )
+           131,376      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,443,237      dTLB-load-misses                                                        ( +-  0.05% )
+                39      context-switches                                                        ( +-  3.85% )
+
+            9.0491 +- 0.0131 seconds time elapsed  ( +-  0.14% )
+
+# started on Mon Mar 17 18:17:26 2025
+
+
+ Performance counter stats for './build/independent 16 5' (2 runs):
+
+    21,851,078,696      cpu-cycles                                                              ( +-  0.15% )
+        40,139,834      cache-misses                                                            ( +-  2.55% )
+           131,495      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                          ( +- 50.00% )
+        15,487,105      dTLB-load-misses                                                        ( +-  0.05% )
+                32      context-switches                                                        ( +-  4.69% )
+
+           9.03933 +- 0.00132 seconds time elapsed  ( +-  0.01% )
+
+# started on Mon Mar 17 18:17:44 2025
+
+
+ Performance counter stats for './build/independent 16 6' (2 runs):
+
+    21,334,334,190      cpu-cycles                                                              ( +-  0.04% )
+        29,102,083      cache-misses                                                            ( +-  0.09% )
+           131,759      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,537,004      dTLB-load-misses                                                        ( +-  0.04% )
+                46      context-switches                                                        ( +- 17.39% )
+
+           9.01598 +- 0.00195 seconds time elapsed  ( +-  0.02% )
+
+# started on Mon Mar 17 18:18:03 2025
+
+
+ Performance counter stats for './build/independent 16 7' (2 runs):
+
+    21,398,696,625      cpu-cycles                                                              ( +-  0.09% )
+        29,654,969      cache-misses                                                            ( +-  0.02% )
+           132,292      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                          ( +-100.00% )
+        15,444,350      dTLB-load-misses                                                        ( +-  0.13% )
+                52      context-switches                                                        ( +-  4.81% )
+
+           9.05917 +- 0.00585 seconds time elapsed  ( +-  0.06% )
+
+# started on Mon Mar 17 18:18:21 2025
+
+
+ Performance counter stats for './build/independent 16 8' (2 runs):
+
+    21,474,284,872      cpu-cycles                                                              ( +-  0.23% )
+        30,696,596      cache-misses                                                            ( +-  0.08% )
+           133,318      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,711,101      dTLB-load-misses                                                        ( +-  0.18% )
+                60      context-switches                                                        ( +-  6.67% )
+
+            9.1025 +- 0.0272 seconds time elapsed  ( +-  0.30% )
+
+# started on Mon Mar 17 18:18:39 2025
+
+
+ Performance counter stats for './build/independent 16 9' (2 runs):
+
+    21,607,828,878      cpu-cycles                                                              ( +-  0.40% )
+        31,477,834      cache-misses                                                            ( +-  0.04% )
+           135,416      page-faults                                                             ( +-  0.00% )
+                 0      cpu-migrations                                                        
+        15,660,355      dTLB-load-misses                                                        ( +-  0.02% )
+                67      context-switches                                                        ( +-  1.49% )
+
+            9.1642 +- 0.0408 seconds time elapsed  ( +-  0.45% )
+
+# started on Mon Mar 17 18:18:57 2025
+
+
+ Performance counter stats for './build/independent 16 10' (2 runs):
+
+    21,803,230,957      cpu-cycles                                                              ( +-  0.02% )
+        32,363,795      cache-misses                                                            ( +-  0.06% )
+           139,651      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                          ( +- 50.00% )
+        15,807,592      dTLB-load-misses                                                        ( +-  0.56% )
+                81      context-switches                                                        ( +-  3.70% )
+
+           9.23860 +- 0.00103 seconds time elapsed  ( +-  0.01% )
+
+# started on Mon Mar 17 18:19:16 2025
+
+
+ Performance counter stats for './build/independent 16 11' (2 runs):
+
+    22,715,935,257      cpu-cycles                                                              ( +-  0.24% )
+        33,696,704      cache-misses                                                            ( +-  0.03% )
+           148,001      page-faults                                                             ( +-  0.01% )
+                 2      cpu-migrations                                                          ( +- 50.00% )
+        15,732,779      dTLB-load-misses                                                        ( +-  0.14% )
+               106      context-switches                                                        ( +-  6.13% )
+
+            9.4854 +- 0.0137 seconds time elapsed  ( +-  0.14% )
+
+# started on Mon Mar 17 18:19:35 2025
+
+
+ Performance counter stats for './build/independent 16 12' (2 runs):
+
+    22,371,319,917      cpu-cycles                                                              ( +-  0.10% )
+        33,577,451      cache-misses                                                            ( +-  0.17% )
+           197,151      page-faults                                                             ( +-  0.01% )
+                 1      cpu-migrations                                                          ( +-100.00% )
+        15,679,816      dTLB-load-misses                                                        ( +-  0.10% )
+                44      context-switches                                                        ( +- 28.41% )
+
+            9.4206 +- 0.0112 seconds time elapsed  ( +-  0.12% )
+
+# started on Mon Mar 17 18:19:54 2025
+
+
+ Performance counter stats for './build/independent 16 13' (2 runs):
+
+    23,326,875,166      cpu-cycles                                                              ( +-  0.06% )
+        35,774,487      cache-misses                                                            ( +-  0.20% )
+           263,087      page-faults                                                             ( +-  0.02% )
+                 0      cpu-migrations                                                        
+        15,980,795      dTLB-load-misses                                                        ( +-  0.39% )
+                39      context-switches                                                        ( +-  1.28% )
+
+           9.74651 +- 0.00236 seconds time elapsed  ( +-  0.02% )
+
+# started on Mon Mar 17 18:20:13 2025
+
+
+ Performance counter stats for './build/independent 16 14' (2 runs):
+
+    25,548,263,945      cpu-cycles                                                              ( +-  0.06% )
+        43,517,719      cache-misses                                                            ( +-  0.07% )
+           394,986      page-faults                                                             ( +-  0.02% )
+                 0      cpu-migrations                                                        
+        16,170,663      dTLB-load-misses                                                        ( +-  0.05% )
+                44      context-switches                                                        ( +- 10.23% )
+
+          10.40379 +- 0.00212 seconds time elapsed  ( +-  0.02% )
+
+# started on Mon Mar 17 18:20:34 2025
+
+
+ Performance counter stats for './build/independent 16 15' (2 runs):
+
+    29,226,288,854      cpu-cycles                                                              ( +-  0.07% )
+        54,348,610      cache-misses                                                            ( +-  0.50% )
+           658,604      page-faults                                                             ( +-  0.01% )
+                 0      cpu-migrations                                                        
+        16,950,598      dTLB-load-misses                                                        ( +-  0.30% )
+                36      context-switches                                                      
+
+         11.733805 +- 0.000375 seconds time elapsed  ( +-  0.00% )
+
+# started on Mon Mar 17 18:20:58 2025
+
+
+ Performance counter stats for './build/independent 16 16' (2 runs):
+
+    35,661,226,370      cpu-cycles                                                              ( +-  0.04% )
+        70,560,605      cache-misses                                                            ( +-  0.11% )
+         1,185,988      page-faults                                                             ( +-  0.01% )
+                 0      cpu-migrations                                                        
+        19,417,438      dTLB-load-misses                                                        ( +-  0.04% )
+                65      context-switches                                                        ( +- 18.46% )
+
+          14.33550 +- 0.00609 seconds time elapsed  ( +-  0.04% )
+
+# started on Mon Mar 17 18:21:26 2025
+
+
+ Performance counter stats for './build/independent 16 17' (2 runs):
+
+    41,479,611,383      cpu-cycles                                                              ( +-  0.00% )
+        83,965,162      cache-misses                                                            ( +-  0.02% )
+         1,659,062      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                        
+        24,148,332      dTLB-load-misses                                                        ( +-  1.96% )
+               156      context-switches                                                        ( +- 16.03% )
+
+          17.09941 +- 0.00380 seconds time elapsed  ( +-  0.02% )
+
+# started on Mon Mar 17 18:22:01 2025
+
+
+ Performance counter stats for './build/independent 16 18' (2 runs):
+
+    44,202,095,939      cpu-cycles                                                              ( +-  0.73% )
+        93,968,135      cache-misses                                                            ( +-  1.16% )
+         1,679,549      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                          ( +-150.00% )
+        28,484,553      dTLB-load-misses                                                        ( +-  0.42% )
+                89      context-switches                                                        ( +-  3.37% )
+
+            18.392 +- 0.111 seconds time elapsed  ( +-  0.60% )
+
+# started on Mon Mar 17 18:22:37 2025
+
+
+ Performance counter stats for './build/independent 32 1' (2 runs):
+
+    27,726,071,220      cpu-cycles                                                              ( +-  0.40% )
+        59,663,966      cache-misses                                                            ( +-  0.95% )
+           131,303      page-faults                                                           
+                 2      cpu-migrations                                                        
+        15,630,460      dTLB-load-misses                                                        ( +-  0.45% )
+               109      context-switches                                                        ( +-  9.17% )
+
+         9.0770705 +- 0.0000416 seconds time elapsed  ( +-  0.00% )
+
+# started on Mon Mar 17 18:22:56 2025
+
+
+ Performance counter stats for './build/independent 32 2' (2 runs):
+
+    29,481,396,035      cpu-cycles                                                              ( +-  0.22% )
+        75,043,311      cache-misses                                                            ( +-  0.47% )
+           131,339      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                        
+        15,578,081      dTLB-load-misses                                                        ( +-  0.14% )
+                94      context-switches                                                        ( +-  9.04% )
+
+           9.12913 +- 0.00656 seconds time elapsed  ( +-  0.07% )
+
+# started on Mon Mar 17 18:23:14 2025
+
+
+ Performance counter stats for './build/independent 32 3' (2 runs):
+
+    25,821,672,030      cpu-cycles                                                              ( +-  0.09% )
+        59,457,598      cache-misses                                                            ( +-  0.44% )
+           131,402      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                          ( +- 25.00% )
+        15,633,612      dTLB-load-misses                                                        ( +-  0.02% )
+                88      context-switches                                                        ( +-  2.84% )
+
+            9.0707 +- 0.0293 seconds time elapsed  ( +-  0.32% )
+
+# started on Mon Mar 17 18:23:32 2025
+
+
+ Performance counter stats for './build/independent 32 4' (2 runs):
+
+    23,724,874,813      cpu-cycles                                                              ( +-  0.27% )
+        50,417,874      cache-misses                                                            ( +-  1.69% )
+           131,529      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                        
+        15,697,870      dTLB-load-misses                                                        ( +-  0.30% )
+                86      context-switches                                                        ( +-  1.74% )
+
+           9.02319 +- 0.00144 seconds time elapsed  ( +-  0.02% )
+
+# started on Mon Mar 17 18:23:50 2025
+
+
+ Performance counter stats for './build/independent 32 5' (2 runs):
+
+    21,774,915,525      cpu-cycles                                                              ( +-  0.14% )
+        31,962,042      cache-misses                                                            ( +-  0.70% )
+           131,789      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                          ( +- 50.00% )
+        15,802,552      dTLB-load-misses                                                        ( +-  0.44% )
+                79      context-switches                                                        ( +-  2.53% )
+
+           8.95623 +- 0.00411 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 17 18:24:08 2025
+
+
+ Performance counter stats for './build/independent 32 6' (2 runs):
+
+    21,737,322,987      cpu-cycles                                                              ( +-  0.17% )
+        30,169,165      cache-misses                                                            ( +-  0.10% )
+           132,316      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                        
+        15,790,181      dTLB-load-misses                                                        ( +-  0.55% )
+                89      context-switches                                                        ( +-  3.93% )
+
+            9.0052 +- 0.0163 seconds time elapsed  ( +-  0.18% )
+
+# started on Mon Mar 17 18:24:26 2025
+
+
+ Performance counter stats for './build/independent 32 7' (2 runs):
+
+    22,031,562,415      cpu-cycles                                                              ( +-  0.17% )
+        31,353,117      cache-misses                                                            ( +-  0.09% )
+           133,354      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                          ( +- 25.00% )
+        15,804,662      dTLB-load-misses                                                        ( +-  0.06% )
+                92      context-switches                                                        ( +-  3.26% )
+
+            9.0853 +- 0.0227 seconds time elapsed  ( +-  0.25% )
+
+# started on Mon Mar 17 18:24:44 2025
+
+
+ Performance counter stats for './build/independent 32 8' (2 runs):
+
+    22,104,284,716      cpu-cycles                                                              ( +-  0.05% )
+        32,123,249      cache-misses                                                            ( +-  0.15% )
+           135,444      page-faults                                                             ( +-  0.01% )
+                 2      cpu-migrations                                                        
+        16,239,769      dTLB-load-misses                                                        ( +-  0.09% )
+                93      context-switches                                                        ( +-  1.08% )
+
+           9.09161 +- 0.00517 seconds time elapsed  ( +-  0.06% )
+
+# started on Mon Mar 17 18:25:03 2025
+
+
+ Performance counter stats for './build/independent 32 9' (2 runs):
+
+    22,482,907,821      cpu-cycles                                                              ( +-  0.12% )
+        32,716,872      cache-misses                                                            ( +-  0.04% )
+           139,597      page-faults                                                             ( +-  0.04% )
+                 3      cpu-migrations                                                          ( +- 16.67% )
+        16,167,488      dTLB-load-misses                                                        ( +-  0.32% )
+               118      context-switches                                                        ( +-  5.51% )
+
+            9.2096 +- 0.0161 seconds time elapsed  ( +-  0.17% )
+
+# started on Mon Mar 17 18:25:21 2025
+
+
+ Performance counter stats for './build/independent 32 10' (2 runs):
+
+    23,482,160,027      cpu-cycles                                                              ( +-  0.09% )
+        33,725,224      cache-misses                                                            ( +-  0.28% )
+           148,050      page-faults                                                             ( +-  0.02% )
+                 4      cpu-migrations                                                          ( +- 25.00% )
+        16,503,812      dTLB-load-misses                                                        ( +-  1.40% )
+                87      context-switches                                                        ( +- 31.61% )
+
+            9.4492 +- 0.0202 seconds time elapsed  ( +-  0.21% )
+
+# started on Mon Mar 17 18:25:40 2025
+
+
+ Performance counter stats for './build/independent 32 11' (2 runs):
+
+    26,394,659,146      cpu-cycles                                                              ( +-  0.30% )
+        35,864,329      cache-misses                                                            ( +-  0.00% )
+           164,937      page-faults                                                             ( +-  0.04% )
+                 3      cpu-migrations                                                          ( +- 33.33% )
+        16,043,929      dTLB-load-misses                                                        ( +-  0.05% )
+               146      context-switches                                                        ( +- 28.77% )
+
+            9.9317 +- 0.0156 seconds time elapsed  ( +-  0.16% )
+
+# started on Mon Mar 17 18:26:00 2025
+
+
+ Performance counter stats for './build/independent 32 12' (2 runs):
+
+    24,694,367,692      cpu-cycles                                                              ( +-  0.04% )
+        36,556,929      cache-misses                                                            ( +-  0.32% )
+           263,157      page-faults                                                           
+                 2      cpu-migrations                                                          ( +- 50.00% )
+        16,524,910      dTLB-load-misses                                                        ( +-  1.09% )
+                81      context-switches                                                        ( +-  5.56% )
+
+            9.7537 +- 0.0137 seconds time elapsed  ( +-  0.14% )
+
+# started on Mon Mar 17 18:26:20 2025
+
+
+ Performance counter stats for './build/independent 32 13' (2 runs):
+
+    28,602,826,430      cpu-cycles                                                              ( +-  0.02% )
+        46,857,951      cache-misses                                                            ( +-  0.10% )
+           394,956      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                        
+        16,745,691      dTLB-load-misses                                                        ( +-  0.19% )
+               121      context-switches                                                        ( +-  3.72% )
+
+          10.47944 +- 0.00212 seconds time elapsed  ( +-  0.02% )
+
+# started on Mon Mar 17 18:26:41 2025
+
+
+ Performance counter stats for './build/independent 32 14' (2 runs):
+
+    34,230,228,999      cpu-cycles                                                              ( +-  0.01% )
+        60,723,512      cache-misses                                                            ( +-  0.03% )
+           658,730      page-faults                                                             ( +-  0.01% )
+                 1      cpu-migrations                                                        
+        17,911,456      dTLB-load-misses                                                        ( +-  2.47% )
+               114      context-switches                                                        ( +- 10.09% )
+
+           11.8198 +- 0.0143 seconds time elapsed  ( +-  0.12% )
+
+# started on Mon Mar 17 18:27:04 2025
+
+
+ Performance counter stats for './build/independent 32 15' (2 runs):
+
+    42,497,789,094      cpu-cycles                                                              ( +-  0.01% )
+        76,817,021      cache-misses                                                            ( +-  0.07% )
+         1,185,969      page-faults                                                             ( +-  0.01% )
+                 1      cpu-migrations                                                        
+        19,900,161      dTLB-load-misses                                                        ( +-  0.08% )
+               131      context-switches                                                        ( +-  4.58% )
+
+          14.45471 +- 0.00771 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 17 18:27:33 2025
+
+
+ Performance counter stats for './build/independent 32 16' (2 runs):
+
+    54,589,812,378      cpu-cycles                                                              ( +-  0.22% )
+        93,307,597      cache-misses                                                            ( +-  1.57% )
+         2,240,664      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                        
+        26,594,403      dTLB-load-misses                                                        ( +-  2.37% )
+               174      context-switches                                                        ( +-  1.44% )
+
+           19.5028 +- 0.0125 seconds time elapsed  ( +-  0.06% )
+
+# started on Mon Mar 17 18:28:12 2025
+
+
+ Performance counter stats for './build/independent 32 17' (2 runs):
+
+    66,179,380,389      cpu-cycles                                                              ( +-  0.04% )
+       110,951,917      cache-misses                                                            ( +-  1.54% )
+         3,252,455      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                          ( +- 50.00% )
+        31,835,208      dTLB-load-misses                                                        ( +-  0.07% )
+               370      context-switches                                                        ( +-  2.70% )
+
+           25.0345 +- 0.0148 seconds time elapsed  ( +-  0.06% )
+
+# started on Mon Mar 17 18:29:02 2025
+
+
+ Performance counter stats for './build/independent 32 18' (2 runs):
+
+    72,232,257,035      cpu-cycles                                                              ( +-  0.60% )
+       126,794,494      cache-misses                                                            ( +-  0.06% )
+         3,293,414      page-faults                                                             ( +-  0.00% )
+                 3      cpu-migrations                                                          ( +- 33.33% )
+        35,659,489      dTLB-load-misses                                                        ( +-  0.05% )
+               267      context-switches                                                        ( +-  3.75% )
+
+            27.686 +- 0.214 seconds time elapsed  ( +-  0.77% )
+
