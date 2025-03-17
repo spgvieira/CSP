@@ -16,14 +16,16 @@
 using Partition = std::vector<std::tuple<int64_t, int64_t>>;
 tuple<int64_t, int64_t>* input;
 
-void partitionInput(int start, int end, int numPartitions, vector<Partition>& partitions) {
+void partitionInput(int numThread, int start, int end, int numPartitions, vector<Partition>& partitions) {
     for (int i = start; i < end; i++) {
         tuple<int64_t, int64_t> t = input[i];
         int partitionKey = hashFunction(get<0>(t), numPartitions);
         partitions[partitionKey].push_back(t);
-        std::cout << "Thread #" << i << ": on CPU " 
-                << sched_getcpu() << "\n"; 
+        // std::cout << "Thread #" << i << ": on CPU " 
+        //         << sched_getcpu() << "\n"; // same thing as independent
     }
+    std::cout << "Thread #" << numThread << ": on CPU " 
+                << sched_getcpu() << "\n"; 
 }
 
 void cleanup(std::vector<std::vector<Partition>>& threadPartitions) {
@@ -35,11 +37,6 @@ void cleanup(std::vector<std::vector<Partition>>& threadPartitions) {
 }
 
 int main(int argc, char* argv[]) {
-    //needs nr threads, nr hashbits, n at least 1 cpu id
-    // if (argc < 3) {
-    //     cout << "Require atleast 3 arguments" << endl;
-    //     return -1;
-    // }
     const size_t numTuples = 16777216;
     input = makeInput(numTuples);
 
@@ -49,11 +46,7 @@ int main(int argc, char* argv[]) {
     const int numPartitions = 1 << hashBits;
     const int sizePartition = numTuplesPerThread/numPartitions * 1.5;
 
-    //this check is here if needed
-    // if (argc < numThreads + 2){
-    //     cout << "CPU id must be specified for every thread" << endl;
-    //     return -1;
-    // }
+
     
     std::vector<std::thread> threads;
     std::vector<std::vector<Partition>> threadPartitions(numThreads, 
@@ -64,22 +57,26 @@ int main(int argc, char* argv[]) {
         for (auto& partition : threadPartition)
             partition.reserve(sizePartition);  
 
+    int numCores = atoi(argv[3]);
+    cpu_set_t cpuset[numCores];
+    for(int i=0; i < numCores; i++) {
+        // Clear it and mark only CPU i as set.
+        CPU_ZERO(&cpuset[i]);
+        //loop thru the args given to compute cpu id
+        CPU_SET(atoi(argv[4 + i]), &cpuset[i]);
+        // CPU_SET(i*2, &cpuset[i]);
+    }
+
     auto start_clock = std::chrono::steady_clock::now();
 
     for (int i = 0; i < numThreads; i++) {
         auto start = i * numTuplesPerThread;
         auto end = (i + 1) * numTuplesPerThread;
-        std::thread thread(partitionInput, start, end, numPartitions, std::ref(threadPartitions[i]));
+        std::thread thread(partitionInput, i, start, end, numPartitions, std::ref(threadPartitions[i]));
         threads.push_back(std::move(thread));
 
-        // Create a cpu_set_t object representing a set of CPUs.
-        // Clear it and mark only CPU i as set.
-        cpu_set_t cpuset;
-        CPU_ZERO(&cpuset);
-        //loop thru the args given to compute cpu id
-        CPU_SET(atoi(argv[3 + i]), &cpuset);
         int rc = pthread_setaffinity_np(threads[i].native_handle(),
-                                        sizeof(cpu_set_t), &cpuset);
+                                        sizeof(cpu_set_t), &cpuset[i]);
         if (rc != 0) {
             cerr << "Error calling pthread_setaffinity_np: " << rc << endl;
         }

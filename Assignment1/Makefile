@@ -2,8 +2,8 @@
 RESULTS_FILE := result.txt
 EVENTS := cpu-cycles,cache-misses,page-faults,cpu-migrations,dTLB-load-misses,context-switches
 REPEAT := 2
-THREADS := 1 2 #4 8 16 32
-HASHBITS := 1 2 3 #4 5 6 7 8 9 10 11 12 13 14 15 16 17 18
+THREADS := 1 2 4 8 16 32
+HASHBITS := 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18
 PERF := /usr/bin/perf
 
 EXECUTABLES = \
@@ -37,7 +37,7 @@ concurrent:
 
 # Independent target
 independent:
-indep_core_aff_1:
+# indep_core_aff_1:
 	@echo "Independent"
 	@for threads in  $(THREADS); do \
 		for hb in $(HASHBITS); do \
@@ -63,13 +63,12 @@ indep_core_aff_1:
 	@echo "Done"
 
 # Second core affinity target
-# TODO: add loop to compute the cpu id for each thread
 indep_core_aff_2:
 	@echo "Independent core affinity 2"
 	@for threads in  $(THREADS); do \
 		for hb in $(HASHBITS); do \
-			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/indep_core_aff_2 $$threads $$hb"; \
-			perf stat -e $(EVENTS) -o indep_core_aff_2.txt --append --repeat=$(REPEAT) ./build/indep_core_aff_2 $$threads $$hb | tee -a indep_core_aff_2_time.txt & \
+			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/indep_core_aff_2 $$threads $$hb $$threads)"; \
+			perf stat -e $(EVENTS) -o indep_core_aff_2.txt --append --repeat=$(REPEAT) ./build/indep_core_aff_2 $$threads $$hb $$threads $$(seq 0 2 $$(expr $$threads + 2))| tee -a indep_core_aff_2_time.txt & \
 			perf_pid=$$!; \
 			wait $$perf_pid; \
 		done; \
