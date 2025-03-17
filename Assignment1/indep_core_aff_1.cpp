@@ -13,14 +13,16 @@
 using Partition = std::vector<std::tuple<int64_t, int64_t>>;
 tuple<int64_t, int64_t>* input;
 
-void partitionInput(int start, int end, int numPartitions, vector<Partition>& partitions) {
+void partitionInput(int numThread, int start, int end, int numPartitions, vector<Partition>& partitions) {
     for (int i = start; i < end; i++) {
         tuple<int64_t, int64_t> t = input[i];
         int partitionKey = hashFunction(get<0>(t), numPartitions);
         partitions[partitionKey].push_back(t);
-        std::cout << "Thread #" << i << ": on CPU " 
-                << sched_getcpu() << "\n"; 
+        // std::cout << "Thread #" << i << ": on CPU " 
+                // << sched_getcpu() << "\n";  // Help! i guess this should be the thread number not i
     }
+    std::cout << "Thread #" << numThread << ": on CPU " 
+                << sched_getcpu() << "\n";  // maybe just one time is enough (?)
 }
 
 void cleanup(std::vector<std::vector<Partition>>& threadPartitions) {
@@ -55,7 +57,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < numThreads; i++) {
         auto start = i * numTuplesPerThread;
         auto end = (i + 1) * numTuplesPerThread;
-        std::thread thread(partitionInput, start, end, numPartitions, std::ref(threadPartitions[i]));
+        std::thread thread(partitionInput, i, start, end, numPartitions, std::ref(threadPartitions[i]));
         threads.push_back(std::move(thread));
 
         // Create a cpu_set_t object representing a set of CPUs.
