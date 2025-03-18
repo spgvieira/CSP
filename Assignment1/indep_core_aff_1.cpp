@@ -21,8 +21,8 @@ void partitionInput(int numThread, int start, int end, int numPartitions, vector
         // std::cout << "Thread #" << i << ": on CPU " 
                 // << sched_getcpu() << "\n";  // Help! i guess this should be the thread number not i
     }
-    std::cout << "Thread #" << numThread << ": on CPU " 
-                << sched_getcpu() << "\n";  // maybe just one time is enough (?)
+    // std::cout << "Thread #" << numThread << ": on CPU " 
+    //             << sched_getcpu() << "\n";  // maybe just one time is enough (?)
 }
 
 void cleanup(std::vector<std::vector<Partition>>& threadPartitions) {
@@ -52,6 +52,13 @@ int main(int argc, char* argv[]) {
         for (auto& partition : threadPartition)
             partition.reserve(sizePartition);  
 
+    cpu_set_t cpuset[numThreads];
+    for(int i=0; i < numThreads; i++) {
+        CPU_ZERO(&cpuset[i]);
+        CPU_SET(i, &cpuset[i]);
+        //this pins Thread #0: on CPU 0, Thread #1: on CPU 1
+    }
+
     auto start_clock = std::chrono::steady_clock::now();
 
     for (int i = 0; i < numThreads; i++) {
@@ -60,14 +67,8 @@ int main(int argc, char* argv[]) {
         std::thread thread(partitionInput, i, start, end, numPartitions, std::ref(threadPartitions[i]));
         threads.push_back(std::move(thread));
 
-        // Create a cpu_set_t object representing a set of CPUs.
-        // Clear it and mark only CPU i as set.
-        cpu_set_t cpuset;
-        CPU_ZERO(&cpuset);
-        CPU_SET(i, &cpuset);
-        //this pins Thread #0: on CPU 0, Thread #1: on CPU 1
         int rc = pthread_setaffinity_np(threads[i].native_handle(),
-                                        sizeof(cpu_set_t), &cpuset);
+                                        sizeof(cpu_set_t), &cpuset[i]);
         if (rc != 0) {
         std::cerr << "Error calling pthread_setaffinity_np: " << rc << "\n";
         }

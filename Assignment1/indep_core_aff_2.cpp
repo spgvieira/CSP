@@ -21,11 +21,9 @@ void partitionInput(int numThread, int start, int end, int numPartitions, vector
         tuple<int64_t, int64_t> t = input[i];
         int partitionKey = hashFunction(get<0>(t), numPartitions);
         partitions[partitionKey].push_back(t);
-        // std::cout << "Thread #" << i << ": on CPU " 
-        //         << sched_getcpu() << "\n"; // same thing as independent
     }
-    std::cout << "Thread #" << numThread << ": on CPU " 
-                << sched_getcpu() << "\n"; 
+    // std::cout << "Thread #" << numThread << ": on CPU " 
+    //             << sched_getcpu() << "\n"; 
 }
 
 void cleanup(std::vector<std::vector<Partition>>& threadPartitions) {
