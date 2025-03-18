@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
 
     // Pre-allocate memory to prevent dynamic resizing overhead
     for (auto& partition : partitions)
-        partition.resize(sizePartition);  
+        partition.reserve(sizePartition);  
 
     std::vector<std::atomic<size_t>> partitionIndices(numPartitions);
 
