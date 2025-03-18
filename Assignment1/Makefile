@@ -29,7 +29,7 @@ concurrent:
 	@for threads in $(THREADS); do \
 		for hb in $(HASHBITS); do \
 			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/concurrent $$threads $$hb"; \
-			$(PERF) stat -e $(EVENTS) -o concurrent_results.txt --append --repeat=$(REPEAT) ./build/concurrent $$threads $$hb | tee -a concurrent_time.txt & \
+			$(PERF) stat -e $(EVENTS) -o results/$$(date +"%d_%m")_concurrent_results.txt --append --repeat=$(REPEAT) ./build/concurrent $$threads $$hb | tee -a results/$$(date +"%d_%m")_concurrent_time.txt & \
 			perf_pid=$$!; \
 			wait $$perf_pid; \
 		done; \
@@ -43,7 +43,7 @@ independent:
 	@for threads in  $(THREADS); do \
 		for hb in $(HASHBITS); do \
 			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/independent $$threads $$hb"; \
-			perf stat -e $(EVENTS) -o independent_results.txt --append --repeat=$(REPEAT) ./build/independent $$threads $$hb | tee -a independent_time.txt & \
+			perf stat -e $(EVENTS) -o results/$$(date +"%d_%m")_independent_results.txt --append --repeat=$(REPEAT) ./build/independent $$threads $$hb | tee -a results/$$(date +"%d_%m")_independent_time.txt & \
 			perf_pid=$$!; \
 			wait $$perf_pid; \
 		done; \
@@ -56,7 +56,7 @@ indep_core_aff_1:
 	@for threads in  $(THREADS); do \
 		for hb in $(HASHBITS); do \
 			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/indep_core_aff_1 $$threads $$hb"; \
-			perf stat -e $(EVENTS) -o indep_core_aff_1.txt --append --repeat=$(REPEAT) ./build/indep_core_aff_1 $$threads $$hb | tee -a indep_core_aff_1_time.txt & \
+			perf stat -e $(EVENTS) -o results/$$(date +"%d_%m")_indep_core_aff_1.txt --append --repeat=$(REPEAT) ./build/indep_core_aff_1 $$threads $$hb | tee -a results/$$(date +"%d_%m")_indep_core_aff_1_time.txt & \
 			perf_pid=$$!; \
 			wait $$perf_pid; \
 		done; \
@@ -69,7 +69,7 @@ indep_core_aff_2:
 	@for threads in  $(THREADS_CORE_AFF); do \
 		for hb in $(HASHBITS); do \
 			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/indep_core_aff_2 $$threads $$hb"; \
-			perf stat -e $(EVENTS) -o indep_core_aff_2.txt --append --repeat=$(REPEAT) ./build/indep_core_aff_2 $$threads $$hb | tee -a indep_core_aff_2_time.txt & \
+			perf stat -e $(EVENTS) -o results/$$(date +"%d_%m")_indep_core_aff_2.txt --append --repeat=$(REPEAT) ./build/indep_core_aff_2 $$threads $$hb | tee -a results/$$(date +"%d_%m")_indep_core_aff_2_time.txt & \
 			perf_pid=$$!; \
 			wait $$perf_pid; \
 		done; \
