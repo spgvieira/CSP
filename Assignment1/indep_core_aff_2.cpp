@@ -55,14 +55,13 @@ int main(int argc, char* argv[]) {
         for (auto& partition : threadPartition)
             partition.reserve(sizePartition);  
 
-    int numCores = atoi(argv[3]);
-    cpu_set_t cpuset[numCores];
-    for(int i=0; i < numCores; i++) {
+    cpu_set_t cpuset[numThreads];
+    for(int i=0; i < numThreads; i++) {
         // Clear it and mark only CPU i as set.
         CPU_ZERO(&cpuset[i]);
         //loop thru the args given to compute cpu id
-        CPU_SET(atoi(argv[4 + i]), &cpuset[i]);
-        // CPU_SET(i*2, &cpuset[i]);
+        // CPU_SET(atoi(argv[3 + i]), &cpuset[i]);
+        CPU_SET(i*2, &cpuset[i]);
     }
 
     auto start_clock = std::chrono::steady_clock::now();
