@@ -7,27 +7,27 @@
 #include <vector>
 #include "tuples.h"
 #include <time.h>
-#include <chrono>
+#include <atomic>
 #include <pthread.h>
 
 using Partition = std::vector<std::tuple<int64_t, int64_t>>;
 tuple<int64_t, int64_t>* input;
 
-void partitionInput(int numThread, int start, int end, int numPartitions, vector<Partition>& partitions) {
+void partitionInput(int start, int end, int numPartitions, 
+    vector<Partition>& partitions, std::vector<std::atomic<size_t>>& locks) {
     for (int i = start; i < end; i++) {
         tuple<int64_t, int64_t> t = input[i];
         int partitionKey = hashFunction(get<0>(t), numPartitions);
-        partitions[partitionKey].push_back(t);
+        size_t index = locks[partitionKey].fetch_add(1, memory_order_relaxed);
+        partitions[partitionKey][index] = t;
     }
     // std::cout << "Thread #" << numThread << ": on CPU " 
-    //             << sched_getcpu() << "\n";  
+    //             << sched_getcpu() << "\n"; 
 }
 
-void cleanup(std::vector<std::vector<Partition>>& threadPartitions) {
-    for (auto& threadPartition : threadPartitions) {
-        for (auto& partition : threadPartition) {
-            partition.clear();
-        }
+void cleanup(std::vector<Partition>& partitions) {
+    for (auto& partition : partitions) {
+        partition.clear();
     }
 }
 
@@ -39,16 +39,16 @@ int main(int argc, char* argv[]) {
     const int numTuplesPerThread = numTuples / numThreads;
     const int hashBits = atoi(argv[2]);
     const int numPartitions = 1 << hashBits;
-    const int sizePartition = numTuplesPerThread/numPartitions * 1.5;
+    const int sizePartition = numTuples/numPartitions * 1.5;
 
     std::vector<std::thread> threads;
-    std::vector<std::vector<Partition>> threadPartitions(numThreads, 
-        std::vector<Partition>(numPartitions));
+    std::vector<Partition> partitions(numPartitions);
 
-    // Pre-allocate memory to prevent dynacdmic resizing overhead
-    for (auto& threadPartition : threadPartitions)
-        for (auto& partition : threadPartition)
-            partition.reserve(sizePartition);  
+    // Pre-allocate memory to prevent dynamic resizing overhead
+    for (auto& partition : partitions)
+        partition.reserve(sizePartition);  
+
+    std::vector<std::atomic<size_t>> partitionIndices(numPartitions);
 
     cpu_set_t cpuset[numThreads]; //represents a set of CPUs
     for(int i=0; i < numThreads; i++) {
@@ -57,11 +57,11 @@ int main(int argc, char* argv[]) {
     }
 
     auto start_clock = std::chrono::steady_clock::now();
-
+    
     for (int i = 0; i < numThreads; i++) {
-        auto start = i * numTuplesPerThread;
-        auto end = (i + 1) * numTuplesPerThread;
-        std::thread thread(partitionInput, i, start, end, numPartitions, std::ref(threadPartitions[i]));
+        auto thread_start = i * numTuplesPerThread;
+        auto thread_end = (i + 1) * numTuplesPerThread;
+        std::thread thread(partitionInput, thread_start, thread_end, numPartitions, std::ref(partitions), std::ref(partitionIndices));
         threads.push_back(std::move(thread));
         //this pins Thread #0: on CPU 0, Thread #1: on CPU 1
         int rc = pthread_setaffinity_np(threads[i].native_handle(),
@@ -69,7 +69,6 @@ int main(int argc, char* argv[]) {
         if (rc != 0) {
         std::cerr << "Error calling pthread_setaffinity_np: " << rc << "\n";
         }
-        
     }
 
     for (auto& t : threads) {
@@ -80,9 +79,7 @@ int main(int argc, char* argv[]) {
     std::chrono::duration<double> cpu_time_used = end_clock - start_clock;
     printf("%d,%d,%f\n", numThreads, hashBits, cpu_time_used);
 
-    cleanup(threadPartitions);
+    cleanup(partitions);
 
     return 0;
 }
-
-
