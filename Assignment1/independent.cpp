@@ -46,6 +46,7 @@ int main(int argc, char* argv[]) {
     std::vector<std::thread> threads;
     std::vector<std::vector<Partition>> threadPartitions(numThreads, 
         std::vector<Partition>(numPartitions));
+    // auto* threadPartitions = new std::vector<std::vector<Partition>>(numThreads, std::vector<Partition>(numPartitions));
 
     // Pre-allocate memory to prevent dynacdmic resizing overhead
     for (auto& threadPartition : threadPartitions)
@@ -78,7 +79,9 @@ int main(int argc, char* argv[]) {
     std::chrono::duration<double> cpu_time_used = end_clock - start_clock;
     printf("%d,%d,%f\n", numThreads, hashBits, cpu_time_used);
 
-    cleanup(threadPartitions);
+    // cleanup(threadPartitions);
+    // delete threadPartitions;
+    // delete input;
 
     return 0;
 }
