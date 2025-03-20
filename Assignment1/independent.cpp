@@ -11,6 +11,7 @@
 
 using Partition = std::vector<std::tuple<int64_t, int64_t>>;
 tuple<int64_t, int64_t>* input;
+const size_t numTuples = 16777216;
 
 void partitionInput(int start, int end, int numPartitions, vector<Partition>& partitions) {
     for (int i = start; i < end; i++) {
@@ -26,10 +27,13 @@ void cleanup(std::vector<std::vector<Partition>>& threadPartitions) {
             partition.clear();
         }
     }
+    for(int i=0; i<numTuples; i++) {
+        input[i] = make_tuple(0,0);
+    }
+
 }
 
 int main(int argc, char* argv[]) {
-    const size_t numTuples = 16777216;
     input = makeInput(numTuples);
 
     const int numThreads = atoi(argv[1]);
@@ -46,7 +50,16 @@ int main(int argc, char* argv[]) {
     // Pre-allocate memory to prevent dynacdmic resizing overhead
     for (auto& threadPartition : threadPartitions)
         for (auto& partition : threadPartition)
-            partition.reserve(sizePartition);  
+            partition.reserve(sizePartition); 
+    
+    // tuple<int64_t, int64_t> temp;
+    // for(int i=0; i<numThreads; i++) {
+    //     for(int j=0; j<numPartitions; j++) {
+    //         for(int k=0; k<numPartitions; k++) {
+    //             temp = threadPartitions[i][j][k];
+    //         }
+    //     }
+    // }
 
     auto start_clock = std::chrono::steady_clock::now();
 

@@ -1,7 +1,8 @@
 # Variables
 EVENTS := cpu-cycles,cache-misses,page-faults,cpu-migrations,dTLB-load-misses,context-switches
 REPEAT := 2 #lets run tests on 5 reps!
-THREADS := 1 2 4 8 16 32
+# THREADS := 1 2 4 8 16 32
+THREADS := 32 16 8 4 2 1
 THREADS_CORE_AFF_2 := 1 2 4 8 16
 HASHBITS := 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 
 PERF := /usr/bin/perf
@@ -16,18 +17,17 @@ EXECUTABLES = \
 all: $(EXECUTABLES)
 
 # Run with $sudo make clean
-clean:
-	@echo "Cleaning build artifacts..."
-	rm -f $(EXECUTABLES)
-	@echo "Clearing system cache (requires sudo)..."
-	sudo sh -c "sync; echo 3 > /proc/sys/vm/drop_caches"
-	@echo "Clean complete."
+# clean:
+# 	@echo "Cleaning build artifacts..."
+# 	rm -f $(EXECUTABLES)
+# 	@echo "Clearing system cache (requires sudo)..."
+# 	# sudo sh -c "sync; echo 3 > /proc/sys/vm/drop_caches"
+# 	@echo "Clean complete."
 
 # Warm-up
 
 # Independent target
 independent:
-# indep_core_aff_1:
 	@echo "Independent"
 	@for threads in  $(THREADS); do \
 		for hb in $(HASHBITS); do \
@@ -71,7 +71,7 @@ concurrent:
 	@for threads in $(THREADS); do \
 		for hb in $(HASHBITS); do \
 			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/concurrent $$threads $$hb"; \
-			$(PERF) stat -e $(EVENTS) -o concurrent_results.txt --append --repeat=$(REPEAT) ./build/concurrent $$threads $$hb | tee -a concurrent_time.txt & \
+			$(PERF) stat -e $(EVENTS) -o results/$$(date +"%d_%m")_concurrent_results.txt --append --repeat=$(REPEAT) ./build/concurrent $$threads $$hb | tee -a results/$$(date +"%d_%m")_concurrent_time.txt & \
 			perf_pid=$$!; \
 			wait $$perf_pid; \
 		done; \
@@ -84,7 +84,7 @@ conc_core_aff_1:
 	@for threads in  $(THREADS); do \
 		for hb in $(HASHBITS); do \
 			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/conc_core_aff_1 $$threads $$hb"; \
-			perf stat -e $(EVENTS) -o conc_core_aff_1.txt --append --repeat=$(REPEAT) ./build/conc_core_aff_1 $$threads $$hb | tee -a conc_core_aff_1_time.txt & \
+			perf stat -e $(EVENTS) -o results/$$(date +"%d_%m")_conc_core_aff_1.txt --append --repeat=$(REPEAT) ./build/conc_core_aff_1 $$threads $$hb | tee -a results/$$(date +"%d_%m")_conc_core_aff_1_time.txt & \
 			perf_pid=$$!; \
 			wait $$perf_pid; \
 		done; \
@@ -97,7 +97,7 @@ conc_core_aff_2:
 	@for threads in  $(THREADS_CORE_AFF_2); do \
 		for hb in $(HASHBITS); do \
 			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/conc_core_aff_2 $$threads $$hb"; \
-			perf stat -e $(EVENTS) -o conc_core_aff_2.txt --append --repeat=$(REPEAT) ./build/conc_core_aff_2 $$threads $$hb | tee -a conc_core_aff_2_time.txt & \
+			perf stat -e $(EVENTS) -o results/$$(date +"%d_%m")_conc_core_aff_2.txt --append --repeat=$(REPEAT) ./build/conc_core_aff_2 $$threads $$hb | tee -a results/$$(date +"%d_%m")_conc_core_aff_2_time.txt & \
 			perf_pid=$$!; \
 			wait $$perf_pid; \
 		done; \
