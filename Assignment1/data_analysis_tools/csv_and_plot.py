@@ -7,6 +7,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 from datetime import datetime
+import re
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_dir = os.path.dirname(current_dir)
@@ -216,14 +217,26 @@ if __name__ == "__main__":
 
     #determine output CSV file name based on the perf_file prefix:
     perf_filename = os.path.basename(args.perf_file)
-    if perf_filename.startswith("indep"):#independent
+    if "indep" in perf_filename:  #independent
         prefix = "indep"
-    elif perf_filename.startswith("conc"):#concurrent
+    elif "conc" in perf_filename:  #concurrent
         prefix = "conc"
     else:
-        prefix = "output"#default if none of them are present.
+        prefix = "output"  #default if none of them are present.
 
-    today_str = datetime.today().strftime('%d_%m')
+    #check for core_aff_1 or core_aff_2 and append it to the prefix
+    if "core_aff_1" in perf_filename:
+        prefix += "_core_aff_1"
+    elif "core_aff_2" in perf_filename:
+        prefix += "_core_aff_2"
+
+    #regular expression to find date at start of filename
+    date_match = re.search(r'(\d{2}_\d{2})', perf_filename)
+    if date_match:
+        today_str = date_match.group(1)  #extract the date from file name
+    else:
+        today_str = datetime.today().strftime('%d_%m')  #if no date is found, use today's date.
+
     output_filename = f"output_{prefix}_{today_str}.csv"
 
     #the path to where the output csv is saved to.
