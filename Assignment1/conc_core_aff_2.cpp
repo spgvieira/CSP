@@ -27,11 +27,11 @@ void partitionInput(int start, int end, int numPartitions,
     //             << sched_getcpu() << "\n"; 
 }
 
-void cleanup(std::vector<Partition>& partitions) {
-    for (auto& partition : partitions) {
-        partition.clear();
-    }
-}
+// void cleanup(std::vector<Partition>& partitions) {
+//     for (auto& partition : partitions) {
+//         partition.clear();
+//     }
+// }
 
 int main(int argc, char* argv[]) {
     const size_t numTuples = 16777216;
@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
     std::chrono::duration<double> cpu_time_used = end_clock - start_clock;
     printf("%d,%d,%f\n", numThreads, hashBits, cpu_time_used);
 
-    cleanup(partitions);
+    // cleanup(partitions);
 
     return 0;
 }
