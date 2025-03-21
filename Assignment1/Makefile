@@ -1,6 +1,6 @@
 # Variables
 EVENTS := cpu-cycles,cache-misses,page-faults,cpu-migrations,dTLB-load-misses,context-switches
-REPEAT := 2 #lets run tests on 5 reps!
+REPEAT := 5 #lets run tests on 5 reps!
 # THREADS := 1 2 4 8 16 32
 THREADS := 32 16 8 4 2 1
 THREADS_CORE_AFF_2 := 1 2 4 8 16

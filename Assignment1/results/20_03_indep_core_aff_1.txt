@@ -1,0 +1,616 @@
+# started on Thu Mar 20 23:24:35 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 32 1' (5 runs):
+
+    28,068,797,070      cpu-cycles                                                              ( +-  0.46% )
+        61,128,513      cache-misses                                                            ( +-  0.98% )
+           131,305      page-faults                                                             ( +-  0.00% )
+                29      cpu-migrations                                                          ( +-  7.55% )
+        15,889,357      dTLB-load-misses                                                        ( +-  0.08% )
+               128      context-switches                                                        ( +-  5.27% )
+
+           9.12707 +- 0.00659 seconds time elapsed  ( +-  0.07% )
+
+# started on Thu Mar 20 23:25:21 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 32 2' (5 runs):
+
+    30,503,578,213      cpu-cycles                                                              ( +-  0.13% )
+        75,986,257      cache-misses                                                            ( +-  0.24% )
+           131,338      page-faults                                                             ( +-  0.00% )
+                30      cpu-migrations                                                          ( +-  5.52% )
+        16,029,084      dTLB-load-misses                                                        ( +-  0.20% )
+               144      context-switches                                                        ( +-  7.68% )
+
+            9.2319 +- 0.0132 seconds time elapsed  ( +-  0.14% )
+
+# started on Thu Mar 20 23:26:07 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 32 3' (5 runs):
+
+    27,584,332,328      cpu-cycles                                                              ( +-  0.14% )
+        63,615,807      cache-misses                                                            ( +-  0.23% )
+           131,402      page-faults                                                             ( +-  0.00% )
+                28      cpu-migrations                                                          ( +- 10.56% )
+        16,035,279      dTLB-load-misses                                                        ( +-  0.05% )
+               126      context-switches                                                        ( +-  7.22% )
+
+           9.16634 +- 0.00877 seconds time elapsed  ( +-  0.10% )
+
+# started on Thu Mar 20 23:26:53 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 32 4' (5 runs):
+
+    24,675,516,925      cpu-cycles                                                              ( +-  0.04% )
+        52,691,005      cache-misses                                                            ( +-  0.19% )
+           131,533      page-faults                                                             ( +-  0.00% )
+                29      cpu-migrations                                                          ( +-  5.00% )
+        16,065,840      dTLB-load-misses                                                        ( +-  0.16% )
+               120      context-switches                                                        ( +-  4.13% )
+
+           9.08853 +- 0.00467 seconds time elapsed  ( +-  0.05% )
+
+# started on Thu Mar 20 23:27:39 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 32 5' (5 runs):
+
+    21,976,446,462      cpu-cycles                                                              ( +-  0.13% )
+        32,027,369      cache-misses                                                            ( +-  0.20% )
+           131,794      page-faults                                                             ( +-  0.00% )
+                31      cpu-migrations                                                          ( +-  3.95% )
+        15,896,510      dTLB-load-misses                                                        ( +-  0.09% )
+               131      context-switches                                                        ( +-  3.90% )
+
+            9.0383 +- 0.0156 seconds time elapsed  ( +-  0.17% )
+
+# started on Thu Mar 20 23:28:24 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 32 6' (5 runs):
+
+    21,846,285,291      cpu-cycles                                                              ( +-  0.05% )
+        30,242,734      cache-misses                                                            ( +-  0.02% )
+           132,320      page-faults                                                             ( +-  0.00% )
+                31      cpu-migrations                                                          ( +-  3.76% )
+        15,824,052      dTLB-load-misses                                                        ( +-  0.09% )
+               141      context-switches                                                        ( +-  2.29% )
+
+           9.04552 +- 0.00400 seconds time elapsed  ( +-  0.04% )
+
+# started on Thu Mar 20 23:29:09 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 32 7' (5 runs):
+
+    21,925,323,523      cpu-cycles                                                              ( +-  0.11% )
+        30,903,907      cache-misses                                                            ( +-  0.03% )
+           135,380      page-faults                                                             ( +-  0.01% )
+                29      cpu-migrations                                                          ( +-  9.08% )
+        15,753,155      dTLB-load-misses                                                        ( +-  0.10% )
+               121      context-switches                                                        ( +-  7.06% )
+
+            9.0410 +- 0.0132 seconds time elapsed  ( +-  0.15% )
+
+# started on Thu Mar 20 23:29:54 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 32 8' (5 runs):
+
+    22,154,587,096      cpu-cycles                                                              ( +-  0.11% )
+        31,807,886      cache-misses                                                            ( +-  0.07% )
+           139,523      page-faults                                                             ( +-  0.01% )
+                29      cpu-migrations                                                          ( +-  2.34% )
+        15,821,184      dTLB-load-misses                                                        ( +-  0.16% )
+               119      context-switches                                                        ( +-  5.20% )
+
+            9.0965 +- 0.0118 seconds time elapsed  ( +-  0.13% )
+
+# started on Thu Mar 20 23:30:40 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 32 9' (5 runs):
+
+    22,268,075,162      cpu-cycles                                                              ( +-  0.11% )
+        32,281,032      cache-misses                                                            ( +-  0.03% )
+           147,762      page-faults                                                             ( +-  0.00% )
+                32      cpu-migrations                                                          ( +-  2.86% )
+        15,904,545      dTLB-load-misses                                                        ( +-  0.14% )
+               125      context-switches                                                        ( +-  7.82% )
+
+            9.1059 +- 0.0127 seconds time elapsed  ( +-  0.14% )
+
+# started on Thu Mar 20 23:31:26 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 32 10' (5 runs):
+
+    22,606,998,855      cpu-cycles                                                              ( +-  0.20% )
+        32,738,309      cache-misses                                                            ( +-  0.03% )
+           163,166      page-faults                                                             ( +-  0.00% )
+                28      cpu-migrations                                                          ( +-  5.82% )
+        16,159,304      dTLB-load-misses                                                        ( +-  0.55% )
+               129      context-switches                                                        ( +-  3.74% )
+
+            9.2347 +- 0.0212 seconds time elapsed  ( +-  0.23% )
+
+# started on Thu Mar 20 23:32:12 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 32 11' (5 runs):
+
+    22,719,833,140      cpu-cycles                                                              ( +-  0.04% )
+        33,078,352      cache-misses                                                            ( +-  0.03% )
+           164,682      page-faults                                                             ( +-  0.00% )
+                29      cpu-migrations                                                          ( +-  5.39% )
+        16,009,993      dTLB-load-misses                                                        ( +-  0.09% )
+               120      context-switches                                                        ( +-  5.19% )
+
+           9.36274 +- 0.00440 seconds time elapsed  ( +-  0.05% )
+
+# started on Thu Mar 20 23:32:59 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 32 12' (5 runs):
+
+    22,907,882,744      cpu-cycles                                                              ( +-  0.04% )
+        33,654,138      cache-misses                                                            ( +-  0.21% )
+           165,321      page-faults                                                             ( +-  0.00% )
+                26      cpu-migrations                                                          ( +-  3.31% )
+        15,826,424      dTLB-load-misses                                                        ( +-  0.02% )
+               109      context-switches                                                        ( +-  3.65% )
+
+           9.50496 +- 0.00493 seconds time elapsed  ( +-  0.05% )
+
+# started on Thu Mar 20 23:33:46 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 32 13' (5 runs):
+
+    23,737,879,506      cpu-cycles                                                              ( +-  0.01% )
+        36,238,450      cache-misses                                                            ( +-  0.08% )
+           166,696      page-faults                                                             ( +-  0.00% )
+                28      cpu-migrations                                                          ( +-  7.20% )
+        15,878,271      dTLB-load-misses                                                        ( +-  0.02% )
+               116      context-switches                                                        ( +-  6.22% )
+
+           9.61653 +- 0.00271 seconds time elapsed  ( +-  0.03% )
+
+# started on Thu Mar 20 23:34:34 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 32 14' (5 runs):
+
+    25,870,343,790      cpu-cycles                                                              ( +-  0.12% )
+        41,636,965      cache-misses                                                            ( +-  0.04% )
+           169,835      page-faults                                                             ( +-  0.00% )
+                28      cpu-migrations                                                          ( +-  8.11% )
+        16,080,510      dTLB-load-misses                                                        ( +-  0.04% )
+               176      context-switches                                                        ( +-  3.58% )
+
+            9.8886 +- 0.0128 seconds time elapsed  ( +-  0.13% )
+
+# started on Thu Mar 20 23:35:24 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 32 15' (5 runs):
+
+    29,962,591,573      cpu-cycles                                                              ( +-  0.06% )
+        53,410,907      cache-misses                                                            ( +-  0.05% )
+           178,561      page-faults                                                             ( +-  0.01% )
+                27      cpu-migrations                                                          ( +-  3.19% )
+        17,540,128      dTLB-load-misses                                                        ( +-  0.09% )
+             2,152      context-switches                                                        ( +-  0.92% )
+
+          10.31405 +- 0.00556 seconds time elapsed  ( +-  0.05% )
+
+# started on Thu Mar 20 23:36:16 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 32 16' (5 runs):
+
+    37,345,300,771      cpu-cycles                                                              ( +-  0.22% )
+        70,958,243      cache-misses                                                            ( +-  0.08% )
+           196,688      page-faults                                                             ( +-  0.00% )
+                33      cpu-migrations                                                          ( +-  6.53% )
+        22,859,906      dTLB-load-misses                                                        ( +-  0.12% )
+            48,477      context-switches                                                        ( +-  1.38% )
+
+           11.3219 +- 0.0169 seconds time elapsed  ( +-  0.15% )
+
+# started on Thu Mar 20 23:37:12 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 32 17' (5 runs):
+
+    41,472,431,167      cpu-cycles                                                              ( +-  0.26% )
+        93,535,899      cache-misses                                                            ( +-  0.72% )
+           226,641      page-faults                                                             ( +-  0.00% )
+                25      cpu-migrations                                                          ( +-  8.24% )
+        29,330,209      dTLB-load-misses                                                        ( +-  0.63% )
+            34,053      context-switches                                                        ( +-  1.11% )
+
+           13.2305 +- 0.0602 seconds time elapsed  ( +-  0.46% )
+
+# started on Thu Mar 20 23:38:19 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 32 18' (5 runs):
+
+    51,958,940,052      cpu-cycles                                                              ( +-  0.66% )
+       116,521,854      cache-misses                                                            ( +-  2.15% )
+           332,332      page-faults                                                             ( +-  7.56% )
+                30      cpu-migrations                                                          ( +-  3.33% )
+        36,197,329      dTLB-load-misses                                                        ( +-  1.18% )
+            64,730      context-switches                                                        ( +-  0.39% )
+
+            17.092 +- 0.147 seconds time elapsed  ( +-  0.86% )
+
+# started on Thu Mar 20 23:39:44 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 16 1' (5 runs):
+
+    21,423,099,155      cpu-cycles                                                              ( +-  0.14% )
+        29,178,977      cache-misses                                                            ( +-  0.20% )
+           131,255      page-faults                                                             ( +-  0.00% )
+                15      cpu-migrations                                                          ( +-  3.40% )
+        15,428,185      dTLB-load-misses                                                        ( +-  0.13% )
+                68      context-switches                                                        ( +-  6.38% )
+
+            9.0895 +- 0.0122 seconds time elapsed  ( +-  0.13% )
+
+# started on Thu Mar 20 23:40:30 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 16 2' (5 runs):
+
+    25,030,784,099      cpu-cycles                                                              ( +-  0.07% )
+        60,474,776      cache-misses                                                            ( +-  0.22% )
+           131,271      page-faults                                                             ( +-  0.00% )
+                15      cpu-migrations                                                          ( +-  2.67% )
+        15,546,446      dTLB-load-misses                                                        ( +-  0.03% )
+                67      context-switches                                                        ( +-  6.58% )
+
+           9.22294 +- 0.00756 seconds time elapsed  ( +-  0.08% )
+
+# started on Thu Mar 20 23:41:16 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 16 3' (5 runs):
+
+    25,101,136,035      cpu-cycles                                                              ( +-  0.24% )
+        56,129,902      cache-misses                                                            ( +-  1.03% )
+           131,304      page-faults                                                             ( +-  0.00% )
+                14      cpu-migrations                                                          ( +-  4.16% )
+        15,694,286      dTLB-load-misses                                                        ( +-  0.38% )
+                65      context-switches                                                        ( +-  4.87% )
+
+           9.25121 +- 0.00547 seconds time elapsed  ( +-  0.06% )
+
+# started on Thu Mar 20 23:42:02 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 16 4' (5 runs):
+
+    24,635,438,127      cpu-cycles                                                              ( +-  0.12% )
+        53,297,292      cache-misses                                                            ( +-  0.35% )
+           131,371      page-faults                                                             ( +-  0.00% )
+                16      cpu-migrations                                                          ( +-  3.64% )
+        15,656,974      dTLB-load-misses                                                        ( +-  0.12% )
+                66      context-switches                                                        ( +-  5.08% )
+
+           9.18818 +- 0.00296 seconds time elapsed  ( +-  0.03% )
+
+# started on Thu Mar 20 23:42:48 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 16 5' (5 runs):
+
+    22,183,449,589      cpu-cycles                                                              ( +-  0.06% )
+        42,426,684      cache-misses                                                            ( +-  0.18% )
+           131,499      page-faults                                                             ( +-  0.00% )
+                16      cpu-migrations                                                          ( +-  4.15% )
+        15,518,684      dTLB-load-misses                                                        ( +-  0.02% )
+                74      context-switches                                                        ( +-  3.93% )
+
+           9.10594 +- 0.00306 seconds time elapsed  ( +-  0.03% )
+
+# started on Thu Mar 20 23:43:34 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 16 6' (5 runs):
+
+    21,555,624,286      cpu-cycles                                                              ( +-  0.08% )
+        29,282,981      cache-misses                                                            ( +-  0.04% )
+           131,756      page-faults                                                             ( +-  0.00% )
+                15      cpu-migrations                                                          ( +-  3.27% )
+        15,675,665      dTLB-load-misses                                                        ( +-  0.58% )
+                68      context-switches                                                        ( +-  2.34% )
+
+           9.08833 +- 0.00855 seconds time elapsed  ( +-  0.09% )
+
+# started on Thu Mar 20 23:44:19 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 16 7' (5 runs):
+
+    21,557,891,528      cpu-cycles                                                              ( +-  0.13% )
+        29,653,146      cache-misses                                                            ( +-  0.07% )
+           132,281      page-faults                                                             ( +-  0.01% )
+                14      cpu-migrations                                                          ( +-  3.64% )
+        15,416,870      dTLB-load-misses                                                        ( +-  0.05% )
+                80      context-switches                                                        ( +-  5.34% )
+
+            9.1146 +- 0.0156 seconds time elapsed  ( +-  0.17% )
+
+# started on Thu Mar 20 23:45:05 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 16 8' (5 runs):
+
+    21,502,939,723      cpu-cycles                                                              ( +-  0.04% )
+        30,457,491      cache-misses                                                            ( +-  0.03% )
+           135,354      page-faults                                                             ( +-  0.01% )
+                15      cpu-migrations                                                          ( +-  3.40% )
+        15,674,407      dTLB-load-misses                                                        ( +-  0.34% )
+                65      context-switches                                                        ( +-  5.89% )
+
+           9.08011 +- 0.00487 seconds time elapsed  ( +-  0.05% )
+
+# started on Thu Mar 20 23:45:50 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 16 9' (5 runs):
+
+    21,580,901,480      cpu-cycles                                                              ( +-  0.11% )
+        31,429,260      cache-misses                                                            ( +-  0.04% )
+           139,478      page-faults                                                             ( +-  0.01% )
+                15      cpu-migrations                                                          ( +-  2.67% )
+        15,480,815      dTLB-load-misses                                                        ( +-  0.38% )
+                69      context-switches                                                        ( +-  4.64% )
+
+           9.12031 +- 0.00929 seconds time elapsed  ( +-  0.10% )
+
+# started on Thu Mar 20 23:46:36 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 16 10' (5 runs):
+
+    21,671,451,637      cpu-cycles                                                              ( +-  0.10% )
+        32,090,866      cache-misses                                                            ( +-  0.04% )
+           147,693      page-faults                                                             ( +-  0.01% )
+                16      cpu-migrations                                                          ( +-  4.59% )
+        15,458,161      dTLB-load-misses                                                        ( +-  0.09% )
+                66      context-switches                                                        ( +-  3.37% )
+
+            9.1509 +- 0.0102 seconds time elapsed  ( +-  0.11% )
+
+# started on Thu Mar 20 23:47:22 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 16 11' (5 runs):
+
+    21,919,514,625      cpu-cycles                                                              ( +-  0.14% )
+        32,546,358      cache-misses                                                            ( +-  0.06% )
+           163,155      page-faults                                                             ( +-  0.01% )
+                15      cpu-migrations                                                          ( +-  1.63% )
+        15,615,551      dTLB-load-misses                                                        ( +-  0.18% )
+                66      context-switches                                                        ( +-  5.09% )
+
+            9.2632 +- 0.0155 seconds time elapsed  ( +-  0.17% )
+
+# started on Thu Mar 20 23:48:08 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 16 12' (5 runs):
+
+    22,061,794,170      cpu-cycles                                                              ( +-  0.16% )
+        32,949,953      cache-misses                                                            ( +-  0.04% )
+           164,647      page-faults                                                             ( +-  0.00% )
+                15      cpu-migrations                                                          ( +-  5.33% )
+        15,642,086      dTLB-load-misses                                                        ( +-  0.03% )
+                67      context-switches                                                        ( +-  7.95% )
+
+            9.3956 +- 0.0179 seconds time elapsed  ( +-  0.19% )
+
+# started on Thu Mar 20 23:48:55 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 16 13' (5 runs):
+
+    22,331,838,767      cpu-cycles                                                              ( +-  0.05% )
+        33,383,792      cache-misses                                                            ( +-  0.08% )
+           165,352      page-faults                                                             ( +-  0.00% )
+                15      cpu-migrations                                                          ( +-  3.40% )
+        15,665,901      dTLB-load-misses                                                        ( +-  0.12% )
+                74      context-switches                                                        ( +-  4.47% )
+
+           9.60355 +- 0.00659 seconds time elapsed  ( +-  0.07% )
+
+# started on Thu Mar 20 23:49:43 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 16 14' (5 runs):
+
+    22,634,341,232      cpu-cycles                                                              ( +-  0.12% )
+        35,752,238      cache-misses                                                            ( +-  0.02% )
+           166,689      page-faults                                                             ( +-  0.00% )
+                15      cpu-migrations                                                          ( +-  3.40% )
+        15,708,786      dTLB-load-misses                                                        ( +-  0.06% )
+                55      context-switches                                                        ( +-  5.62% )
+
+            9.6542 +- 0.0128 seconds time elapsed  ( +-  0.13% )
+
+# started on Thu Mar 20 23:50:32 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 16 15' (5 runs):
+
+    23,722,447,906      cpu-cycles                                                              ( +-  0.05% )
+        41,532,403      cache-misses                                                            ( +-  0.04% )
+           169,795      page-faults                                                             ( +-  0.00% )
+                15      cpu-migrations                                                          ( +-  2.67% )
+        15,944,146      dTLB-load-misses                                                        ( +-  0.29% )
+                72      context-switches                                                        ( +-  6.65% )
+
+           9.89198 +- 0.00811 seconds time elapsed  ( +-  0.08% )
+
+# started on Thu Mar 20 23:51:21 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 16 16' (5 runs):
+
+    26,211,381,185      cpu-cycles                                                              ( +-  0.16% )
+        53,191,078      cache-misses                                                            ( +-  0.07% )
+           178,390      page-faults                                                             ( +-  0.01% )
+                15      cpu-migrations                                                          ( +-  3.89% )
+        17,238,840      dTLB-load-misses                                                        ( +-  0.07% )
+               736      context-switches                                                        ( +-  7.27% )
+
+           10.4234 +- 0.0154 seconds time elapsed  ( +-  0.15% )
+
+# started on Thu Mar 20 23:52:14 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 16 17' (5 runs):
+
+    30,250,639,343      cpu-cycles                                                              ( +-  0.03% )
+        69,138,223      cache-misses                                                            ( +-  0.09% )
+           196,542      page-faults                                                             ( +-  0.03% )
+                16      cpu-migrations                                                          ( +-  6.56% )
+        22,102,710      dTLB-load-misses                                                        ( +-  0.22% )
+            22,175      context-switches                                                        ( +-  1.24% )
+
+          11.27842 +- 0.00928 seconds time elapsed  ( +-  0.08% )
+
+# started on Thu Mar 20 23:53:10 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 16 18' (5 runs):
+
+    35,200,205,028      cpu-cycles                                                              ( +-  0.14% )
+        90,765,125      cache-misses                                                            ( +-  1.33% )
+           227,399      page-faults                                                             ( +-  0.02% )
+                15      cpu-migrations                                                          ( +-  4.00% )
+        28,613,749      dTLB-load-misses                                                        ( +-  0.52% )
+            11,395      context-switches                                                        ( +-  4.10% )
+
+           13.1287 +- 0.0353 seconds time elapsed  ( +-  0.27% )
+
+# started on Thu Mar 20 23:54:16 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 8 1' (5 runs):
+
+    21,386,373,637      cpu-cycles                                                              ( +-  0.09% )
+        29,154,561      cache-misses                                                            ( +-  0.24% )
+           131,230      page-faults                                                             ( +-  0.00% )
+                 8      cpu-migrations                                                          ( +-  5.00% )
+        15,425,768      dTLB-load-misses                                                        ( +-  0.12% )
+                46      context-switches                                                        ( +-  8.31% )
+
+            9.1952 +- 0.0108 seconds time elapsed  ( +-  0.12% )
+
+# started on Thu Mar 20 23:55:02 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 8 2' (5 runs):
+
+    23,417,702,088      cpu-cycles                                                              ( +-  0.14% )
+        46,134,426      cache-misses                                                            ( +-  0.27% )
+           131,237      page-faults                                                             ( +-  0.00% )
+                 7      cpu-migrations                                                          ( +-  5.35% )
+        15,465,460      dTLB-load-misses                                                        ( +-  0.02% )
+                47      context-switches                                                        ( +-  6.81% )
+
+            9.3685 +- 0.0149 seconds time elapsed  ( +-  0.16% )
+
+# started on Thu Mar 20 23:55:49 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 8 3' (5 runs):
+
+    22,853,032,190      cpu-cycles                                                              ( +-  0.26% )
+        45,619,427      cache-misses                                                            ( +-  1.92% )
+           131,254      page-faults                                                             ( +-  0.00% )
+                 8      cpu-migrations                                                          ( +-  3.06% )
+        15,464,912      dTLB-load-misses                                                        ( +-  0.04% )
+                48      context-switches                                                        ( +-  8.90% )
+
+            9.3440 +- 0.0176 seconds time elapsed  ( +-  0.19% )
+
+# started on Thu Mar 20 23:56:35 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 8 4' (5 runs):
+
+    24,217,032,843      cpu-cycles                                                              ( +-  0.13% )
+        58,275,868      cache-misses                                                            ( +-  0.21% )
+           131,288      page-faults                                                             ( +-  0.00% )
+                 7      cpu-migrations                                                          ( +-  7.00% )
+        15,548,776      dTLB-load-misses                                                        ( +-  0.07% )
+                42      context-switches                                                        ( +- 12.15% )
+
+           9.37651 +- 0.00957 seconds time elapsed  ( +-  0.10% )
+
+# started on Thu Mar 20 23:57:22 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 8 5' (5 runs):
+
+    22,180,402,334      cpu-cycles                                                              ( +-  0.13% )
+        42,275,267      cache-misses                                                            ( +-  0.69% )
+           131,354      page-faults                                                             ( +-  0.00% )
+                 8      cpu-migrations                                                          ( +-  3.06% )
+        15,505,529      dTLB-load-misses                                                        ( +-  0.10% )
+                44      context-switches                                                        ( +-  4.51% )
+
+            9.2613 +- 0.0102 seconds time elapsed  ( +-  0.11% )
+
+# started on Thu Mar 20 23:58:09 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 8 6' (5 runs):
+
+    21,500,602,656      cpu-cycles                                                              ( +-  0.04% )
+        28,810,312      cache-misses                                                            ( +-  0.03% )
+           131,481      page-faults                                                             ( +-  0.00% )
+                 8      cpu-migrations                                                          ( +-  5.00% )
+        15,592,158      dTLB-load-misses                                                        ( +-  0.56% )
+                52      context-switches                                                        ( +-  3.30% )
+
+           9.18533 +- 0.00422 seconds time elapsed  ( +-  0.05% )
+
+# started on Thu Mar 20 23:58:55 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 8 7' (5 runs):
+
+    21,475,098,236      cpu-cycles                                                              ( +-  0.07% )
+        28,871,628      cache-misses                                                            ( +-  0.04% )
+           131,748      page-faults                                                             ( +-  0.00% )
+                 7      cpu-migrations                                                          ( +-  7.00% )
+        15,557,571      dTLB-load-misses                                                        ( +-  0.13% )
+                56      context-switches                                                        ( +-  6.51% )
+
+            9.2030 +- 0.0103 seconds time elapsed  ( +-  0.11% )
+
+# started on Thu Mar 20 23:59:41 2025
+
+
+ Performance counter stats for './build/indep_core_aff_1 8 8' (5 runs):
+
+    21,509,562,155      cpu-cycles                                                              ( +-  0.12% )
+        29,421,202      cache-misses                                                            ( +-  0.07% )
+           132,262      page-faults                                                             ( +-  0.01% )
+                 8      cpu-migrations                                                          ( +-  5.00% )
+        15,427,434      dTLB-load-misses                                                        ( +-  0.08% )
+                57      context-switches                                                        ( +-  4.35% )
+
+            9.2244 +- 0.0130 seconds time elapsed  ( +-  0.14% )
+
