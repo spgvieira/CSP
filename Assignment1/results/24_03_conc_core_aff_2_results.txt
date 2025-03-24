@@ -1,0 +1,1260 @@
+# started on Mon Mar 24 08:44:13 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 16 1' (5 runs):
+
+    57,857,346,460      cpu-cycles                                                              ( +-  0.31% )
+        30,993,010      cache-misses                                                            ( +-  3.25% )
+         1,047,709      page-faults                                                             ( +-  3.22% )
+                17      cpu-migrations                                                          ( +-  5.70% )
+        19,902,845      dTLB-load-misses                                                        ( +-  2.28% )
+               146      context-switches                                                        ( +-  4.59% )
+
+            10.307 +- 0.139 seconds time elapsed  ( +-  1.34% )
+
+# started on Mon Mar 24 08:45:04 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 16 2' (5 runs):
+
+    45,978,728,431      cpu-cycles                                                              ( +-  0.16% )
+        28,994,776      cache-misses                                                            ( +-  0.03% )
+           838,950      page-faults                                                             ( +-  0.16% )
+                17      cpu-migrations                                                          ( +-  1.18% )
+        19,099,855      dTLB-load-misses                                                        ( +-  1.14% )
+               117      context-switches                                                        ( +-  4.57% )
+
+           9.69620 +- 0.00355 seconds time elapsed  ( +-  0.04% )
+
+# started on Mon Mar 24 08:45:53 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 16 3' (5 runs):
+
+    42,050,136,282      cpu-cycles                                                              ( +-  0.13% )
+        28,416,468      cache-misses                                                            ( +-  0.08% )
+           614,702      page-faults                                                             ( +-  0.15% )
+                17      cpu-migrations                                                        
+        17,613,184      dTLB-load-misses                                                        ( +-  0.96% )
+                95      context-switches                                                        ( +-  5.68% )
+
+           9.58918 +- 0.00421 seconds time elapsed  ( +-  0.04% )
+
+# started on Mon Mar 24 08:46:41 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 16 4' (5 runs):
+
+    36,004,869,025      cpu-cycles                                                              ( +-  0.11% )
+        28,228,448      cache-misses                                                            ( +-  0.09% )
+           467,061      page-faults                                                             ( +-  0.09% )
+                17      cpu-migrations                                                          ( +-  1.18% )
+        16,914,463      dTLB-load-misses                                                        ( +-  1.02% )
+                79      context-switches                                                        ( +-  5.83% )
+
+           9.38870 +- 0.00681 seconds time elapsed  ( +-  0.07% )
+
+# started on Mon Mar 24 08:47:28 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 16 5' (5 runs):
+
+    32,492,684,645      cpu-cycles                                                              ( +-  0.06% )
+        28,230,641      cache-misses                                                            ( +-  0.05% )
+           346,285      page-faults                                                             ( +-  0.10% )
+                17      cpu-migrations                                                          ( +-  1.44% )
+        16,562,002      dTLB-load-misses                                                        ( +-  0.35% )
+                82      context-switches                                                        ( +-  5.88% )
+
+           9.28158 +- 0.00314 seconds time elapsed  ( +-  0.03% )
+
+# started on Mon Mar 24 08:48:14 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 16 6' (5 runs):
+
+    29,709,229,595      cpu-cycles                                                              ( +-  0.02% )
+        28,155,756      cache-misses                                                            ( +-  0.03% )
+           267,141      page-faults                                                             ( +-  0.04% )
+                17      cpu-migrations                                                          ( +-  1.44% )
+        16,231,499      dTLB-load-misses                                                        ( +-  0.18% )
+                72      context-switches                                                        ( +-  5.60% )
+
+           9.19996 +- 0.00381 seconds time elapsed  ( +-  0.04% )
+
+# started on Mon Mar 24 08:49:00 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 16 7' (5 runs):
+
+    28,244,504,697      cpu-cycles                                                              ( +-  0.05% )
+        28,107,099      cache-misses                                                            ( +-  0.03% )
+           212,068      page-faults                                                             ( +-  0.05% )
+                17      cpu-migrations                                                          ( +-  1.44% )
+        16,159,163      dTLB-load-misses                                                        ( +-  0.25% )
+                79      context-switches                                                        ( +-  4.11% )
+
+           9.17011 +- 0.00598 seconds time elapsed  ( +-  0.07% )
+
+# started on Mon Mar 24 08:49:46 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 16 8' (5 runs):
+
+    27,054,678,598      cpu-cycles                                                              ( +-  0.02% )
+        28,070,575      cache-misses                                                            ( +-  0.11% )
+           177,197      page-faults                                                             ( +-  0.05% )
+                18      cpu-migrations                                                        
+        15,908,365      dTLB-load-misses                                                        ( +-  0.23% )
+                74      context-switches                                                        ( +-  5.30% )
+
+           9.09885 +- 0.00368 seconds time elapsed  ( +-  0.04% )
+
+# started on Mon Mar 24 08:50:32 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 16 9' (5 runs):
+
+    26,647,099,535      cpu-cycles                                                              ( +-  0.06% )
+        28,009,309      cache-misses                                                            ( +-  0.02% )
+           156,745      page-faults                                                             ( +-  0.03% )
+                17      cpu-migrations                                                          ( +-  3.53% )
+        15,940,304      dTLB-load-misses                                                        ( +-  0.18% )
+                82      context-switches                                                        ( +-  4.03% )
+
+           9.15653 +- 0.00596 seconds time elapsed  ( +-  0.07% )
+
+# started on Mon Mar 24 08:51:18 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 16 10' (5 runs):
+
+    26,409,110,742      cpu-cycles                                                              ( +-  0.16% )
+        28,155,425      cache-misses                                                            ( +-  0.04% )
+           144,906      page-faults                                                             ( +-  0.05% )
+                18      cpu-migrations                                                        
+        16,055,486      dTLB-load-misses                                                        ( +-  0.12% )
+                91      context-switches                                                        ( +-  3.78% )
+
+            9.1163 +- 0.0249 seconds time elapsed  ( +-  0.27% )
+
+# started on Mon Mar 24 08:52:03 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 16 11' (5 runs):
+
+    26,538,978,452      cpu-cycles                                                              ( +-  0.06% )
+        29,093,821      cache-misses                                                            ( +-  0.04% )
+           139,451      page-faults                                                             ( +-  0.03% )
+                16      cpu-migrations                                                          ( +-  1.25% )
+        16,051,384      dTLB-load-misses                                                        ( +-  0.24% )
+                85      context-switches                                                        ( +-  4.65% )
+
+           9.15488 +- 0.00482 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 24 08:52:49 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 16 12' (5 runs):
+
+    26,709,637,859      cpu-cycles                                                              ( +-  0.04% )
+        30,484,899      cache-misses                                                            ( +-  0.03% )
+           138,701      page-faults                                                             ( +-  0.02% )
+                16      cpu-migrations                                                          ( +-  2.50% )
+        16,163,056      dTLB-load-misses                                                        ( +-  0.45% )
+                72      context-switches                                                        ( +-  5.50% )
+
+           9.11644 +- 0.00489 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 24 08:53:35 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 16 13' (5 runs):
+
+    27,069,486,093      cpu-cycles                                                              ( +-  0.08% )
+        31,647,126      cache-misses                                                            ( +-  0.03% )
+           141,131      page-faults                                                             ( +-  0.01% )
+                18      cpu-migrations                                                          ( +-  2.83% )
+        16,090,169      dTLB-load-misses                                                        ( +-  0.06% )
+                77      context-switches                                                        ( +-  4.35% )
+
+            9.1536 +- 0.0153 seconds time elapsed  ( +-  0.17% )
+
+# started on Mon Mar 24 08:54:21 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 16 14' (5 runs):
+
+    27,569,119,047      cpu-cycles                                                              ( +-  0.11% )
+        33,227,456      cache-misses                                                            ( +-  0.02% )
+           148,549      page-faults                                                             ( +-  0.02% )
+                18      cpu-migrations                                                          ( +-  2.72% )
+        16,407,781      dTLB-load-misses                                                        ( +-  0.09% )
+                98      context-switches                                                        ( +- 19.00% )
+
+            9.2559 +- 0.0102 seconds time elapsed  ( +-  0.11% )
+
+# started on Mon Mar 24 08:55:07 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 16 15' (5 runs):
+
+    28,166,089,975      cpu-cycles                                                              ( +-  0.03% )
+        36,056,661      cache-misses                                                            ( +-  0.06% )
+           164,657      page-faults                                                             ( +-  0.01% )
+                17      cpu-migrations                                                          ( +-  3.43% )
+        18,552,194      dTLB-load-misses                                                        ( +-  0.14% )
+                65      context-switches                                                        ( +-  4.11% )
+
+           9.30026 +- 0.00446 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 24 08:55:53 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 16 16' (5 runs):
+
+    28,952,241,330      cpu-cycles                                                              ( +-  0.10% )
+        38,941,640      cache-misses                                                            ( +-  0.04% )
+           164,862      page-faults                                                             ( +-  0.00% )
+                16      cpu-migrations                                                          ( +-  1.25% )
+        23,844,174      dTLB-load-misses                                                        ( +-  0.10% )
+                74      context-switches                                                        ( +-  8.55% )
+
+            9.4827 +- 0.0148 seconds time elapsed  ( +-  0.16% )
+
+# started on Mon Mar 24 08:56:41 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 16 17' (5 runs):
+
+    30,137,969,851      cpu-cycles                                                              ( +-  0.07% )
+        42,467,449      cache-misses                                                            ( +-  0.10% )
+           165,545      page-faults                                                             ( +-  0.00% )
+                16      cpu-migrations                                                          ( +-  1.98% )
+        31,783,403      dTLB-load-misses                                                        ( +-  0.10% )
+                70      context-switches                                                        ( +-  3.84% )
+
+           9.65090 +- 0.00817 seconds time elapsed  ( +-  0.08% )
+
+# started on Mon Mar 24 08:57:29 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 16 18' (5 runs):
+
+    30,971,523,416      cpu-cycles                                                              ( +-  1.83% )
+        49,218,712      cache-misses                                                            ( +-  0.08% )
+           167,083      page-faults                                                             ( +-  0.00% )
+                16      cpu-migrations                                                          ( +-  1.53% )
+        39,304,685      dTLB-load-misses                                                        ( +-  0.04% )
+                80      context-switches                                                        ( +-  9.10% )
+
+            9.7672 +- 0.0107 seconds time elapsed  ( +-  0.11% )
+
+# started on Mon Mar 24 08:58:18 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 8 1' (5 runs):
+
+    41,884,035,172      cpu-cycles                                                              ( +-  0.28% )
+        29,278,894      cache-misses                                                            ( +-  0.09% )
+           565,914      page-faults                                                             ( +-  0.11% )
+                 9      cpu-migrations                                                          ( +-  7.86% )
+        16,224,584      dTLB-load-misses                                                        ( +-  1.24% )
+                62      context-switches                                                        ( +-  4.50% )
+
+          10.33953 +- 0.00646 seconds time elapsed  ( +-  0.06% )
+
+# started on Mon Mar 24 08:59:10 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 8 2' (5 runs):
+
+    35,176,893,302      cpu-cycles                                                              ( +-  0.22% )
+        29,105,119      cache-misses                                                            ( +-  0.06% )
+           524,486      page-faults                                                             ( +-  0.09% )
+                 8      cpu-migrations                                                          ( +-  2.50% )
+        16,203,596      dTLB-load-misses                                                        ( +-  1.09% )
+                56      context-switches                                                        ( +-  2.56% )
+
+           9.91463 +- 0.00759 seconds time elapsed  ( +-  0.08% )
+
+# started on Mon Mar 24 09:00:00 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 8 3' (5 runs):
+
+    33,644,363,502      cpu-cycles                                                              ( +-  0.07% )
+        28,625,183      cache-misses                                                            ( +-  0.03% )
+           411,027      page-faults                                                             ( +-  0.19% )
+                 8      cpu-migrations                                                          ( +-  5.00% )
+        15,872,021      dTLB-load-misses                                                        ( +-  0.57% )
+                60      context-switches                                                        ( +-  7.77% )
+
+           9.82162 +- 0.00351 seconds time elapsed  ( +-  0.04% )
+
+# started on Mon Mar 24 09:00:49 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 8 4' (5 runs):
+
+    28,551,221,800      cpu-cycles                                                              ( +-  0.07% )
+        28,161,856      cache-misses                                                            ( +-  0.03% )
+           331,162      page-faults                                                             ( +-  0.16% )
+                 8      cpu-migrations                                                          ( +-  2.50% )
+        15,680,115      dTLB-load-misses                                                        ( +-  0.09% )
+                52      context-switches                                                        ( +-  2.24% )
+
+           9.51294 +- 0.00260 seconds time elapsed  ( +-  0.03% )
+
+# started on Mon Mar 24 09:01:36 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 8 5' (5 runs):
+
+    27,024,273,897      cpu-cycles                                                              ( +-  0.03% )
+        28,035,230      cache-misses                                                            ( +-  0.03% )
+           256,393      page-faults                                                             ( +-  0.07% )
+                 8      cpu-migrations                                                          ( +-  2.50% )
+        15,558,346      dTLB-load-misses                                                        ( +-  0.04% )
+                46      context-switches                                                        ( +-  4.88% )
+
+           9.39430 +- 0.00472 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 24 09:02:23 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 8 6' (5 runs):
+
+    25,785,547,838      cpu-cycles                                                              ( +-  0.04% )
+        28,029,177      cache-misses                                                            ( +-  0.02% )
+           207,803      page-faults                                                             ( +-  0.02% )
+                 9      cpu-migrations                                                        
+        15,534,492      dTLB-load-misses                                                        ( +-  0.05% )
+                50      context-switches                                                        ( +-  6.94% )
+
+           9.33369 +- 0.00389 seconds time elapsed  ( +-  0.04% )
+
+# started on Mon Mar 24 09:03:10 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 8 7' (5 runs):
+
+    25,187,151,492      cpu-cycles                                                              ( +-  0.09% )
+        28,060,321      cache-misses                                                            ( +-  0.03% )
+           175,353      page-faults                                                             ( +-  0.04% )
+                 8      cpu-migrations                                                          ( +-  2.50% )
+        15,539,779      dTLB-load-misses                                                        ( +-  0.04% )
+                60      context-switches                                                        ( +-  6.18% )
+
+            9.2991 +- 0.0116 seconds time elapsed  ( +-  0.12% )
+
+# started on Mon Mar 24 09:03:57 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 8 8' (5 runs):
+
+    24,681,281,090      cpu-cycles                                                              ( +-  0.02% )
+        28,043,248      cache-misses                                                            ( +-  0.01% )
+           155,544      page-faults                                                             ( +-  0.05% )
+                 8      cpu-migrations                                                          ( +-  3.06% )
+        15,526,922      dTLB-load-misses                                                        ( +-  0.09% )
+                56      context-switches                                                        ( +-  5.80% )
+
+           9.24976 +- 0.00182 seconds time elapsed  ( +-  0.02% )
+
+# started on Mon Mar 24 09:04:43 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 8 9' (5 runs):
+
+    24,524,814,871      cpu-cycles                                                              ( +-  0.04% )
+        28,075,741      cache-misses                                                            ( +-  0.03% )
+           144,404      page-faults                                                             ( +-  0.04% )
+                10      cpu-migrations                                                          ( +-  8.00% )
+        15,545,469      dTLB-load-misses                                                        ( +-  0.02% )
+                52      context-switches                                                        ( +-  4.92% )
+
+           9.26218 +- 0.00560 seconds time elapsed  ( +-  0.06% )
+
+# started on Mon Mar 24 09:05:30 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 8 10' (5 runs):
+
+    24,532,205,319      cpu-cycles                                                              ( +-  0.11% )
+        28,267,259      cache-misses                                                            ( +-  0.03% )
+           138,532      page-faults                                                             ( +-  0.02% )
+                 9      cpu-migrations                                                          ( +-  2.22% )
+        15,624,907      dTLB-load-misses                                                        ( +-  0.04% )
+                62      context-switches                                                        ( +-  1.95% )
+
+            9.3071 +- 0.0140 seconds time elapsed  ( +-  0.15% )
+
+# started on Mon Mar 24 09:06:16 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 8 11' (5 runs):
+
+    24,515,179,797      cpu-cycles                                                              ( +-  0.03% )
+        28,785,801      cache-misses                                                            ( +-  0.02% )
+           136,328      page-faults                                                             ( +-  0.01% )
+                 8      cpu-migrations                                                          ( +-  3.06% )
+        15,575,675      dTLB-load-misses                                                        ( +-  0.05% )
+                62      context-switches                                                        ( +-  3.63% )
+
+           9.30428 +- 0.00432 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 24 09:07:03 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 8 12' (5 runs):
+
+    24,456,918,926      cpu-cycles                                                              ( +-  0.03% )
+        30,178,790      cache-misses                                                            ( +-  0.04% )
+           137,069      page-faults                                                             ( +-  0.02% )
+                 8      cpu-migrations                                                          ( +-  3.06% )
+        15,611,695      dTLB-load-misses                                                        ( +-  0.10% )
+                47      context-switches                                                        ( +-  5.61% )
+
+           9.25008 +- 0.00355 seconds time elapsed  ( +-  0.04% )
+
+# started on Mon Mar 24 09:07:49 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 8 13' (5 runs):
+
+    24,589,346,795      cpu-cycles                                                              ( +-  0.01% )
+        31,490,406      cache-misses                                                            ( +-  0.04% )
+           140,346      page-faults                                                             ( +-  0.01% )
+                 9      cpu-migrations                                                        
+        15,607,098      dTLB-load-misses                                                        ( +-  0.05% )
+                51      context-switches                                                        ( +-  5.17% )
+
+           9.29131 +- 0.00249 seconds time elapsed  ( +-  0.03% )
+
+# started on Mon Mar 24 09:08:36 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 8 14' (5 runs):
+
+    24,792,853,170      cpu-cycles                                                              ( +-  0.02% )
+        33,024,354      cache-misses                                                            ( +-  0.02% )
+           148,157      page-faults                                                             ( +-  0.01% )
+                 9      cpu-migrations                                                        
+        15,719,227      dTLB-load-misses                                                        ( +-  0.25% )
+                44      context-switches                                                        ( +-  3.48% )
+
+           9.34612 +- 0.00440 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 24 09:09:22 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 8 15' (5 runs):
+
+    25,108,604,223      cpu-cycles                                                              ( +-  0.16% )
+        35,421,633      cache-misses                                                            ( +-  0.02% )
+           164,453      page-faults                                                             ( +-  0.00% )
+                 9      cpu-migrations                                                          ( +-  3.51% )
+        15,999,443      dTLB-load-misses                                                        ( +-  0.13% )
+                48      context-switches                                                        ( +-  2.34% )
+
+            9.4494 +- 0.0212 seconds time elapsed  ( +-  0.22% )
+
+# started on Mon Mar 24 09:10:10 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 8 16' (5 runs):
+
+    25,245,917,269      cpu-cycles                                                              ( +-  0.02% )
+        37,803,116      cache-misses                                                            ( +-  0.05% )
+           164,808      page-faults                                                             ( +-  0.00% )
+                 9      cpu-migrations                                                          ( +-  2.72% )
+        17,636,156      dTLB-load-misses                                                        ( +-  0.02% )
+                53      context-switches                                                        ( +-  3.34% )
+
+           9.58511 +- 0.00252 seconds time elapsed  ( +-  0.03% )
+
+# started on Mon Mar 24 09:10:58 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 8 17' (5 runs):
+
+    26,682,477,995      cpu-cycles                                                              ( +-  0.07% )
+        41,780,551      cache-misses                                                            ( +-  0.09% )
+           165,527      page-faults                                                             ( +-  0.00% )
+                 8      cpu-migrations                                                        
+        22,972,687      dTLB-load-misses                                                        ( +-  0.02% )
+                52      context-switches                                                        ( +-  5.25% )
+
+           9.79305 +- 0.00533 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 24 09:11:47 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 8 18' (5 runs):
+
+    26,326,222,750      cpu-cycles                                                              ( +-  0.15% )
+        48,741,389      cache-misses                                                            ( +-  0.11% )
+           167,064      page-faults                                                             ( +-  0.00% )
+                 8      cpu-migrations                                                          ( +-  4.68% )
+        31,644,134      dTLB-load-misses                                                        ( +-  0.05% )
+                46      context-switches                                                        ( +-  3.98% )
+
+            9.8652 +- 0.0238 seconds time elapsed  ( +-  0.24% )
+
+# started on Mon Mar 24 09:12:36 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 4 1' (5 runs):
+
+    29,627,305,829      cpu-cycles                                                              ( +-  0.15% )
+        29,205,988      cache-misses                                                            ( +-  0.27% )
+           322,933      page-faults                                                             ( +-  0.10% )
+                 4      cpu-migrations                                                          ( +- 15.00% )
+        16,048,824      dTLB-load-misses                                                        ( +-  1.34% )
+                49      context-switches                                                        ( +-  7.71% )
+
+           10.3645 +- 0.0233 seconds time elapsed  ( +-  0.22% )
+
+# started on Mon Mar 24 09:13:28 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 4 2' (5 runs):
+
+    27,141,307,767      cpu-cycles                                                              ( +-  0.11% )
+        28,895,568      cache-misses                                                            ( +-  0.08% )
+           315,873      page-faults                                                             ( +-  0.06% )
+                 4      cpu-migrations                                                          ( +- 15.00% )
+        15,733,142      dTLB-load-misses                                                        ( +-  0.47% )
+                40      context-switches                                                        ( +-  4.15% )
+
+           10.0045 +- 0.0120 seconds time elapsed  ( +-  0.12% )
+
+# started on Mon Mar 24 09:14:18 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 4 3' (5 runs):
+
+    26,720,902,322      cpu-cycles                                                              ( +-  0.09% )
+        28,618,425      cache-misses                                                            ( +-  0.05% )
+           283,096      page-faults                                                             ( +-  0.05% )
+                 4      cpu-migrations                                                        
+        15,619,195      dTLB-load-misses                                                        ( +-  0.26% )
+                43      context-switches                                                        ( +-  3.72% )
+
+           9.94621 +- 0.00419 seconds time elapsed  ( +-  0.04% )
+
+# started on Mon Mar 24 09:15:08 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 4 4' (5 runs):
+
+    25,493,400,105      cpu-cycles                                                              ( +-  0.15% )
+        28,328,000      cache-misses                                                            ( +-  0.27% )
+           237,985      page-faults                                                             ( +-  0.05% )
+                 4      cpu-migrations                                                          ( +- 14.58% )
+        15,586,779      dTLB-load-misses                                                        ( +-  0.35% )
+                41      context-switches                                                        ( +- 10.07% )
+
+            9.8096 +- 0.0136 seconds time elapsed  ( +-  0.14% )
+
+# started on Mon Mar 24 09:15:57 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 4 5' (5 runs):
+
+    25,030,482,697      cpu-cycles                                                              ( +-  0.05% )
+        27,874,078      cache-misses                                                            ( +-  0.02% )
+           197,962      page-faults                                                             ( +-  0.05% )
+                 4      cpu-migrations                                                          ( +-  5.00% )
+        15,507,237      dTLB-load-misses                                                        ( +-  0.12% )
+                38      context-switches                                                        ( +-  6.83% )
+
+           9.74176 +- 0.00616 seconds time elapsed  ( +-  0.06% )
+
+# started on Mon Mar 24 09:16:46 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 4 6' (5 runs):
+
+    24,693,634,967      cpu-cycles                                                              ( +-  0.13% )
+        27,933,526      cache-misses                                                            ( +-  0.14% )
+           170,363      page-faults                                                             ( +-  0.06% )
+                 4      cpu-migrations                                                          ( +-  5.00% )
+        15,655,086      dTLB-load-misses                                                        ( +-  0.60% )
+                39      context-switches                                                        ( +-  3.48% )
+
+            9.7084 +- 0.0158 seconds time elapsed  ( +-  0.16% )
+
+# started on Mon Mar 24 09:17:34 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 4 7' (5 runs):
+
+    24,543,921,835      cpu-cycles                                                              ( +-  0.25% )
+        28,313,961      cache-misses                                                            ( +-  1.15% )
+           159,566      page-faults                                                             ( +-  4.27% )
+                 4      cpu-migrations                                                          ( +- 10.00% )
+        15,536,857      dTLB-load-misses                                                        ( +-  0.12% )
+                39      context-switches                                                        ( +-  5.46% )
+
+            9.7040 +- 0.0314 seconds time elapsed  ( +-  0.32% )
+
+# started on Mon Mar 24 09:18:23 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 4 8' (5 runs):
+
+    24,225,259,798      cpu-cycles                                                              ( +-  0.04% )
+        27,978,074      cache-misses                                                            ( +-  0.02% )
+           142,760      page-faults                                                             ( +-  0.04% )
+                 4      cpu-migrations                                                          ( +-  5.00% )
+        15,496,840      dTLB-load-misses                                                        ( +-  0.05% )
+                41      context-switches                                                        ( +-  4.85% )
+
+           9.63459 +- 0.00501 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 24 09:19:11 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 4 9' (5 runs):
+
+    24,191,656,754      cpu-cycles                                                              ( +-  0.10% )
+        28,001,149      cache-misses                                                            ( +-  0.01% )
+           137,528      page-faults                                                             ( +-  0.03% )
+                 4      cpu-migrations                                                          ( +-  6.12% )
+        15,513,255      dTLB-load-misses                                                        ( +-  0.03% )
+                41      context-switches                                                        ( +-  3.81% )
+
+            9.6529 +- 0.0113 seconds time elapsed  ( +-  0.12% )
+
+# started on Mon Mar 24 09:20:00 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 4 10' (5 runs):
+
+    24,143,633,695      cpu-cycles                                                              ( +-  0.04% )
+        28,177,055      cache-misses                                                            ( +-  0.04% )
+           135,110      page-faults                                                             ( +-  0.02% )
+                 4      cpu-migrations                                                          ( +- 11.18% )
+        15,596,271      dTLB-load-misses                                                        ( +-  0.02% )
+                41      context-switches                                                        ( +-  2.10% )
+
+           9.64458 +- 0.00474 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 24 09:20:48 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 4 11' (5 runs):
+
+    24,223,103,416      cpu-cycles                                                              ( +-  0.08% )
+        28,822,428      cache-misses                                                            ( +-  0.17% )
+           134,645      page-faults                                                             ( +-  0.01% )
+                 5      cpu-migrations                                                          ( +- 10.20% )
+        15,571,534      dTLB-load-misses                                                        ( +-  0.04% )
+                51      context-switches                                                        ( +-  5.74% )
+
+           9.68295 +- 0.00885 seconds time elapsed  ( +-  0.09% )
+
+# started on Mon Mar 24 09:21:36 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 4 12' (5 runs):
+
+    24,277,518,876      cpu-cycles                                                              ( +-  0.07% )
+        30,495,861      cache-misses                                                            ( +-  0.14% )
+           136,109      page-faults                                                             ( +-  0.01% )
+                 4      cpu-migrations                                                        
+        15,591,003      dTLB-load-misses                                                        ( +-  0.05% )
+                37      context-switches                                                        ( +-  3.95% )
+
+           9.68114 +- 0.00787 seconds time elapsed  ( +-  0.08% )
+
+# started on Mon Mar 24 09:22:25 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 4 13' (5 runs):
+
+    24,698,673,033      cpu-cycles                                                              ( +-  1.25% )
+        32,087,832      cache-misses                                                            ( +-  0.08% )
+           139,856      page-faults                                                             ( +-  0.01% )
+                 4      cpu-migrations                                                          ( +- 14.58% )
+        15,648,268      dTLB-load-misses                                                        ( +-  0.16% )
+                35      context-switches                                                        ( +-  3.13% )
+
+             9.854 +- 0.155 seconds time elapsed  ( +-  1.57% )
+
+# started on Mon Mar 24 09:23:14 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 4 14' (5 runs):
+
+    24,753,556,148      cpu-cycles                                                              ( +-  0.02% )
+        34,154,819      cache-misses                                                            ( +-  0.13% )
+           147,913      page-faults                                                             ( +-  0.00% )
+                 5      cpu-migrations                                                          ( +-  4.00% )
+        15,677,495      dTLB-load-misses                                                        ( +-  0.09% )
+                42      context-switches                                                        ( +-  4.56% )
+
+           9.81812 +- 0.00515 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 24 09:24:03 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 4 15' (5 runs):
+
+    24,949,571,063      cpu-cycles                                                              ( +-  0.11% )
+        35,765,237      cache-misses                                                            ( +-  0.05% )
+           164,332      page-faults                                                             ( +-  0.00% )
+                 4      cpu-migrations                                                          ( +- 15.00% )
+        15,984,833      dTLB-load-misses                                                        ( +-  0.11% )
+                41      context-switches                                                        ( +- 11.42% )
+
+            9.8755 +- 0.0151 seconds time elapsed  ( +-  0.15% )
+
+# started on Mon Mar 24 09:24:53 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 4 16' (5 runs):
+
+    25,084,670,944      cpu-cycles                                                              ( +-  0.12% )
+        38,042,948      cache-misses                                                            ( +-  0.04% )
+           164,777      page-faults                                                             ( +-  0.00% )
+                 4      cpu-migrations                                                          ( +- 14.58% )
+        17,705,885      dTLB-load-misses                                                        ( +-  0.45% )
+                41      context-switches                                                        ( +-  6.63% )
+
+            9.9880 +- 0.0128 seconds time elapsed  ( +-  0.13% )
+
+# started on Mon Mar 24 09:25:43 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 4 17' (5 runs):
+
+    25,729,471,707      cpu-cycles                                                              ( +-  1.05% )
+        42,767,539      cache-misses                                                            ( +-  0.35% )
+           166,902      page-faults                                                             ( +-  0.83% )
+                 5      cpu-migrations                                                          ( +-  8.94% )
+        22,941,818      dTLB-load-misses                                                        ( +-  0.06% )
+                40      context-switches                                                        ( +-  7.39% )
+
+           10.1994 +- 0.0399 seconds time elapsed  ( +-  0.39% )
+
+# started on Mon Mar 24 09:26:34 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 4 18' (5 runs):
+
+    26,332,580,909      cpu-cycles                                                              ( +-  0.15% )
+        50,073,377      cache-misses                                                            ( +-  0.07% )
+           167,055      page-faults                                                             ( +-  0.00% )
+                 4      cpu-migrations                                                          ( +- 12.25% )
+        31,600,817      dTLB-load-misses                                                        ( +-  0.02% )
+                40      context-switches                                                        ( +-  6.09% )
+
+           10.3424 +- 0.0193 seconds time elapsed  ( +-  0.19% )
+
+# started on Mon Mar 24 09:27:26 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 2 1' (5 runs):
+
+    24,950,691,040      cpu-cycles                                                              ( +-  0.12% )
+        28,783,717      cache-misses                                                            ( +-  0.10% )
+           195,804      page-faults                                                             ( +-  0.05% )
+                 3      cpu-migrations                                                          ( +- 25.82% )
+        15,520,864      dTLB-load-misses                                                        ( +-  0.40% )
+                35      context-switches                                                        ( +-  6.17% )
+
+          10.66278 +- 0.00939 seconds time elapsed  ( +-  0.09% )
+
+# started on Mon Mar 24 09:28:19 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 2 2' (5 runs):
+
+    24,865,702,164      cpu-cycles                                                              ( +-  0.13% )
+        28,740,939      cache-misses                                                            ( +-  0.10% )
+           194,620      page-faults                                                             ( +-  0.03% )
+                 3      cpu-migrations                                                          ( +- 17.00% )
+        15,523,203      dTLB-load-misses                                                        ( +-  0.37% )
+                44      context-switches                                                        ( +-  4.31% )
+
+          10.63453 +- 0.00937 seconds time elapsed  ( +-  0.09% )
+
+# started on Mon Mar 24 09:29:12 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 2 3' (5 runs):
+
+    24,766,032,134      cpu-cycles                                                              ( +-  0.05% )
+        28,608,245      cache-misses                                                            ( +-  0.05% )
+           188,269      page-faults                                                             ( +-  0.02% )
+                 2      cpu-migrations                                                          ( +- 10.00% )
+        15,521,446      dTLB-load-misses                                                        ( +-  0.17% )
+                34      context-switches                                                        ( +-  5.01% )
+
+          10.60858 +- 0.00514 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 24 09:30:06 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 2 4' (5 runs):
+
+    24,237,760,842      cpu-cycles                                                              ( +-  0.04% )
+        28,458,887      cache-misses                                                            ( +-  0.07% )
+           174,530      page-faults                                                             ( +-  0.02% )
+                 2      cpu-migrations                                                          ( +- 24.49% )
+        15,455,932      dTLB-load-misses                                                        ( +-  0.08% )
+                43      context-switches                                                        ( +-  8.93% )
+
+          10.47614 +- 0.00208 seconds time elapsed  ( +-  0.02% )
+
+# started on Mon Mar 24 09:30:58 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 2 5' (5 runs):
+
+    24,004,329,343      cpu-cycles                                                              ( +-  0.01% )
+        28,026,159      cache-misses                                                            ( +-  0.02% )
+           159,206      page-faults                                                             ( +-  0.02% )
+                 2      cpu-migrations                                                          ( +- 10.00% )
+        15,498,846      dTLB-load-misses                                                        ( +-  0.14% )
+                36      context-switches                                                        ( +-  5.60% )
+
+          10.41830 +- 0.00342 seconds time elapsed  ( +-  0.03% )
+
+# started on Mon Mar 24 09:31:50 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 2 6' (5 runs):
+
+    23,861,728,311      cpu-cycles                                                              ( +-  0.06% )
+        28,046,190      cache-misses                                                            ( +-  0.18% )
+           147,302      page-faults                                                             ( +-  0.03% )
+                 2      cpu-migrations                                                          ( +- 20.00% )
+        15,460,479      dTLB-load-misses                                                        ( +-  0.13% )
+                39      context-switches                                                        ( +-  6.71% )
+
+          10.38791 +- 0.00737 seconds time elapsed  ( +-  0.07% )
+
+# started on Mon Mar 24 09:32:42 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 2 7' (5 runs):
+
+    23,864,343,357      cpu-cycles                                                              ( +-  0.11% )
+        28,264,961      cache-misses                                                            ( +-  0.01% )
+           139,800      page-faults                                                             ( +-  0.03% )
+                 2      cpu-migrations                                                          ( +- 12.25% )
+        15,489,124      dTLB-load-misses                                                        ( +-  0.16% )
+                33      context-switches                                                        ( +- 11.27% )
+
+           10.4029 +- 0.0140 seconds time elapsed  ( +-  0.14% )
+
+# started on Mon Mar 24 09:33:34 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 2 8' (5 runs):
+
+    23,723,738,159      cpu-cycles                                                              ( +-  0.05% )
+        28,269,800      cache-misses                                                            ( +-  0.02% )
+           135,751      page-faults                                                             ( +-  0.02% )
+                 2      cpu-migrations                                                          ( +- 18.71% )
+        15,482,734      dTLB-load-misses                                                        ( +-  0.02% )
+                30      context-switches                                                        ( +-  7.20% )
+
+          10.36137 +- 0.00563 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 24 09:34:26 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 2 9' (5 runs):
+
+    23,644,416,962      cpu-cycles                                                              ( +-  0.05% )
+        28,061,863      cache-misses                                                            ( +-  0.04% )
+           133,828      page-faults                                                             ( +-  0.01% )
+                 3      cpu-migrations                                                        
+        15,502,092      dTLB-load-misses                                                        ( +-  0.02% )
+                47      context-switches                                                        ( +-  5.92% )
+
+          10.33226 +- 0.00590 seconds time elapsed  ( +-  0.06% )
+
+# started on Mon Mar 24 09:35:18 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 2 10' (5 runs):
+
+    23,747,102,929      cpu-cycles                                                              ( +-  0.14% )
+        28,538,717      cache-misses                                                            ( +-  0.04% )
+           133,277      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                          ( +- 10.00% )
+        15,620,701      dTLB-load-misses                                                        ( +-  0.11% )
+                52      context-switches                                                        ( +- 14.81% )
+
+           10.3835 +- 0.0161 seconds time elapsed  ( +-  0.15% )
+
+# started on Mon Mar 24 09:36:10 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 2 11' (5 runs):
+
+    23,789,532,684      cpu-cycles                                                              ( +-  0.14% )
+        29,106,928      cache-misses                                                            ( +-  0.03% )
+           133,742      page-faults                                                             ( +-  0.00% )
+                 3      cpu-migrations                                                        
+        15,558,080      dTLB-load-misses                                                        ( +-  0.02% )
+                60      context-switches                                                        ( +-  3.05% )
+
+           10.4024 +- 0.0152 seconds time elapsed  ( +-  0.15% )
+
+# started on Mon Mar 24 09:37:02 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 2 12' (5 runs):
+
+    23,836,228,332      cpu-cycles                                                              ( +-  0.10% )
+        30,815,197      cache-misses                                                            ( +-  0.03% )
+           135,612      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                          ( +- 10.00% )
+        15,672,928      dTLB-load-misses                                                        ( +-  0.32% )
+                37      context-switches                                                        ( +-  5.76% )
+
+           10.4010 +- 0.0103 seconds time elapsed  ( +-  0.10% )
+
+# started on Mon Mar 24 09:37:54 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 2 13' (5 runs):
+
+    24,102,714,993      cpu-cycles                                                              ( +-  0.10% )
+        32,713,510      cache-misses                                                            ( +-  0.09% )
+           139,598      page-faults                                                             ( +-  0.01% )
+                 2      cpu-migrations                                                          ( +- 20.00% )
+        15,629,282      dTLB-load-misses                                                        ( +-  0.12% )
+                35      context-switches                                                        ( +-  5.00% )
+
+           10.4765 +- 0.0124 seconds time elapsed  ( +-  0.12% )
+
+# started on Mon Mar 24 09:38:47 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 2 14' (5 runs):
+
+    24,297,623,223      cpu-cycles                                                              ( +-  0.11% )
+        33,591,235      cache-misses                                                            ( +-  0.13% )
+           147,791      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                        
+        15,735,163      dTLB-load-misses                                                        ( +-  0.30% )
+                37      context-switches                                                        ( +-  5.30% )
+
+          10.53993 +- 0.00868 seconds time elapsed  ( +-  0.08% )
+
+# started on Mon Mar 24 09:39:39 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 2 15' (5 runs):
+
+    24,542,514,888      cpu-cycles                                                              ( +-  0.03% )
+        34,692,225      cache-misses                                                            ( +-  0.02% )
+           164,268      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                          ( +- 37.42% )
+        16,135,679      dTLB-load-misses                                                        ( +-  0.69% )
+                37      context-switches                                                        ( +-  8.98% )
+
+          10.64685 +- 0.00353 seconds time elapsed  ( +-  0.03% )
+
+# started on Mon Mar 24 09:40:33 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 2 16' (5 runs):
+
+    25,332,414,977      cpu-cycles                                                              ( +-  0.03% )
+        37,291,629      cache-misses                                                            ( +-  0.07% )
+           164,755      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                          ( +- 10.00% )
+        17,650,339      dTLB-load-misses                                                        ( +-  0.02% )
+                35      context-switches                                                        ( +- 14.25% )
+
+          10.92392 +- 0.00280 seconds time elapsed  ( +-  0.03% )
+
+# started on Mon Mar 24 09:41:27 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 2 17' (5 runs):
+
+    25,156,182,779      cpu-cycles                                                              ( +-  0.02% )
+        41,809,640      cache-misses                                                            ( +-  0.06% )
+           165,515      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                        
+        22,971,124      dTLB-load-misses                                                        ( +-  0.18% )
+                36      context-switches                                                        ( +-  2.99% )
+
+          10.95912 +- 0.00264 seconds time elapsed  ( +-  0.02% )
+
+# started on Mon Mar 24 09:42:22 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 2 18' (5 runs):
+
+    26,925,236,977      cpu-cycles                                                              ( +-  2.49% )
+        50,891,347      cache-misses                                                            ( +-  2.36% )
+           193,280      page-faults                                                             ( +- 13.57% )
+                 3      cpu-migrations                                                          ( +- 12.47% )
+        31,802,574      dTLB-load-misses                                                        ( +-  0.35% )
+                39      context-switches                                                        ( +- 10.80% )
+
+            11.458 +- 0.169 seconds time elapsed  ( +-  1.47% )
+
+# started on Mon Mar 24 09:43:20 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 1 1' (5 runs):
+
+    22,866,764,115      cpu-cycles                                                              ( +-  0.02% )
+        29,132,470      cache-misses                                                            ( +-  0.10% )
+           145,645      page-faults                                                             ( +-  0.01% )
+                 1      cpu-migrations                                                        
+        15,523,005      dTLB-load-misses                                                        ( +-  0.26% )
+                29      context-switches                                                        ( +-  3.62% )
+
+          11.47533 +- 0.00292 seconds time elapsed  ( +-  0.03% )
+
+# started on Mon Mar 24 09:44:17 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 1 2' (5 runs):
+
+    22,718,259,021      cpu-cycles                                                              ( +-  0.17% )
+        28,652,692      cache-misses                                                            ( +-  0.04% )
+           145,513      page-faults                                                             ( +-  0.04% )
+                 1      cpu-migrations                                                          ( +- 20.00% )
+        15,461,672      dTLB-load-misses                                                        ( +-  0.08% )
+                33      context-switches                                                        ( +-  9.84% )
+
+           11.4021 +- 0.0209 seconds time elapsed  ( +-  0.18% )
+
+# started on Mon Mar 24 09:45:14 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 1 3' (5 runs):
+
+    22,904,336,075      cpu-cycles                                                              ( +-  0.18% )
+        29,076,590      cache-misses                                                            ( +-  0.11% )
+           145,717      page-faults                                                             ( +-  0.02% )
+                 1      cpu-migrations                                                        
+        15,659,538      dTLB-load-misses                                                        ( +-  0.67% )
+                30      context-switches                                                        ( +-  4.22% )
+
+           11.4999 +- 0.0204 seconds time elapsed  ( +-  0.18% )
+
+# started on Mon Mar 24 09:46:12 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 1 4' (5 runs):
+
+    22,702,598,646      cpu-cycles                                                              ( +-  0.05% )
+        28,631,355      cache-misses                                                            ( +-  0.04% )
+           145,709      page-faults                                                             ( +-  0.01% )
+                 1      cpu-migrations                                                          ( +- 20.00% )
+        15,446,911      dTLB-load-misses                                                        ( +-  0.02% )
+                26      context-switches                                                        ( +-  8.69% )
+
+          11.39719 +- 0.00538 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 24 09:47:09 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 1 5' (5 runs):
+
+    22,729,869,102      cpu-cycles                                                              ( +-  0.10% )
+        28,464,099      cache-misses                                                            ( +-  0.05% )
+           145,671      page-faults                                                             ( +-  0.03% )
+                 1      cpu-migrations                                                          ( +- 40.00% )
+        15,484,273      dTLB-load-misses                                                        ( +-  0.12% )
+                29      context-switches                                                        ( +- 10.96% )
+
+           11.4095 +- 0.0126 seconds time elapsed  ( +-  0.11% )
+
+# started on Mon Mar 24 09:48:06 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 1 6' (5 runs):
+
+    22,784,476,176      cpu-cycles                                                              ( +-  0.04% )
+        28,121,765      cache-misses                                                            ( +-  0.02% )
+           146,754      page-faults                                                             ( +-  0.01% )
+                 1      cpu-migrations                                                          ( +- 20.00% )
+        15,473,542      dTLB-load-misses                                                        ( +-  0.03% )
+                27      context-switches                                                        ( +-  6.87% )
+
+          11.43832 +- 0.00640 seconds time elapsed  ( +-  0.06% )
+
+# started on Mon Mar 24 09:49:03 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 1 7' (5 runs):
+
+    23,140,848,036      cpu-cycles                                                              ( +-  0.99% )
+        29,086,766      cache-misses                                                            ( +-  2.75% )
+           178,278      page-faults                                                             ( +- 17.46% )
+                 2      cpu-migrations                                                          ( +- 22.36% )
+        15,724,761      dTLB-load-misses                                                        ( +-  1.10% )
+                31      context-switches                                                        ( +-  4.26% )
+
+            11.615 +- 0.114 seconds time elapsed  ( +-  0.98% )
+
+# started on Mon Mar 24 09:50:01 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 1 8' (5 runs):
+
+    22,647,152,622      cpu-cycles                                                              ( +-  0.02% )
+        28,203,317      cache-misses                                                            ( +-  0.04% )
+           131,813      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                        
+        15,507,222      dTLB-load-misses                                                        ( +-  0.31% )
+                43      context-switches                                                        ( +-  2.90% )
+
+          11.36316 +- 0.00230 seconds time elapsed  ( +-  0.02% )
+
+# started on Mon Mar 24 09:50:58 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 1 9' (5 runs):
+
+    22,715,961,392      cpu-cycles                                                              ( +-  0.03% )
+        28,634,653      cache-misses                                                            ( +-  0.03% )
+           132,417      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                        
+        15,516,398      dTLB-load-misses                                                        ( +-  0.08% )
+                36      context-switches                                                        ( +-  3.69% )
+
+          11.40393 +- 0.00492 seconds time elapsed  ( +-  0.04% )
+
+# started on Mon Mar 24 09:51:55 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 1 10' (5 runs):
+
+    22,758,206,310      cpu-cycles                                                              ( +-  0.06% )
+        29,033,194      cache-misses                                                            ( +-  0.04% )
+           133,604      page-faults                                                             ( +-  0.00% )
+                 1      cpu-migrations                                                          ( +- 50.99% )
+        15,577,876      dTLB-load-misses                                                        ( +-  0.07% )
+                41      context-switches                                                        ( +-  3.27% )
+
+          11.42313 +- 0.00872 seconds time elapsed  ( +-  0.08% )
+
+# started on Mon Mar 24 09:52:53 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 1 11' (5 runs):
+
+    22,933,095,412      cpu-cycles                                                              ( +-  0.05% )
+        30,146,820      cache-misses                                                            ( +-  0.07% )
+           135,961      page-faults                                                             ( +-  0.00% )
+                 2      cpu-migrations                                                          ( +- 15.81% )
+        15,578,192      dTLB-load-misses                                                        ( +-  0.07% )
+                41      context-switches                                                        ( +-  2.60% )
+
+          11.51683 +- 0.00576 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 24 09:53:50 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 1 12' (5 runs):
+
+    23,077,512,444      cpu-cycles                                                              ( +-  0.12% )
+        31,782,332      cache-misses                                                            ( +-  0.20% )
+           141,380      page-faults                                                             ( +-  0.39% )
+                 1      cpu-migrations                                                          ( +- 40.00% )
+        15,601,741      dTLB-load-misses                                                        ( +-  0.07% )
+                31      context-switches                                                        ( +-  7.26% )
+
+           11.5856 +- 0.0151 seconds time elapsed  ( +-  0.13% )
+
+# started on Mon Mar 24 09:54:48 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 1 13' (5 runs):
+
+    23,370,721,279      cpu-cycles                                                              ( +-  0.15% )
+        32,727,310      cache-misses                                                            ( +-  0.30% )
+           151,503      page-faults                                                             ( +-  0.72% )
+                 1      cpu-migrations                                                          ( +- 31.62% )
+        15,699,877      dTLB-load-misses                                                        ( +-  0.37% )
+                29      context-switches                                                        ( +-  4.57% )
+
+           11.7343 +- 0.0171 seconds time elapsed  ( +-  0.15% )
+
+# started on Mon Mar 24 09:55:47 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 1 14' (5 runs):
+
+    23,646,435,992      cpu-cycles                                                              ( +-  0.06% )
+        33,224,436      cache-misses                                                            ( +-  0.03% )
+           169,607      page-faults                                                             ( +-  0.01% )
+                 1      cpu-migrations                                                          ( +- 20.00% )
+        15,738,875      dTLB-load-misses                                                        ( +-  0.09% )
+                34      context-switches                                                        ( +-  6.13% )
+
+          11.86630 +- 0.00735 seconds time elapsed  ( +-  0.06% )
+
+# started on Mon Mar 24 09:56:46 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 1 15' (5 runs):
+
+    24,479,997,596      cpu-cycles                                                              ( +-  1.36% )
+        34,277,700      cache-misses                                                            ( +-  0.09% )
+           210,765      page-faults                                                             ( +-  1.35% )
+                 1      cpu-migrations                                                          ( +- 40.00% )
+        16,118,229      dTLB-load-misses                                                        ( +-  0.08% )
+                32      context-switches                                                        ( +-  8.52% )
+
+            12.285 +- 0.166 seconds time elapsed  ( +-  1.35% )
+
+# started on Mon Mar 24 09:57:48 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 1 16' (5 runs):
+
+    24,614,766,394      cpu-cycles                                                              ( +-  0.05% )
+        36,399,924      cache-misses                                                            ( +-  0.05% )
+           230,412      page-faults                                                             ( +-  0.02% )
+                 1      cpu-migrations                                                          ( +- 40.00% )
+        17,921,365      dTLB-load-misses                                                        ( +-  0.04% )
+                30      context-switches                                                        ( +-  2.45% )
+
+          12.35566 +- 0.00618 seconds time elapsed  ( +-  0.05% )
+
+# started on Mon Mar 24 09:58:50 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 1 17' (5 runs):
+
+    25,173,453,437      cpu-cycles                                                              ( +-  0.01% )
+        41,009,811      cache-misses                                                            ( +-  0.12% )
+           231,310      page-faults                                                             ( +-  0.03% )
+                 1      cpu-migrations                                                          ( +- 20.00% )
+        23,105,191      dTLB-load-misses                                                        ( +-  0.04% )
+                35      context-switches                                                        ( +-  8.15% )
+
+          12.63606 +- 0.00142 seconds time elapsed  ( +-  0.01% )
+
+# started on Mon Mar 24 09:59:53 2025
+
+
+ Performance counter stats for './build/conc_core_aff_2 1 18' (5 runs):
+
+    26,330,769,165      cpu-cycles                                                              ( +-  0.03% )
+        49,188,339      cache-misses                                                            ( +-  0.10% )
+           232,826      page-faults                                                             ( +-  0.03% )
+                 2      cpu-migrations                                                          ( +- 29.15% )
+        31,786,966      dTLB-load-misses                                                        ( +-  0.01% )
+                33      context-switches                                                        ( +-  7.67% )
+
+          13.21615 +- 0.00362 seconds time elapsed  ( +-  0.03% )
+
