@@ -3,7 +3,8 @@ EVENTS := cpu-cycles,cache-misses,page-faults,cpu-migrations,dTLB-load-misses,co
 REPEAT := 5 #lets run tests on 5 reps!
 # THREADS := 1 2 4 8 16 32
 THREADS := 32 16 8 4 2 1
-THREADS_CORE_AFF_2 := 1 2 4 8 16
+# THREADS_CORE_AFF_2 := 1 2 4 8 16
+THREADS_CORE_AFF_2 := 16 8 4 2 1
 HASHBITS := 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 
 PERF := /usr/bin/perf
 
