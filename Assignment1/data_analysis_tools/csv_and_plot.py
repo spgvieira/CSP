@@ -133,6 +133,9 @@ def plot_hashbits_versus_perf_vals(merged_df, date, programName):
     fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(15, 10))
     axes = axes.flatten()
 
+    #if "indep" in programName:
+    #if "conc" in programName:
+
     #loop through each metric and subplot axis
     for ax, (col, ylabel) in zip(axes, metrics):
         for thread in sorted(merged_df['threads'].unique()):
@@ -177,7 +180,8 @@ def plot_tuples_persec_hashbits(merged_df, date, programName):
                     linewidth=2,
                     markersize=8,
                     label=f' {threads} Threads',
-                    color=color)
+                    color=color)     
+    
             
     #appearance of the plot graph
     plt.xlabel('hashbits', fontsize=12)
@@ -187,6 +191,13 @@ def plot_tuples_persec_hashbits(merged_df, date, programName):
     plt.grid(True, linestyle='--', alpha=0.7)
 
     plt.legend(title='thread Count', fontsize=10)
+
+    # Set y-axis maximum based on programName (values are already in millions)
+    if "indep" in programName:
+        plt.ylim(top=235)
+    elif "conc" in programName:
+        plt.ylim(top=80)
+
     plt.tight_layout()
 
     output_path = os.path.join(plots_results_folder, f'{date}_{programName}_performance_plot.png')
