@@ -8,13 +8,15 @@ import matplotlib.pyplot as plt
 import os
 from datetime import datetime
 import re
+import numpy as np
+import math
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_dir = os.path.dirname(current_dir)
 
 #change or add folders here you'd like plots to be written to.
 csv_results_folder = os.path.join(project_dir, 'csv')
-plots_results_folder = os.path.join(project_dir, 'plots')
+plots_results_folder = os.path.join(project_dir, 'plots/analysis_plots')
 
 #define mapping of thread counts to colors (used in both plots)
 thread_colors = {
@@ -111,6 +113,10 @@ def convert_merge_to_csv(perf_results, time_results):
     df = pd.DataFrame(perf_results, columns=headers)
     return df
 
+#for rounding down numbers to 10,15,20 etc.
+def round_down(value, step):
+    return math.floor(value / step) * step
+
 def plot_hashbits_versus_perf_vals(merged_df, date, programName): 
     csvData = merged_df
     #convert columns for plotting clarity and convert cpu-cycles to billions and cache-misses to millions
@@ -121,23 +127,48 @@ def plot_hashbits_versus_perf_vals(merged_df, date, programName):
 
     #list of metrics to plot and corresponding labels
     metrics = [
-        ('cpu-cycles (B)', 'CPU Cycles (Billions)'),
-        ('cache-misses (M)', 'Cache Misses (Millions)'),
-        ('page-faults (M)', 'Page Faults (Millions)'),
+        ('cpu-cycles (B)', 'CPU Cycles in value of billions'),
+        ('cache-misses (M)', 'Cache Misses in value of millions'),
+        ('page-faults (M)', 'Page Faults in value of millions'),
         ('cpu-migrations', 'CPU Migrations'),
-        ('dTLB-load-misses (M)', 'dTLB Load Misses (Millions)'),
+        ('dTLB-load-misses (M)', 'dTLB Load Misses in value of millions'),
         ('context-switches', 'Context Switches')
     ]
+
+        #define max y-values and y-axis tick intervals based on programName
+    y_settings = {
+        "indep": {
+            'cpu-cycles (B)': (60, 5),
+            'cache-misses (M)': (120, 10),
+            'page-faults (M)': (0.35, 0.05),
+            'cpu-migrations': (35, 5),
+            'dTLB-load-misses (M)': (40, 5)
+            #'context-switches': 16000 #for core aff1, meget højere, 60000
+        },
+        "conc": {
+            'cpu-cycles (B)': (120, 5),
+            'cache-misses (M)': (120, 5),
+            'page-faults (M)': (1.5, 0.2),
+            'cpu-migrations': (35, 5),
+            'dTLB-load-misses (M)': (40, 5)
+            #'context-switches': 700
+        }
+    }
+
+    y_config = None
+    if "indep" in programName:
+        y_config = y_settings["indep"]
+    elif "conc" in programName:
+        y_config = y_settings["conc"]
 
     #create subplots: 2 rows x 3 columns
     fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(15, 10))
     axes = axes.flatten()
-
-    #if "indep" in programName:
-    #if "conc" in programName:
+    plt.suptitle(f'{date}_{programName}', fontweight='bold')
 
     #loop through each metric and subplot axis
     for ax, (col, ylabel) in zip(axes, metrics):
+        min_y_value = merged_df[col].min()#find the minimum value for the metric
         for thread in sorted(merged_df['threads'].unique()):
             color = thread_colors.get(thread, 'black')#defaults to black if no color is set in dictionary top of file.
             subset = merged_df[merged_df['threads'] == thread]
@@ -149,8 +180,15 @@ def plot_hashbits_versus_perf_vals(merged_df, date, programName):
         ax.set_xlabel('Hashbits')
         ax.set_ylabel(ylabel)
         ax.legend()
+        ax.grid(True, linestyle='--', alpha=0.7)
         #ensure x-axis ticks are the integers 1 through 18 (for hashbits 1-18)
         ax.set_xticks(range(1, 19))
+        #set the max y-axis limit and y-axis ticks based on programName
+        if y_config and col in y_config:
+            max_y, tick_interval = y_config[col]
+            rounded_min_y = round_down(min_y_value, tick_interval)
+            ax.set_ylim(bottom=min_y_value, top=max_y)
+            ax.set_yticks(np.arange(rounded_min_y, max_y + tick_interval, tick_interval))
 
     plt.tight_layout()
     output_path = os.path.join(plots_results_folder, f'{date}_{programName}_hashbits_vs_perfvals.png')
@@ -187,16 +225,24 @@ def plot_tuples_persec_hashbits(merged_df, date, programName):
     plt.xlabel('hashbits', fontsize=12)
     plt.ylabel('Milions of tuples per second', fontsize = 12)
     plt.title('Millions of tuples per second vs Hashbits by thread count.', fontsize = 14)
+    plt.suptitle(f'{date}_{programName}', fontweight='bold')
     plt.xticks(range(1, 19)) #hashbits from 1 to 18
     plt.grid(True, linestyle='--', alpha=0.7)
 
     plt.legend(title='thread Count', fontsize=10)
 
+    max_y = 0
     # Set y-axis maximum based on programName (values are already in millions)
     if "indep" in programName:
         plt.ylim(top=235)
+        max_y = 235
+        #change last number here to whatever interval you want.
+        plt.yticks(np.arange(0, max_y + 1, 10)) 
     elif "conc" in programName:
         plt.ylim(top=80)
+        max_y = 80
+        #change last number here to whatever interval you want.
+        plt.yticks(np.arange(0, max_y + 1, 5)) 
 
     plt.tight_layout()
 
