@@ -1,3 +1,4 @@
+#SHELL = /bin/bash
 # Variables
 EVENTS := cpu-cycles,cache-misses,page-faults,cpu-migrations,dTLB-load-misses,context-switches
 REPEAT := 5 #lets run tests on 5 reps!
