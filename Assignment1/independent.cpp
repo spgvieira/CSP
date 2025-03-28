@@ -46,21 +46,11 @@ int main(int argc, char* argv[]) {
     std::vector<std::thread> threads;
     std::vector<std::vector<Partition>> threadPartitions(numThreads, 
         std::vector<Partition>(numPartitions));
-    // auto* threadPartitions = new std::vector<std::vector<Partition>>(numThreads, std::vector<Partition>(numPartitions));
 
     // Pre-allocate memory to prevent dynacdmic resizing overhead
     for (auto& threadPartition : threadPartitions)
         for (auto& partition : threadPartition)
             partition.reserve(sizePartition); 
-    
-    // tuple<int64_t, int64_t> temp;
-    // for(int i=0; i<numThreads; i++) {
-    //     for(int j=0; j<numPartitions; j++) {
-    //         for(int k=0; k<numPartitions; k++) {
-    //             temp = threadPartitions[i][j][k];
-    //         }
-    //     }
-    // }
 
     auto start_clock = std::chrono::steady_clock::now();
 
@@ -78,10 +68,6 @@ int main(int argc, char* argv[]) {
     auto end_clock = std::chrono::steady_clock::now();
     std::chrono::duration<double> cpu_time_used = end_clock - start_clock;
     printf("%d,%d,%f\n", numThreads, hashBits, cpu_time_used);
-
-    // cleanup(threadPartitions);
-    // delete threadPartitions;
-    // delete input;
 
     return 0;
 }
