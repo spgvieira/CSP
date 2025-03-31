@@ -28,81 +28,43 @@ all: $(EXECUTABLES)
 # Warm-up
 
 # Independent target
-# independent:
-# 	@echo "Independent"
-# 	@for threads in  $(THREADS); do \
-# 		for hb in $(HASHBITS); do \
-# 			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/independent $$threads $$hb"; \
-# 			perf stat -e $(EVENTS) -o results/$$(date +"%d_%m")_independent_results.txt --append --repeat=$(REPEAT) ./build/independent $$threads $$hb | tee -a results/$$(date +"%d_%m")_independent_time.txt & \
-# 			perf_pid=$$!; \
-# 			wait $$perf_pid; \
-# 		done; \
-# 	done
-# 	@echo "Done"
-
 independent:
 	@echo "Independent"
 	@for threads in  $(THREADS); do \
 		for hb in $(HASHBITS); do \
-			for ((i=0; i<$(REPEAT); i++)); do \
-				echo "Running: independent $$threads $$hb"; \
-				./build/independent $$threads $$hb | tee -a results/$$(date +"%d_%m")_independent.txt; \
-			done; \
+			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/independent $$threads $$hb"; \
+			perf stat -e $(EVENTS) -o results/$$(date +"%d_%m")_independent_results.txt --append --repeat=$(REPEAT) ./build/independent $$threads $$hb | tee -a results/$$(date +"%d_%m")_independent_time.txt & \
+			perf_pid=$$!; \
+			wait $$perf_pid; \
 		done; \
 	done
 	@echo "Done"
 
 # First independent core affinity target
-# indep_core_aff_1:
-# 	@echo "Independent core affinity 1"
-# 	@for threads in  $(THREADS); do \
-# 		for hb in $(HASHBITS); do \
-# 			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/indep_core_aff_1 $$threads $$hb"; \
-# 			perf stat -e $(EVENTS) -o results/$$(date +"%d_%m")_indep_core_aff_1_results.txt --append --repeat=$(REPEAT) ./build/indep_core_aff_1 $$threads $$hb | tee -a results/$$(date +"%d_%m")_indep_core_aff_1_time.txt & \
-# 			perf_pid=$$!; \
-# 			wait $$perf_pid; \
-# 		done; \
-# 	done
-# 	@echo "Done"
-
 indep_core_aff_1:
 	@echo "Independent core affinity 1"
 	@for threads in  $(THREADS); do \
 		for hb in $(HASHBITS); do \
-			for ((i=0; i<$(REPEAT); i++)); do \
-				echo "Running: indep_core_aff_1 $$threads $$hb"; \
-				./build/indep_core_aff_1 $$threads $$hb | tee -a results/$$(date +"%d_%m")_indep_core_aff_1_time.txt; \
-			done; \
+			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/indep_core_aff_1 $$threads $$hb"; \
+			perf stat -e $(EVENTS) -o results/$$(date +"%d_%m")_indep_core_aff_1_results.txt --append --repeat=$(REPEAT) ./build/indep_core_aff_1 $$threads $$hb | tee -a results/$$(date +"%d_%m")_indep_core_aff_1_time.txt & \
+			perf_pid=$$!; \
+			wait $$perf_pid; \
 		done; \
 	done
 	@echo "Done"
 
 # Second independent core affinity target
-# indep_core_aff_2:
-# 	@echo "Independent core affinity 2"
-# 	@for threads in  $(THREADS_CORE_AFF_2); do \
-# 		for hb in $(HASHBITS); do \
-# 			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/indep_core_aff_2 $$threads $$hb"; \
-# 			perf stat -e $(EVENTS) -o results/$$(date +"%d_%m")_indep_core_aff_2_results.txt --append --repeat=$(REPEAT) ./build/indep_core_aff_2 $$threads $$hb | tee -a results/$$(date +"%d_%m")_indep_core_aff_2_time.txt & \
-# 			perf_pid=$$!; \
-# 			wait $$perf_pid; \
-# 		done; \
-# 	done
-#   @echo "Done"
-
 indep_core_aff_2:
 	@echo "Independent core affinity 2"
 	@for threads in  $(THREADS_CORE_AFF_2); do \
 		for hb in $(HASHBITS); do \
-			for ((i=0; i<$(REPEAT); i++)); do \
-				echo "Running: indep_core_aff_2 $$threads $$hb"; \
-				./build/indep_core_aff_2 $$threads $$hb | tee -a results/$$(date +"%d_%m")_indep_core_aff_2_time.txt; \
-			done; \
+			echo "Running: perf stat -e $(EVENTS) --repeat=$(REPEAT) ./build/indep_core_aff_2 $$threads $$hb"; \
+			perf stat -e $(EVENTS) -o results/$$(date +"%d_%m")_indep_core_aff_2_results.txt --append --repeat=$(REPEAT) ./build/indep_core_aff_2 $$threads $$hb | tee -a results/$$(date +"%d_%m")_indep_core_aff_2_time.txt & \
+			perf_pid=$$!; \
+			wait $$perf_pid; \
 		done; \
 	done
-	@echo "Done"
-
-
+  @echo "Done"
 
 # Concurrent target
 concurrent:
