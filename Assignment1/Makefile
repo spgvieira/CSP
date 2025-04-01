@@ -9,8 +9,7 @@ THREADS_CORE_AFF_2 := 16 8 4 2 1
 HASHBITS := 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 
 PERF := /usr/bin/perf
 
-EXECUTABLES = \
-	concurrent independent indep_core_aff_1 indep_core_aff_2 conc_core_aff_1 conc_core_aff_2
+EXECUTABLES = concurrent independent indep_core_aff_1 indep_core_aff_2 conc_core_aff_1 conc_core_aff_2
 
 # Phony targets
 .PHONY: all clean concurrent independent indep_core_aff_1 indep_core_aff_2 conc_core_aff_1 conc_core_aff_2
@@ -65,7 +64,7 @@ indep_core_aff_2:
 			wait $$perf_pid; \
 		done; \
 	done
-  @echo "Done"
+	@echo "Done"
 
 # Concurrent target
 concurrent:
