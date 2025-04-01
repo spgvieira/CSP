@@ -118,40 +118,46 @@ def round_down(value, step):
     return math.floor(value / step) * step
 
 def plot_hashbits_versus_perf_vals(merged_df, date, programName): 
+    #csvData = merged_df
     csvData = merged_df
-    #convert columns for plotting clarity and convert cpu-cycles to billions and cache-misses to millions
-    csvData['cpu-cycles (B)'] = csvData['cpu-cycles'] / 1e9
-    csvData['cache-misses (M)'] = csvData['cache-misses'] / 1e6
-    csvData['dTLB-load-misses (M)'] = csvData['dTLB-load-misses'] / 1e6
-    csvData['page-faults (M)'] = csvData['page-faults'] / 1e6
+    NUM_TUPLES = 16777216
+
+    #convert columns for plotting clarity and to make them show x per tuple.
+    csvData['cpu-cycles per Tuple'] = csvData['cpu-cycles'] / NUM_TUPLES
+    csvData['cache-misses per Tuple'] = csvData['cache-misses'] / NUM_TUPLES
+    csvData['dTLB-load-misses per Tuple'] = csvData['dTLB-load-misses'] / NUM_TUPLES
+    csvData['page-faults per Tuple'] = csvData['page-faults'] / NUM_TUPLES
+    #also calculate for metrics that aren't scaled, but can be commented out later if wanted.
+    #csvData['cpu-migrations per Tuple'] = csvData['cpu-migrations'] / NUM_TUPLES
+    #csvData['context-switches per Tuple'] = csvData['context-switches'] / NUM_TUPLES
 
     #list of metrics to plot and corresponding labels
     metrics = [
-        ('cpu-cycles (B)', 'CPU Cycles in value of billions'),
-        ('cache-misses (M)', 'Cache Misses in value of millions'),
-        ('page-faults (M)', 'Page Faults in value of millions'),
+        ('cpu-cycles per Tuple', 'CPU Cycles per Tuple'),
+        ('cache-misses per Tuple', 'Cache Misses per Tuple'),
+        ('page-faults per Tuple', 'Page Faults per Tuple'),
         ('cpu-migrations', 'CPU Migrations'),
-        ('dTLB-load-misses (M)', 'dTLB Load Misses in value of millions'),
+        ('dTLB-load-misses per Tuple', 'dTLB Load Misses per Tuple'),
         ('context-switches', 'Context Switches')
     ]
 
         #define max y-values and y-axis tick intervals based on programName
     y_settings = {
         "indep": {
-            'cpu-cycles (B)': (60, 5),
-            'cache-misses (M)': (120, 10),
-            'page-faults (M)': (0.35, 0.05),
+            'cpu-cycles per Tuple': (3400, 125),
+            'cache-misses per Tuple': (7, 1),
+            'page-faults per Tuple': (0.020, 0.002),
             'cpu-migrations': (35, 5),
-            'dTLB-load-misses (M)': (40, 5)
-            #'context-switches': 16000 #for core aff1, meget højere, 60000
+            'dTLB-load-misses per Tuple': (2.2, 0.2)
+            #'context-switches per Tuple': (0.001, 0.0001)
         },
         "conc": {
-            'cpu-cycles (B)': (120, 5),
-            'cache-misses (M)': (120, 5),
-            'page-faults (M)': (1.5, 0.2),
+            'cpu-cycles per Tuple': (7500, 250),
+            'cache-misses per Tuple': (7, 1),
+            'page-faults per Tuple': (0.10, 0.02),
             'cpu-migrations': (35, 5),
-            'dTLB-load-misses (M)': (40, 5)
-            #'context-switches': 700
+            'dTLB-load-misses per Tuple': (2.4, 0.2)
+            #'context-switches per Tuple': (0.0005, 0.0001)
         }
     }
 
