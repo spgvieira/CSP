@@ -1,4 +1,4 @@
-threads,hashbits,cpu-cycles:u,cache-misses:u,page-faults:u,cpu-migrations:u,dTLB-load-misses:u,context-switches:u,time_elapsed,wall_time
+threads,hashbits,cpu-cycles,cache-misses,page-faults,cpu-migrations,dTLB-load-misses,context-switches,time_elapsed,wall_time
 16,1,12162825682,34096504,32882,0,16578217,0,4.75416,0.201218
 16,2,12173277038,34986442,32897,0,16572605,0,4.75013,0.207123
 16,3,12213289537,34581223,32930,0,16570067,0,4.76277,0.213185
