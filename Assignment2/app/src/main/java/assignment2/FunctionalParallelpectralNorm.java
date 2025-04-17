@@ -2,20 +2,21 @@ package assignment2;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.concurrent.ForkJoinPool;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
-public class FunctionalSequentialSpectralNorm {
-
+public class FunctionalParallelpectralNorm {
     private static final NumberFormat formatter = new DecimalFormat("#.000000000");
+    private static final ForkJoinPool customPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
 
     record UV(double[] u, double[] v) {}
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         int n = 5500;
         // if (args.length > 0) n = Integer.parseInt(args[0]);
         
-        double result = approximate(n);
+        double result =  customPool.submit(() -> approximate(n)).get();
         System.out.println(formatter.format(result));
     }
 
@@ -39,8 +40,12 @@ public class FunctionalSequentialSpectralNorm {
         double[] u = finalUV.u();
         double[] v = finalUV.v();
 
-        double vBv = IntStream.range(0, n).mapToDouble(i -> u[i] * v[i]).sum();
-        double vv  = IntStream.range(0, n).mapToDouble(i -> v[i] * v[i]).sum();
+        double vBv = customPool.submit(() ->
+            IntStream.range(0, n).parallel().mapToDouble(i -> u[i] * v[i]).sum()
+        ).join();
+        double vv  = customPool.submit(() ->
+            IntStream.range(0, n).parallel().mapToDouble(i -> v[i] * v[i]).sum()
+        ).join();
 
         return Math.sqrt(vBv / vv);
     }
@@ -52,7 +57,7 @@ public class FunctionalSequentialSpectralNorm {
 
     /* multiply vector v by matrix A */
     private static double[] multiplyAv(int n, double[] v) {
-        return IntStream.range(0, n)
+        return IntStream.range(0, n).parallel()
                 .mapToDouble(i ->
                         IntStream.range(0, n)
                                 .mapToDouble(j -> A(i, j) * v[j])
@@ -62,7 +67,7 @@ public class FunctionalSequentialSpectralNorm {
 
     /* multiply vector v by matrix A transposed */
     private static double[] multiplyAtv(int n, double[] v) {
-        return IntStream.range(0, n)
+        return IntStream.range(0, n).parallel()
                 .mapToDouble(i ->
                         IntStream.range(0, n)
                                 .mapToDouble(j -> A(j, i) * v[j])
@@ -74,5 +79,4 @@ public class FunctionalSequentialSpectralNorm {
     private static double[] multiplyAtAv(int n, double[] v) {
         return multiplyAtv(n, multiplyAv(n, v));
     }
-    
 }
