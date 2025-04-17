@@ -20,8 +20,8 @@ public class ImperativeSequentialSpectralNorm {
    private static final NumberFormat formatter = new DecimalFormat("#.000000000");
    
    public static void main(String[] args) {
-      int n = 100;
-      if (args.length > 0) n = Integer.parseInt(args[0]);
+      int n = 5500;
+      // if (args.length > 0) n = Integer.parseInt(args[0]);
       
       System.out.println(formatter.format(new ImperativeSequentialSpectralNorm ().Approximate(n)));
    }
@@ -47,7 +47,7 @@ public class ImperativeSequentialSpectralNorm {
          vBv += u[i]*v[i];
          vv  += v[i]*v[i];
       }
-      
+
       return Math.sqrt(vBv/vv);
    }
    

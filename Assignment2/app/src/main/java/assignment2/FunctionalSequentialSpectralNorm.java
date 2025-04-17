@@ -9,20 +9,40 @@ public class FunctionalSequentialSpectralNorm {
 
     private static final NumberFormat formatter = new DecimalFormat("#.000000000");
 
+    record UV(double[] u, double[] v) {}
+
     public static void main(String[] args) {
-        int n = 100;
-        if (args.length > 0) n = Integer.parseInt(args[0]);
+        int n = 5500;
+        // if (args.length > 0) n = Integer.parseInt(args[0]);
         
         double result = approximate(n);
         System.out.println(formatter.format(result));
     }
 
     // by making it static I know I'm only using input variables
-    private static double approximate(int n) {
-        // create unit vector
-        double[] u = DoubleStream.generate(() -> 1.0).limit(n).toArray();
-    
-        return 0.0;
+    public static double approximate(int n) {
+        double[] uInitial = DoubleStream.generate(() -> 1.0).limit(n).toArray();
+        double[] vInitial = DoubleStream.generate(() -> 0.0).limit(n).toArray();
+
+        UV finalUV = IntStream.range(0, 10)
+            .boxed()
+            .reduce(
+                new UV(uInitial, vInitial), 
+                (uv, i) -> {
+                    double[] vNew = multiplyAtAv(n, uv.u());
+                    double[] uNew = multiplyAtAv(n, vNew);
+                    return new UV(uNew, vNew);
+                },
+                (a, b) -> b 
+            );
+
+        double[] u = finalUV.u();
+        double[] v = finalUV.v();
+
+        double vBv = IntStream.range(0, n).mapToDouble(i -> u[i] * v[i]).sum();
+        double vv  = IntStream.range(0, n).mapToDouble(i -> v[i] * v[i]).sum();
+
+        return Math.sqrt(vBv / vv);
     }
 
     /* return element i,j of infinite matrix A */
