@@ -16,7 +16,7 @@ project_dir = os.path.dirname(current_dir)
 
 #change or add folders here you'd like plots to be written to.
 csv_results_folder = os.path.join(project_dir, 'csv')
-plots_results_folder = os.path.join(project_dir, 'plots/analysis_plots')
+plots_results_folder = os.path.join(project_dir, 'plots/18_04_graphs_symbols_no_title')
 
 #define mapping of thread counts to colors (used in both plots)
 thread_colors = {
@@ -26,6 +26,24 @@ thread_colors = {
     8: 'orange',
     16: 'blue',
     32: 'red'
+}
+
+thread_markers = {
+    1:  'o',
+    2:  's',
+    4:  '^',
+    8:  'D',
+    16: 'X',
+    32: '*'
+}
+
+thread_markersize = {
+    1: 12,   #make the circle marker noticeably bigger
+    2: 9,
+    4: 8,
+    8: 8,
+    16: 8,
+    32: 8
 }
 
 
@@ -167,94 +185,118 @@ def plot_hashbits_versus_perf_vals(merged_df, date, programName):
     elif "conc" in programName:
         y_config = y_settings["conc"]
 
-    #create subplots: 2 rows x 3 columns
-    fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(15, 10))
-    axes = axes.flatten()
-    plt.suptitle(f'{date}_{programName}', fontweight='bold')
 
-    #loop through each metric and subplot axis
-    for ax, (col, ylabel) in zip(axes, metrics):
-        min_y_value = merged_df[col].min()#find the minimum value for the metric
+    #loop through each metric and create individual plots
+    for col, ylabel in metrics:
+        #set plot fig size (same as tuples per second graphs)
+        fig, ax = plt.subplots(figsize = (12,7))
+
         for thread in sorted(merged_df['threads'].unique()):
             color = thread_colors.get(thread, 'black')#defaults to black if no color is set in dictionary top of file.
-            subset = merged_df[merged_df['threads'] == thread]
+            marker = thread_markers.get(thread, 'o')#defaults to 0 marker if no marker present in dict on top.
+            subset = merged_df[merged_df['threads'] == thread] 
             #use plot with marker "o" and line style "-" to connect dots.
             ax.plot(subset['hashbits'], subset[col],
-                    marker='o', markersize=4, linestyle='-', linewidth=1,
-                    label=f'{thread} thread', color=color)
-        ax.set_title(ylabel)
+                    marker=marker, markersize=thread_markersize.get(thread, 8), linestyle='--', linewidth=2,
+                    label=f'{thread} thread(s)', color=color)
+            
+        #set titles of plots/labels
+        #plot_title = f'{ylabel} vs. Hashbits\n({programName} - {date})'
+        #ax.set_title(plot_title, fontweight='bold')
         ax.set_xlabel('Hashbits')
         ax.set_ylabel(ylabel)
-        ax.legend()
+        ax.legend(title="Threads") # Add a title to the legend
         ax.grid(True, linestyle='--', alpha=0.7)
-        #ensure x-axis ticks are the integers 1 through 18 (for hashbits 1-18)
-        ax.set_xticks(range(1, 19))
-        #set the max y-axis limit and y-axis ticks based on programName
+            
+        max_hashbit = int(csvData['hashbits'].max())
+        ax.set_xlim(1, max_hashbit)
+        ax.set_xticks(range(1, max_hashbit + 1))
+
+        min_y_value = merged_df[col].min()#find the minimum value for the metric
+
         if y_config and col in y_config:
             max_y, tick_interval = y_config[col]
             rounded_min_y = round_down(min_y_value, tick_interval)
             ax.set_ylim(bottom=min_y_value, top=max_y)
             ax.set_yticks(np.arange(rounded_min_y, max_y + tick_interval, tick_interval))
+            
+        plt.tight_layout()
+        safe_col_name = col.lower().replace(' ', '_').replace('/', '_per_').replace('-', '_')
 
-    plt.tight_layout()
-    output_path = os.path.join(plots_results_folder, f'{date}_{programName}_hashbits_vs_perfvals.png')
-    plt.savefig(output_path, dpi=300)
+        output_filename = f'{date}_{programName}_{safe_col_name}.png'
+        output_path = os.path.join(plots_results_folder, output_filename)
 
+        plt.savefig(output_path, dpi=300, bbox_inches='tight')
+        print(f"Saved plot: {output_path}")
+
+        # Close the current figure to free memory
+        plt.close(fig)
 
 def plot_tuples_persec_hashbits(merged_df, date, programName):
-    csvData = merged_df
+#compute throughput in millions of tuples/sec
+    csvData = merged_df.copy()
     csvData['throughput_mtps'] = 16.777216 / csvData['wall_time']
 
-    #here we filter the stuff we want from csv
+    #only these threads, sorted by threads and hashbits
     sel_threads = [1, 2, 4, 8, 16, 32]
-    csvData = csvData[csvData['threads'].isin(sel_threads)].sort_values(['threads', 'hashbits'])
+    csvData = (
+        csvData[csvData['threads'].isin(sel_threads)]
+        .sort_values(['threads', 'hashbits'])
+    )
 
-    #creating the plot
-    plt.figure(figsize=(12,7))
+    #find maximum hashbit (so we can lock x-axis from 1 to 18)
+    max_hashbit = int(csvData['hashbits'].max())
 
-    #plot a line for each thread count 1-32:
+    #create figure + axis
+    fig, ax = plt.subplots(figsize=(12, 7))
+
+    #plot each result per threads
     for threads in sel_threads:
         subset = csvData[csvData['threads'] == threads]
-        if not subset.empty:
-            color = thread_colors.get(threads, 'black')#defaults to black if no color is set in dictionary top of file.
-            plt.plot(subset['hashbits'],
-                    subset['throughput_mtps'],#change this to "time_elapsed" if you want to track perf time
-                    marker='o',
-                    linestyle='-',
-                    linewidth=2,
-                    markersize=8,
-                    label=f' {threads} Threads',
-                    color=color)     
-    
-            
-    #appearance of the plot graph
-    plt.xlabel('hashbits', fontsize=12)
-    plt.ylabel('Milions of tuples per second', fontsize = 12)
-    plt.title('Millions of tuples per second vs Hashbits by thread count.', fontsize = 14)
-    plt.suptitle(f'{date}_{programName}', fontweight='bold')
-    plt.xticks(range(1, 19)) #hashbits from 1 to 18
-    plt.grid(True, linestyle='--', alpha=0.7)
+        if subset.empty:
+            continue
+        ax.plot(
+            subset['hashbits'],
+            subset['throughput_mtps'],
+            marker = thread_markers.get(threads, 'o'),#defaults to 0 marker if no marker present in dict on top.,
+            linestyle='--',
+            linewidth=2,
+            markersize=thread_markersize.get(threads, 8),
+            label=f'{threads} Threads',
+            color=thread_colors.get(threads, 'black')
+        )
 
-    plt.legend(title='thread Count', fontsize=10)
+    #labels & grid
+    ax.set_xlabel('Hashbits', fontsize=12)
+    ax.set_ylabel('Millions of tuples per second', fontsize=12)
+    ax.grid(True, linestyle='--', alpha=0.7)
+    ax.legend(title='Thread Count', fontsize=10)
 
-    max_y = 0
-    # Set y-axis maximum based on programName (values are already in millions)
+    #x-axis exactly 1 to max_hashbit, no side marginerinos
+    ax.set_xticks(range(1, max_hashbit + 1))
+    ax.set_xlim(1, max_hashbit)
+
+    #set top‐of‐y based on programName, then apply both limits
     if "indep" in programName:
-        plt.ylim(top=235)
-        max_y = 235
-        #change last number here to whatever interval you want.
-        plt.yticks(np.arange(0, max_y + 1, 10)) 
+        y_top = 235
     elif "conc" in programName:
-        plt.ylim(top=80)
-        max_y = 80
-        #change last number here to whatever interval you want.
-        plt.yticks(np.arange(0, max_y + 1, 5)) 
+        y_top = 235
+
+    ax.set_ylim(bottom=0, top=y_top)
+
+    #custom yticks every 10 units
+    ax.set_yticks(np.arange(0, y_top + 1, 10))
 
     plt.tight_layout()
 
-    output_path = os.path.join(plots_results_folder, f'{date}_{programName}_performance_plot.png')
-    #save plot
-    plt.savefig(output_path, dpi=300)
+    #saving graph to picture/png
+    output_path = os.path.join(
+        plots_results_folder,
+        f'{date}_{programName}_performance_plot.png'
+    )
+    plt.savefig(output_path, dpi=300, bbox_inches='tight')
+    plt.close(fig)
+    print(f"Saved plot: {output_path}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Parse performance results and wall times into CSV')
