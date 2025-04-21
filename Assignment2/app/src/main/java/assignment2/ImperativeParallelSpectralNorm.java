@@ -8,7 +8,7 @@ contributed by Ziad Hatahet
 based on the Go entry by K P anonymous
 */
 
-// JAVA NAOT #3
+// JAVA NAOT #3 (closest in performance that does not use cyclic barriers)
 // https://benchmarksgame-team.pages.debian.net/benchmarksgame/program/spectralnorm-graalvmaot-3.html
 import java.text.DecimalFormat;
 

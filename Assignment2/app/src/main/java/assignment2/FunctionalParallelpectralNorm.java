@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
 
 public class FunctionalParallelpectralNorm {
     private static final NumberFormat formatter = new DecimalFormat("#.000000000");
+    // ForkJoinPool allows me to ensure that there are always a certain amount of threads available
     private static final ForkJoinPool customPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
 
     record UV(double[] u, double[] v) {}

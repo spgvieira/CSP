@@ -9,7 +9,7 @@ public class FunctionalSequentialSpectralNorm {
 
     private static final NumberFormat formatter = new DecimalFormat("#.000000000");
 
-    record UV(double[] u, double[] v) {}
+    record UV(double[] u, double[] v) {} 
 
     public static void main(String[] args) {
         int n = 5500;
@@ -21,9 +21,12 @@ public class FunctionalSequentialSpectralNorm {
 
     // by making it static I know I'm only using input variables
     public static double approximate(int n) {
+        // create unit vector
         double[] uInitial = DoubleStream.generate(() -> 1.0).limit(n).toArray();
+         // 20 steps of the power method
         double[] vInitial = DoubleStream.generate(() -> 0.0).limit(n).toArray();
 
+        // creation of single object to be able to use a Stream to calculate v based on previous u and u based on just calculated v
         UV finalUV = IntStream.range(0, 10)
             .boxed()
             .reduce( // same as fold
@@ -39,6 +42,8 @@ public class FunctionalSequentialSpectralNorm {
         double[] u = finalUV.u();
         double[] v = finalUV.v();
 
+        // B=AtA         A multiplied by A transposed
+        // v.Bv /(v.v)   eigenvalue of v
         double vBv = IntStream.range(0, n).mapToDouble(i -> u[i] * v[i]).sum();
         double vv  = IntStream.range(0, n).mapToDouble(i -> v[i] * v[i]).sum();
 
