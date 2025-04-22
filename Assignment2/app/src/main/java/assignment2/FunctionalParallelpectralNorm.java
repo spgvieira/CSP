@@ -2,14 +2,13 @@ package assignment2;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.concurrent.ForkJoinPool;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
 public class FunctionalParallelpectralNorm {
     private static final NumberFormat formatter = new DecimalFormat("#.000000000");
     // ForkJoinPool allows me to ensure that there are always a certain amount of threads available
-    private static final ForkJoinPool customPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
+    // private static final ForkJoinPool customPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
 
     record UV(double[] u, double[] v) {}
 
@@ -17,7 +16,7 @@ public class FunctionalParallelpectralNorm {
         int n = 5500;
         // if (args.length > 0) n = Integer.parseInt(args[0]);
         
-        double result =  customPool.submit(() -> approximate(n)).get();
+        double result =  approximate(n);
         System.out.println(formatter.format(result));
     }
 
@@ -41,12 +40,8 @@ public class FunctionalParallelpectralNorm {
         double[] u = finalUV.u();
         double[] v = finalUV.v();
 
-        double vBv = customPool.submit(() ->
-            IntStream.range(0, n).parallel().mapToDouble(i -> u[i] * v[i]).sum()
-        ).join();
-        double vv  = customPool.submit(() ->
-            IntStream.range(0, n).parallel().mapToDouble(i -> v[i] * v[i]).sum()
-        ).join();
+        double vBv = IntStream.range(0, n).parallel().mapToDouble(i -> u[i] * v[i]).sum();
+        double vv  = IntStream.range(0, n).parallel().mapToDouble(i -> v[i] * v[i]).sum();
 
         return Math.sqrt(vBv / vv);
     }
