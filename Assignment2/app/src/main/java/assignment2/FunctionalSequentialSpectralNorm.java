@@ -2,6 +2,7 @@ package assignment2;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
@@ -9,7 +10,46 @@ public class FunctionalSequentialSpectralNorm {
 
     private static final NumberFormat formatter = new DecimalFormat("#.000000000");
 
-    record UV(double[] u, double[] v) {} 
+    public static class UV {
+        private final double[] u;
+        private final double[] v;
+
+        public UV(double[] u, double[] v) {
+            this.u = u;
+            this.v = v;
+        }
+
+        public double[] u() {
+            return u;
+        }
+
+        public double[] v() {
+            return v;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            UV uv = (UV) o;
+            return Arrays.equals(u, uv.u) && Arrays.equals(v, uv.v);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = Arrays.hashCode(u);
+            result = 31 * result + Arrays.hashCode(v);
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "UV{" +
+                   "u=" + Arrays.toString(u) +
+                   ", v=" + Arrays.toString(v) +
+                   '}';
+        }
+    }
 
     public static void main(String[] args) {
         int n = 5500;

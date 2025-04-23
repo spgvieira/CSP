@@ -4,6 +4,7 @@ plugins {
     id 'java'
 }
 
+
 def resultsDir = file("experimental_results")
 def perfDir = file("perf_reports")
 def inputs = [1000, 2000, 3000]
