@@ -21,9 +21,13 @@ public class ImperativeSequentialSpectralNorm {
    
    public static void main(String[] args) {
       int n = 5500;
-      // if (args.length > 0) n = Integer.parseInt(args[0]);
-      
-      System.out.println(formatter.format(new ImperativeSequentialSpectralNorm ().Approximate(n)));
+      if (args.length > 0) n = Integer.parseInt(args[0]);
+      long startTime = System.currentTimeMillis();
+      double result = new ImperativeSequentialSpectralNorm ().Approximate(n);
+      formatter.format(result);
+      // System.out.println(formatter.format(new ImperativeSequentialSpectralNorm ().Approximate(n)));
+      long estimatedTime = System.currentTimeMillis() - startTime;
+      System.out.println(estimatedTime);
    }
    
    private final double Approximate(int n) {

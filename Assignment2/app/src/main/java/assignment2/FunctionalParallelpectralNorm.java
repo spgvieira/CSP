@@ -7,17 +7,18 @@ import java.util.stream.IntStream;
 
 public class FunctionalParallelpectralNorm {
     private static final NumberFormat formatter = new DecimalFormat("#.000000000");
-    // ForkJoinPool allows me to ensure that there are always a certain amount of threads available
-    // private static final ForkJoinPool customPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
-
+    
     record UV(double[] u, double[] v) {}
 
     public static void main(String[] args) throws Exception {
         int n = 5500;
-        // if (args.length > 0) n = Integer.parseInt(args[0]);
-        
-        double result =  approximate(n);
-        System.out.println(formatter.format(result));
+        if (args.length > 0) n = Integer.parseInt(args[0]);
+        long startTime = System.currentTimeMillis();
+        double result = approximate(n);
+        formatter.format(result);
+        // System.out.println(formatter.format(result));
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println(estimatedTime);
     }
 
     // by making it static I know I'm only using input variables

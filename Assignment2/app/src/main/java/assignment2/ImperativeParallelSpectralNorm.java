@@ -18,6 +18,7 @@ public class ImperativeParallelSpectralNorm {
 
     public static void main(String[] args) throws InterruptedException {
         final int n = args.length > 0 ? Integer.parseInt(args[0]) : 5500;
+        long startTime = System.currentTimeMillis();
         final var u = new double[n];
         for (int i = 0; i < n; i++)
             u[i] = 1.0;
@@ -33,7 +34,12 @@ public class ImperativeParallelSpectralNorm {
             vBv += u[i] * vi;
             vv += vi * vi;
         }
-        System.out.println(formatter.format(Math.sqrt(vBv / vv)));
+        
+        // System.out.println(formatter.format(Math.sqrt(vBv / vv)));
+        double result = Math.sqrt(vBv / vv);
+        formatter.format(result);
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println(estimatedTime);
     }
 
     private static void aTimesTransp(double[] v, double[] u) throws InterruptedException {

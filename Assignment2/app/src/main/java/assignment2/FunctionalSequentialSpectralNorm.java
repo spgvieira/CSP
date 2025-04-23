@@ -13,10 +13,13 @@ public class FunctionalSequentialSpectralNorm {
 
     public static void main(String[] args) {
         int n = 5500;
-        // if (args.length > 0) n = Integer.parseInt(args[0]);
-        
+        if (args.length > 0) n = Integer.parseInt(args[0]);
+        long startTime = System.currentTimeMillis();
         double result = approximate(n);
-        System.out.println(formatter.format(result));
+        formatter.format(result);
+        // System.out.println(formatter.format(result));
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println(estimatedTime);
     }
 
     // by making it static I know I'm only using input variables
