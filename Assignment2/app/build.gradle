@@ -4,6 +4,7 @@ plugins {
     id 'java'
 }
 
+
 def resultsDir = file("experimental_results")
 def inputs = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
 def dateStr = new SimpleDateFormat("dd_MM").format(new Date())
