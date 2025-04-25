@@ -4,22 +4,25 @@ plugins {
     id 'java'
 }
 
-
 def resultsDir = file("experimental_results")
+def perfDir = file("perf_reports")
 def inputs = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
 def dateStr = new SimpleDateFormat("dd_MM").format(new Date())
 
 tasks.register("imperativeSequentialSpectralNorm", JavaExec) {
     group = "imperative_sequential"
-
     classpath = sourceSets.main.runtimeClasspath
-    mainClass.set("assignment2.ImperativeSequentialSpectralNorm") 
+    mainClass.set("assignment2.ImperativeSequentialSpectralNorm")
 
     def groupName = group
     def timeFileName = "${dateStr}_${groupName}_time.csv"
     def timeFile = file("${resultsDir}/${timeFileName}")
+    def perfReportName = "${dateStr}_${groupName}_perf.data"
+    def perfReportFile = file("${perfDir}/${perfReportName}")
 
     doFirst {
+        resultsDir.mkdirs()
+        perfDir.mkdirs()
         timeFile.text = "input,time_taken\n"
     }
 
@@ -28,7 +31,8 @@ tasks.register("imperativeSequentialSpectralNorm", JavaExec) {
             println "Running with input size $inputSize"
             def output = new ByteArrayOutputStream()
             exec {
-                commandLine 'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
+                commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath,
+                        'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
                 standardOutput = output
                 errorOutput = output
                 ignoreExitValue = true
@@ -41,13 +45,14 @@ tasks.register("imperativeSequentialSpectralNorm", JavaExec) {
 
 tasks.register("imperativeParallelSpectralNorm", JavaExec) {
     group = "imperative_parallel"
-
     classpath = sourceSets.main.runtimeClasspath
-    mainClass.set("assignment2.ImperativeParallelSpectralNorm") // Use mainClass.set()
+    mainClass.set("assignment2.ImperativeParallelSpectralNorm")
 
     def groupName = group
     def timeFileName = "${dateStr}_${groupName}_time.csv"
     def timeFile = file("${resultsDir}/${timeFileName}")
+    def perfReportName = "${dateStr}_${groupName}_perf.data"
+    def perfReportFile = file("${perfDir}/${perfReportName}")
 
     doFirst {
         timeFile.text = "input,time_taken\n"
@@ -58,7 +63,8 @@ tasks.register("imperativeParallelSpectralNorm", JavaExec) {
             println "Running with input size $inputSize"
             def output = new ByteArrayOutputStream()
             exec {
-                commandLine 'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
+                commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath,
+                        'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
                 standardOutput = output
                 errorOutput = output
                 ignoreExitValue = true
@@ -71,13 +77,14 @@ tasks.register("imperativeParallelSpectralNorm", JavaExec) {
 
 tasks.register("functionalSequentialSpectralNorm", JavaExec) {
     group = "functional_sequential"
-
     classpath = sourceSets.main.runtimeClasspath
-    mainClass.set("assignment2.FunctionalSequentialSpectralNorm") // Use mainClass.set()
+    mainClass.set("assignment2.FunctionalSequentialSpectralNorm")
 
     def groupName = group
     def timeFileName = "${dateStr}_${groupName}_time.csv"
     def timeFile = file("${resultsDir}/${timeFileName}")
+    def perfReportName = "${dateStr}_${groupName}_perf.data"
+    def perfReportFile = file("${perfDir}/${perfReportName}")
 
     doFirst {
         timeFile.text = "input,time_taken\n"
@@ -88,7 +95,8 @@ tasks.register("functionalSequentialSpectralNorm", JavaExec) {
             println "Running with input size $inputSize"
             def output = new ByteArrayOutputStream()
             exec {
-                commandLine 'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
+                commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath,
+                        'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
                 standardOutput = output
                 errorOutput = output
                 ignoreExitValue = true
@@ -101,13 +109,14 @@ tasks.register("functionalSequentialSpectralNorm", JavaExec) {
 
 tasks.register("functionalParallelSpectralNorm", JavaExec) {
     group = "functional_parallel"
-
     classpath = sourceSets.main.runtimeClasspath
-    mainClass.set("assignment2.FunctionalParallelSpectralNorm") // Use mainClass.set()
+    mainClass.set("assignment2.FunctionalParallelSpectralNorm")
 
     def groupName = group
     def timeFileName = "${dateStr}_${groupName}_time.csv"
     def timeFile = file("${resultsDir}/${timeFileName}")
+    def perfReportName = "${dateStr}_${groupName}_perf.data"
+    def perfReportFile = file("${perfDir}/${perfReportName}")
 
     doFirst {
         timeFile.text = "input,time_taken\n"
@@ -118,7 +127,8 @@ tasks.register("functionalParallelSpectralNorm", JavaExec) {
             println "Running with input size $inputSize"
             def output = new ByteArrayOutputStream()
             exec {
-                commandLine 'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
+                commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath,
+                        'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
                 standardOutput = output
                 errorOutput = output
                 ignoreExitValue = true
@@ -128,4 +138,3 @@ tasks.register("functionalParallelSpectralNorm", JavaExec) {
         }
     }
 }
-
