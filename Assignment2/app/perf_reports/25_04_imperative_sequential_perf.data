@@ -1,0 +1,160 @@
+# started on Fri Apr 25 08:45:57 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.ImperativeSequentialSpectralNorm 1000' (5 runs):
+
+            780.77 msec task-clock                       #    1.471 CPUs utilized               ( +-  0.52% )
+               523      context-switches                 #  669.851 /sec                        ( +-  4.42% )
+                 7      cpu-migrations                   #    8.966 /sec                        ( +-  9.69% )
+             6,354      page-faults                      #    8.138 K/sec                       ( +-  0.33% )
+     1,254,031,637      cycles                           #    1.606 GHz                         ( +-  0.18% )
+     1,208,203,180      instructions                     #    0.96  insn per cycle              ( +-  0.03% )
+       105,585,001      branches                         #  135.232 M/sec                       ( +-  0.07% )
+        12,993,719      branch-misses                    #   12.31% of all branches             ( +-  0.21% )
+
+           0.53066 +- 0.00169 seconds time elapsed  ( +-  0.32% )
+
+# started on Fri Apr 25 08:46:00 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.ImperativeSequentialSpectralNorm 2000' (5 runs):
+
+          1,571.14 msec task-clock                       #    1.186 CPUs utilized               ( +-  1.05% )
+               517      context-switches                 #  329.060 /sec                        ( +-  1.83% )
+                 6      cpu-migrations                   #    3.819 /sec                        ( +- 19.44% )
+             6,759      page-faults                      #    4.302 K/sec                       ( +-  0.19% )
+     2,835,106,638      cycles                           #    1.804 GHz                         ( +-  0.31% )
+     3,285,836,804      instructions                     #    1.16  insn per cycle              ( +-  0.21% )
+       135,581,836      branches                         #   86.295 M/sec                       ( +-  0.90% )
+        12,827,058      branch-misses                    #    9.46% of all branches             ( +-  1.84% )
+
+           1.32473 +- 0.00415 seconds time elapsed  ( +-  0.31% )
+
+# started on Fri Apr 25 08:46:06 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.ImperativeSequentialSpectralNorm 3000' (5 runs):
+
+          2,899.17 msec task-clock                       #    1.096 CPUs utilized               ( +-  0.53% )
+               542      context-switches                 #  186.950 /sec                        ( +-  1.52% )
+                 8      cpu-migrations                   #    2.759 /sec                        ( +- 10.75% )
+             7,583      page-faults                      #    2.616 K/sec                       ( +-  0.68% )
+     5,472,878,232      cycles                           #    1.888 GHz                         ( +-  0.18% )
+     6,767,216,308      instructions                     #    1.24  insn per cycle              ( +-  0.11% )
+       187,968,149      branches                         #   64.835 M/sec                       ( +-  0.71% )
+        12,870,232      branch-misses                    #    6.85% of all branches             ( +-  2.04% )
+
+           2.64439 +- 0.00551 seconds time elapsed  ( +-  0.21% )
+
+# started on Fri Apr 25 08:46:20 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.ImperativeSequentialSpectralNorm 4000' (5 runs):
+
+          4,752.95 msec task-clock                       #    1.059 CPUs utilized               ( +-  0.26% )
+               616      context-switches                 #  129.604 /sec                        ( +-  3.48% )
+                 9      cpu-migrations                   #    1.894 /sec                        ( +- 17.71% )
+             7,689      page-faults                      #    1.618 K/sec                       ( +-  0.27% )
+     9,160,936,960      cycles                           #    1.927 GHz                         ( +-  0.09% )
+    11,640,562,430      instructions                     #    1.27  insn per cycle              ( +-  0.05% )
+       261,168,872      branches                         #   54.949 M/sec                       ( +-  0.37% )
+        13,156,256      branch-misses                    #    5.04% of all branches             ( +-  1.47% )
+
+           4.48848 +- 0.00489 seconds time elapsed  ( +-  0.11% )
+
+# started on Fri Apr 25 08:46:42 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.ImperativeSequentialSpectralNorm 5000' (5 runs):
+
+          7,134.93 msec task-clock                       #    1.038 CPUs utilized               ( +-  0.09% )
+               681      context-switches                 #   95.446 /sec                        ( +-  3.45% )
+                 9      cpu-migrations                   #    1.261 /sec                        ( +- 19.12% )
+             7,834      page-faults                      #    1.098 K/sec                       ( +-  0.52% )
+    13,910,437,685      cycles                           #    1.950 GHz                         ( +-  0.02% )
+    17,908,264,655      instructions                     #    1.29  insn per cycle              ( +-  0.00% )
+       355,138,119      branches                         #   49.775 M/sec                       ( +-  0.03% )
+        13,858,506      branch-misses                    #    3.90% of all branches             ( +-  0.23% )
+
+           6.87255 +- 0.00187 seconds time elapsed  ( +-  0.03% )
+
+# started on Fri Apr 25 08:47:17 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.ImperativeSequentialSpectralNorm 6000' (5 runs):
+
+         10,047.31 msec task-clock                       #    1.028 CPUs utilized               ( +-  0.04% )
+               769      context-switches                 #   76.538 /sec                        ( +-  3.23% )
+                 8      cpu-migrations                   #    0.796 /sec                        ( +- 18.29% )
+             8,210      page-faults                      #  817.134 /sec                        ( +-  0.45% )
+    19,698,397,041      cycles                           #    1.961 GHz                         ( +-  0.01% )
+    25,560,118,681      instructions                     #    1.30  insn per cycle              ( +-  0.00% )
+       468,948,549      branches                         #   46.674 M/sec                       ( +-  0.02% )
+        14,154,483      branch-misses                    #    3.02% of all branches             ( +-  0.14% )
+
+           9.77211 +- 0.00184 seconds time elapsed  ( +-  0.02% )
+
+# started on Fri Apr 25 08:48:06 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.ImperativeSequentialSpectralNorm 7000' (5 runs):
+
+         13,471.92 msec task-clock                       #    1.021 CPUs utilized               ( +-  0.05% )
+               874      context-switches                 #   64.876 /sec                        ( +-  3.05% )
+                 6      cpu-migrations                   #    0.445 /sec                        ( +- 12.25% )
+             8,501      page-faults                      #  631.016 /sec                        ( +-  0.54% )
+    26,535,772,728      cycles                           #    1.970 GHz                         ( +-  0.01% )
+    34,596,771,434      instructions                     #    1.30  insn per cycle              ( +-  0.01% )
+       602,242,752      branches                         #   44.704 M/sec                       ( +-  0.11% )
+        14,262,431      branch-misses                    #    2.37% of all branches             ( +-  0.85% )
+
+          13.19590 +- 0.00298 seconds time elapsed  ( +-  0.02% )
+
+# started on Fri Apr 25 08:49:12 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.ImperativeSequentialSpectralNorm 8000' (5 runs):
+
+         17,357.58 msec task-clock                       #    1.016 CPUs utilized               ( +-  0.43% )
+               940      context-switches                 #   54.155 /sec                        ( +-  1.28% )
+                 8      cpu-migrations                   #    0.461 /sec                        ( +-  6.12% )
+             8,753      page-faults                      #  504.275 /sec                        ( +-  0.63% )
+    34,304,919,670      cycles                           #    1.976 GHz                         ( +-  0.38% )
+    44,998,559,153      instructions                     #    1.31  insn per cycle              ( +-  0.06% )
+       755,064,292      branches                         #   43.501 M/sec                       ( +-  0.24% )
+        14,336,186      branch-misses                    #    1.90% of all branches             ( +-  1.90% )
+
+           17.0910 +- 0.0627 seconds time elapsed  ( +-  0.37% )
+
+# started on Fri Apr 25 08:50:37 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.ImperativeSequentialSpectralNorm 9000' (5 runs):
+
+         21,912.97 msec task-clock                       #    1.013 CPUs utilized               ( +-  0.03% )
+             1,084      context-switches                 #   49.468 /sec                        ( +-  0.40% )
+                 9      cpu-migrations                   #    0.411 /sec                        ( +- 14.23% )
+             8,689      page-faults                      #  396.523 /sec                        ( +-  0.08% )
+    43,374,040,205      cycles                           #    1.979 GHz                         ( +-  0.01% )
+    56,850,217,804      instructions                     #    1.31  insn per cycle              ( +-  0.01% )
+       931,291,487      branches                         #   42.500 M/sec                       ( +-  0.09% )
+        15,048,491      branch-misses                    #    1.62% of all branches             ( +-  1.04% )
+
+          21.63591 +- 0.00181 seconds time elapsed  ( +-  0.01% )
+
+# started on Fri Apr 25 08:52:25 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.ImperativeSequentialSpectralNorm 10000' (5 runs):
+
+         26,941.49 msec task-clock                       #    1.011 CPUs utilized               ( +-  0.03% )
+             1,221      context-switches                 #   45.320 /sec                        ( +-  1.14% )
+                12      cpu-migrations                   #    0.445 /sec                        ( +- 11.90% )
+             8,943      page-faults                      #  331.942 /sec                        ( +-  0.56% )
+    53,400,196,155      cycles                           #    1.982 GHz                         ( +-  0.03% )
+    70,070,076,038      instructions                     #    1.31  insn per cycle              ( +-  0.00% )
+     1,128,263,044      branches                         #   41.878 M/sec                       ( +-  0.01% )
+        15,581,082      branch-misses                    #    1.38% of all branches             ( +-  0.21% )
+
+          26.66062 +- 0.00763 seconds time elapsed  ( +-  0.03% )
+
