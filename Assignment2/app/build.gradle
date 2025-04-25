@@ -8,6 +8,7 @@ def resultsDir = file("experimental_results")
 def perfDir = file("perf_reports")
 def inputs = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
 def dateStr = new SimpleDateFormat("dd_MM").format(new Date())
+def repeat = 5
 
 tasks.register("imperativeSequentialSpectralNorm", JavaExec) {
     group = "imperative_sequential"
@@ -31,7 +32,7 @@ tasks.register("imperativeSequentialSpectralNorm", JavaExec) {
             println "Running with input size $inputSize"
             def output = new ByteArrayOutputStream()
             exec {
-                commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath,
+                commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath, '--append', "--repeat=${repeat}" ,
                         'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
                 standardOutput = output
                 errorOutput = output
@@ -40,6 +41,7 @@ tasks.register("imperativeSequentialSpectralNorm", JavaExec) {
             def timeTaken = output.toString().trim()
             timeFile << "$inputSize,$timeTaken\n"
         }
+        println "Perf report for ${groupName} generated at: ${perfReportFile.absolutePath}"
     }
 }
 
@@ -63,7 +65,7 @@ tasks.register("imperativeParallelSpectralNorm", JavaExec) {
             println "Running with input size $inputSize"
             def output = new ByteArrayOutputStream()
             exec {
-                commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath,
+                commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath, '--append', "--repeat=${repeat}" ,
                         'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
                 standardOutput = output
                 errorOutput = output
@@ -72,6 +74,7 @@ tasks.register("imperativeParallelSpectralNorm", JavaExec) {
             def timeTaken = output.toString().trim()
             timeFile << "$inputSize,$timeTaken\n"
         }
+        println "Perf report for ${groupName} generated at: ${perfReportFile.absolutePath}"
     }
 }
 
@@ -95,7 +98,7 @@ tasks.register("functionalSequentialSpectralNorm", JavaExec) {
             println "Running with input size $inputSize"
             def output = new ByteArrayOutputStream()
             exec {
-                commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath,
+                commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath, '--append', "--repeat=${repeat}" ,
                         'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
                 standardOutput = output
                 errorOutput = output
@@ -104,6 +107,7 @@ tasks.register("functionalSequentialSpectralNorm", JavaExec) {
             def timeTaken = output.toString().trim()
             timeFile << "$inputSize,$timeTaken\n"
         }
+        println "Perf report for ${groupName} generated at: ${perfReportFile.absolutePath}"
     }
 }
 
@@ -127,7 +131,7 @@ tasks.register("functionalParallelSpectralNorm", JavaExec) {
             println "Running with input size $inputSize"
             def output = new ByteArrayOutputStream()
             exec {
-                commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath,
+                commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath, '--append', "--repeat=${repeat}" ,
                         'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
                 standardOutput = output
                 errorOutput = output
@@ -136,5 +140,6 @@ tasks.register("functionalParallelSpectralNorm", JavaExec) {
             def timeTaken = output.toString().trim()
             timeFile << "$inputSize,$timeTaken\n"
         }
+        println "Perf report for ${groupName} generated at: ${perfReportFile.absolutePath}"
     }
 }
