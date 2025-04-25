@@ -7,6 +7,7 @@ plugins {
 def resultsDir = file("experimental_results")
 def perfDir = file("perf_reports")
 def inputs = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
+def threads = [1,2,4,8,16,32,64,128]
 def dateStr = new SimpleDateFormat("dd_MM").format(new Date())
 def repeat = 5
 
@@ -22,26 +23,27 @@ tasks.register("imperativeSequentialSpectralNorm", JavaExec) {
     def perfReportFile = file("${perfDir}/${perfReportName}")
 
     doFirst {
-        resultsDir.mkdirs()
-        perfDir.mkdirs()
-        timeFile.text = "input,time_taken\n"
+        timeFile.text = "input,${(1..repeat).collect { "time${it}" }.join(',')}\n"
     }
 
     doLast {
         inputs.each { inputSize ->
             println "Running with input size $inputSize"
-            def output = new ByteArrayOutputStream()
-            exec {
-                commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath, '--append', "--repeat=${repeat}" ,
-                        'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
-                standardOutput = output
-                errorOutput = output
-                ignoreExitValue = true
+            def times = []
+            for (int i = 0; i < repeat; i++) {
+                def output = new ByteArrayOutputStream()
+                exec {
+                    commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath, '--append',
+                            'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
+                    standardOutput = output
+                    errorOutput = output
+                    ignoreExitValue = true
+                }
+                def timeTaken = output.toString().trim()
+                times.add(timeTaken)
             }
-            def timeTaken = output.toString().trim()
-            timeFile << "$inputSize,$timeTaken\n"
+            timeFile << "$inputSize,${times.join(',')}\n" 
         }
-        println "Perf report for ${groupName} generated at: ${perfReportFile.absolutePath}"
     }
 }
 
@@ -57,24 +59,29 @@ tasks.register("imperativeParallelSpectralNorm", JavaExec) {
     def perfReportFile = file("${perfDir}/${perfReportName}")
 
     doFirst {
-        timeFile.text = "input,time_taken\n"
+        timeFile.text = "input,thread,${(1..repeat).collect { "time${it}" }.join(',')}\n"
     }
 
     doLast {
         inputs.each { inputSize ->
-            println "Running with input size $inputSize"
-            def output = new ByteArrayOutputStream()
-            exec {
-                commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath, '--append', "--repeat=${repeat}" ,
-                        'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
-                standardOutput = output
-                errorOutput = output
-                ignoreExitValue = true
+            threads.each { threadCount ->
+                println "Running with input size $inputSize and threads $threadCount"
+                def times = []
+                for (int i = 0; i < repeat; i++) {
+                    def output = new ByteArrayOutputStream()
+                    exec {
+                        commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath, '--append',
+                                'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString(), threadCount.toString()
+                        standardOutput = output
+                        errorOutput = output
+                        ignoreExitValue = true
+                    }
+                    def timeTaken = output.toString().trim()
+                    times.add(timeTaken)
+                }
+                timeFile << "$inputSize,$threadCount,${times.join(',')}\n"
             }
-            def timeTaken = output.toString().trim()
-            timeFile << "$inputSize,$timeTaken\n"
         }
-        println "Perf report for ${groupName} generated at: ${perfReportFile.absolutePath}"
     }
 }
 
@@ -90,24 +97,27 @@ tasks.register("functionalSequentialSpectralNorm", JavaExec) {
     def perfReportFile = file("${perfDir}/${perfReportName}")
 
     doFirst {
-        timeFile.text = "input,time_taken\n"
+        timeFile.text = "input,${(1..repeat).collect { "time${it}" }.join(',')}\n"
     }
 
     doLast {
         inputs.each { inputSize ->
             println "Running with input size $inputSize"
-            def output = new ByteArrayOutputStream()
-            exec {
-                commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath, '--append', "--repeat=${repeat}" ,
-                        'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
-                standardOutput = output
-                errorOutput = output
-                ignoreExitValue = true
+            def times = []
+            for (int i = 0; i < repeat; i++) {
+                def output = new ByteArrayOutputStream()
+                exec {
+                    commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath, '--append',
+                            'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
+                    standardOutput = output
+                    errorOutput = output
+                    ignoreExitValue = true
+                }
+                def timeTaken = output.toString().trim()
+                times.add(timeTaken)
             }
-            def timeTaken = output.toString().trim()
-            timeFile << "$inputSize,$timeTaken\n"
+            timeFile << "$inputSize,${times.join(',')}\n" 
         }
-        println "Perf report for ${groupName} generated at: ${perfReportFile.absolutePath}"
     }
 }
 
@@ -123,23 +133,28 @@ tasks.register("functionalParallelSpectralNorm", JavaExec) {
     def perfReportFile = file("${perfDir}/${perfReportName}")
 
     doFirst {
-        timeFile.text = "input,time_taken\n"
+        timeFile.text = "input,thread,${(1..repeat).collect { "time${it}" }.join(',')}\n"
     }
 
     doLast {
         inputs.each { inputSize ->
-            println "Running with input size $inputSize"
-            def output = new ByteArrayOutputStream()
-            exec {
-                commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath, '--append', "--repeat=${repeat}" ,
-                        'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
-                standardOutput = output
-                errorOutput = output
-                ignoreExitValue = true
+            threads.each { threadCount ->
+                println "Running with input size $inputSize and threads $threadCount"
+                def times = []
+                for (int i = 0; i < repeat; i++) {
+                    def output = new ByteArrayOutputStream()
+                    exec {
+                        commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath, '--append',
+                                'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString(), threadCount.toString()
+                        standardOutput = output
+                        errorOutput = output
+                        ignoreExitValue = true
+                    }
+                    def timeTaken = output.toString().trim()
+                    times.add(timeTaken)
+                }
+                timeFile << "$inputSize,$threadCount,${times.join(',')}\n" 
             }
-            def timeTaken = output.toString().trim()
-            timeFile << "$inputSize,$timeTaken\n"
         }
-        println "Perf report for ${groupName} generated at: ${perfReportFile.absolutePath}"
     }
 }

@@ -9,8 +9,6 @@ import java.util.stream.IntStream;
 
 public class FunctionalParallelSpectralNorm {
     private static final NumberFormat formatter = new DecimalFormat("#.000000000");
-    // ForkJoinPool allows me to ensure that there are always a certain amount of threads available
-    private static final ForkJoinPool customPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
 
     public static class UV {
         private final double[] u;
@@ -56,16 +54,18 @@ public class FunctionalParallelSpectralNorm {
     public static void main(String[] args) throws Exception {
         int n = 5500;
         if (args.length > 0) n = Integer.parseInt(args[0]);
+        final int nThreads = args.length > 0 ? Integer.parseInt(args[0]) : 1;
+        final ForkJoinPool customPool = new ForkJoinPool(nThreads);
         long startTime = System.currentTimeMillis();
-        double result =  customPool.submit(() -> approximate(n)).get();
-        formatter.format(result);
+        double result = approximate(n, customPool);
+        String r = formatter.format(result);
         // System.out.println(formatter.format(result));
         long estimatedTime = System.currentTimeMillis() - startTime;
         System.out.println(estimatedTime);
     }
 
     // by making it static I know I'm only using input variables
-    public static double approximate(int n) {
+    public static double approximate(int n, ForkJoinPool pool) {
         double[] uInitial = DoubleStream.generate(() -> 1.0).limit(n).toArray();
         double[] vInitial = DoubleStream.generate(() -> 0.0).limit(n).toArray();
 
@@ -84,12 +84,12 @@ public class FunctionalParallelSpectralNorm {
         double[] u = finalUV.u();
         double[] v = finalUV.v();
 
-        double vBv = customPool.submit(() -> 
+        double vBv = pool.submit(() -> 
             IntStream.range(0, n).parallel().mapToDouble(i -> u[i] * v[i]).sum()
         ).join();
  
 
-        double vv  = customPool.submit(() ->
+        double vv  = pool.submit(() ->
             IntStream.range(0, n).parallel().mapToDouble(i -> v[i] * v[i]).sum()
         ).join();
 
