@@ -4,8 +4,9 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
-import java.util.stream.IntStream;
+import java.util.stream.IntStream; 
 
 public class FunctionalParallelSpectralNorm {
     private static final NumberFormat formatter = new DecimalFormat("#.000000000");
@@ -138,8 +139,7 @@ public class FunctionalParallelSpectralNorm {
                                                             .sum();
                                     result[i] = sum;
                                     return null;
-                                })
-                                .toList());
+                                }).collect(Collectors.toList()));
         return result;
     }
     
@@ -153,8 +153,7 @@ public class FunctionalParallelSpectralNorm {
                                                         .sum();
                                     result[i] = sum;
                                     return null;
-                                })
-                                .toList());
+                                }).collect(Collectors.toList()));
         return result;
     }
     
