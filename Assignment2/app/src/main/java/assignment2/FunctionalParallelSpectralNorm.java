@@ -4,8 +4,9 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
-import java.util.stream.IntStream;
+import java.util.stream.IntStream; 
 
 public class FunctionalParallelSpectralNorm {
     private static final NumberFormat formatter = new DecimalFormat("#.000000000");
@@ -54,7 +55,7 @@ public class FunctionalParallelSpectralNorm {
     public static void main(String[] args) throws Exception {
         int n = 5500;
         if (args.length > 0) n = Integer.parseInt(args[0]);
-        final int nThreads = args.length > 0 ? Integer.parseInt(args[0]) : 1;
+        final int nThreads = args.length > 1 ? Integer.parseInt(args[1]) : 1;
         final ForkJoinPool customPool = new ForkJoinPool(nThreads);
         long startTime = System.currentTimeMillis();
         double result = approximate(n, customPool);
@@ -74,8 +75,8 @@ public class FunctionalParallelSpectralNorm {
             .reduce( // same as fold
                 new UV(uInitial, vInitial),
                 (uv, i) -> {
-                    double[] vNew = multiplyAtAv(n, uv.u());
-                    double[] uNew = multiplyAtAv(n, vNew);
+                    double[] vNew = multiplyAtAv(n, uv.u(), pool);
+                    double[] uNew = multiplyAtAv(n, vNew, pool);
                     return new UV(uNew, vNew);
                 },
                 (a, b) -> b
@@ -101,28 +102,64 @@ public class FunctionalParallelSpectralNorm {
         return 1.0/((i+j)*(i+j+1)/2 +i+1);
     }
 
+    // /* multiply vector v by matrix A */
+    // private static double[] multiplyAv(int n, double[] v) {
+    //     return IntStream.range(0, n).parallel()
+    //             .mapToDouble(i ->
+    //                     IntStream.range(0, n)
+    //                             .mapToDouble(j -> A(i, j) * v[j])
+    //                             .sum())
+    //             .toArray();
+    // }
+
+    // /* multiply vector v by matrix A transposed */
+    // private static double[] multiplyAtv(int n, double[] v) {
+    //     return IntStream.range(0, n).parallel()
+    //             .mapToDouble(i ->
+    //                     IntStream.range(0, n)
+    //                             .mapToDouble(j -> A(j, i) * v[j])
+    //                             .sum())
+    //             .toArray();
+    // }
+
+ 
+
+    // /* multiply vector v by matrix A and then by matrix A transposed */
+    // private static double[] multiplyAtAv(int n, double[] v) {
+    //     return multiplyAtv(n, multiplyAv(n, v));
+    // }
+
     /* multiply vector v by matrix A */
-    private static double[] multiplyAv(int n, double[] v) {
-        return IntStream.range(0, n).parallel()
-                .mapToDouble(i ->
-                        IntStream.range(0, n)
-                                .mapToDouble(j -> A(i, j) * v[j])
-                                .sum())
-                .toArray();
+    private static double[] multiplyAv(int n, double[] v, ForkJoinPool pool) {
+        double[] result = new double[n];
+        pool.invokeAll(IntStream.range(0, n)
+                                .mapToObj(i -> (java.util.concurrent.Callable<Void>) () -> {
+                                    double sum = IntStream.range(0, n)
+                                                            .mapToDouble(j -> A(i, j) * v[j])
+                                                            .sum();
+                                    result[i] = sum;
+                                    return null;
+                                }).collect(Collectors.toList()));
+        return result;
     }
-
+    
     /* multiply vector v by matrix A transposed */
-    private static double[] multiplyAtv(int n, double[] v) {
-        return IntStream.range(0, n).parallel()
-                .mapToDouble(i ->
-                        IntStream.range(0, n)
-                                .mapToDouble(j -> A(j, i) * v[j])
-                                .sum())
-                .toArray();
+    private static double[] multiplyAtv(int n, double[] v, ForkJoinPool pool) {
+        double[] result = new double[n];
+        pool.invokeAll(IntStream.range(0, n)
+                                .mapToObj(i -> (java.util.concurrent.Callable<Void>) () -> {
+                                    double sum = IntStream.range(0, n)
+                                                        .mapToDouble(j -> A(j, i) * v[j])
+                                                        .sum();
+                                    result[i] = sum;
+                                    return null;
+                                }).collect(Collectors.toList()));
+        return result;
     }
-
+    
     /* multiply vector v by matrix A and then by matrix A transposed */
-    private static double[] multiplyAtAv(int n, double[] v) {
-        return multiplyAtv(n, multiplyAv(n, v));
+    private static double[] multiplyAtAv(int n, double[] v, ForkJoinPool pool) {
+        return multiplyAtv(n, multiplyAv(n, v, pool), pool);
     }
+      
 }

@@ -19,7 +19,7 @@ public class ImperativeParallelSpectralNorm {
 
     public static void main(String[] args) throws InterruptedException {
         final int n = args.length > 0 ? Integer.parseInt(args[0]) : 5500;
-        final int nThreads = args.length > 0 ? Integer.parseInt(args[0]) : 1;
+        final int nThreads = args.length > 1 ? Integer.parseInt(args[1]) : 1;
         final ForkJoinPool customPool = new ForkJoinPool(nThreads);
         long startTime = System.currentTimeMillis();
         final var u = new double[n];
