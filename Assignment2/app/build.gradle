@@ -11,6 +11,8 @@ def threads = [1,2,4,8,16,32,64,128]
 def dateStr = new SimpleDateFormat("dd_MM").format(new Date())
 def repeat = 5
 
+def perfEvents = 'task-clock,context-switches,cpu-migrations,page-faults,major-faults,kmalloc,kfree,brk,mmap'
+
 tasks.register("imperativeSequentialSpectralNorm", JavaExec) {
     group = "imperative_sequential"
     classpath = sourceSets.main.runtimeClasspath
@@ -33,7 +35,9 @@ tasks.register("imperativeSequentialSpectralNorm", JavaExec) {
             for (int i = 0; i < repeat; i++) {
                 def output = new ByteArrayOutputStream()
                 exec {
-                    commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath, '--append',
+                    commandLine 'perf', 'stat',
+                            '-e', perfEvents,
+                            '-o', perfReportFile.absolutePath, '--append',
                             'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
                     standardOutput = output
                     errorOutput = output
@@ -42,7 +46,7 @@ tasks.register("imperativeSequentialSpectralNorm", JavaExec) {
                 def timeTaken = output.toString().trim()
                 times.add(timeTaken)
             }
-            timeFile << "$inputSize,${times.join(',')}\n" 
+            timeFile << "$inputSize,${times.join(',')}\n"
         }
     }
 }
@@ -70,7 +74,9 @@ tasks.register("imperativeParallelSpectralNorm", JavaExec) {
                 for (int i = 0; i < repeat; i++) {
                     def output = new ByteArrayOutputStream()
                     exec {
-                        commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath, '--append',
+                        commandLine 'perf', 'stat',
+                                '-e', perfEvents,
+                                '-o', perfReportFile.absolutePath, '--append',
                                 'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString(), threadCount.toString()
                         standardOutput = output
                         errorOutput = output
@@ -107,7 +113,9 @@ tasks.register("functionalSequentialSpectralNorm", JavaExec) {
             for (int i = 0; i < repeat; i++) {
                 def output = new ByteArrayOutputStream()
                 exec {
-                    commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath, '--append',
+                    commandLine 'perf', 'stat',
+                            '-e', perfEvents,
+                            '-o', perfReportFile.absolutePath, '--append',
                             'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
                     standardOutput = output
                     errorOutput = output
@@ -116,7 +124,7 @@ tasks.register("functionalSequentialSpectralNorm", JavaExec) {
                 def timeTaken = output.toString().trim()
                 times.add(timeTaken)
             }
-            timeFile << "$inputSize,${times.join(',')}\n" 
+            timeFile << "$inputSize,${times.join(',')}\n"
         }
     }
 }
@@ -144,7 +152,9 @@ tasks.register("functionalParallelSpectralNorm", JavaExec) {
                 for (int i = 0; i < repeat; i++) {
                     def output = new ByteArrayOutputStream()
                     exec {
-                        commandLine 'perf', 'stat', '-o', perfReportFile.absolutePath, '--append',
+                        commandLine 'perf', 'stat',
+                                '-e', perfEvents,
+                                '-o', perfReportFile.absolutePath, '--append',
                                 'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString(), threadCount.toString()
                         standardOutput = output
                         errorOutput = output
@@ -153,7 +163,7 @@ tasks.register("functionalParallelSpectralNorm", JavaExec) {
                     def timeTaken = output.toString().trim()
                     times.add(timeTaken)
                 }
-                timeFile << "$inputSize,$threadCount,${times.join(',')}\n" 
+                timeFile << "$inputSize,$threadCount,${times.join(',')}\n"
             }
         }
     }
