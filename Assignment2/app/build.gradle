@@ -14,19 +14,16 @@ def registerPerfTask(name, groupName, mainClassName, isParallel = false) {
             def dateStr = new SimpleDateFormat("dd_MM").format(new Date())
             def resultsDir = file("experimental_results")
             def perfDir = file("perf_reports")
-            def memDir = file("memory_reports")
+            // def memDir = file("mem_pid_reports")
+            def memDir = file("mem_reports")
             def timeFileName = "${dateStr}_${groupName}_time.csv"
             def timeFile = file("${resultsDir}/${timeFileName}")
             def perfReportName = "${dateStr}_${groupName}_perf.data"
             def perfReportFile = file("${perfDir}/${perfReportName}")
-            def memReportName = "${dateStr}_${groupName}_mem.data"
+            def memReportName = "${dateStr}_${groupName}_mem_pid.csv"
             def memReportFile = file("${memDir}/${memReportName}")
             def repeat = 5
 
-            resultsDir.mkdirs()
-            perfDir.mkdirs()
-
-            // Save files in task context for use in doLast
             project.ext["${name}_timeFile"] = timeFile
             project.ext["${name}_perfFile"] = perfReportFile
             project.ext["${name}_memFile"] = memReportFile
@@ -46,6 +43,7 @@ def registerPerfTask(name, groupName, mainClassName, isParallel = false) {
             def perfEvents = 'task-clock,context-switches,cpu-migrations,page-faults,major-faults'
             def repeat = 5 
 
+            // def memoryScript = file("record_memory_pid.sh").absolutePath
             def memoryScript = file("record_memory.sh").absolutePath
 
             inputs.each { inputSize ->
@@ -69,12 +67,13 @@ def registerPerfTask(name, groupName, mainClassName, isParallel = false) {
                         def process = processBuilder.start()
                         def pid = process.pid()
 
-                        // Launch memory script in background
+                        // def memScriptProcess = new ProcessBuilder(
+                        //     "sh", memoryScript, pid.toString(), memReportFile.absolutePath, *argsList
+                        // ).inheritIO().start()
                         def memScriptProcess = new ProcessBuilder(
-                            "sh", memoryScript, pid.toString(), memReportFile.absolutePath, *argsList
+                            "sh", memoryScript, memReportFile.absolutePath, *argsList
                         ).inheritIO().start()
 
-                        // Collect output
                         def reader = new BufferedReader(new InputStreamReader(process.inputStream))
                         def output = new StringBuilder()
                         String line
