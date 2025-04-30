@@ -4,167 +4,100 @@ plugins {
     id 'java'
 }
 
-def resultsDir = file("experimental_results")
-def perfDir = file("perf_reports")
-def inputs = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
-def threads = [1,2,4,8,16,32]
-def dateStr = new SimpleDateFormat("dd_MM").format(new Date())
-def repeat = 5
+def registerPerfTask(name, groupName, mainClassName, isParallel = false) {
+    tasks.register(name, JavaExec) {
+        group = groupName
+        classpath = sourceSets.main.runtimeClasspath
+        mainClass.set(mainClassName)
 
-def perfEvents = 'task-clock,context-switches,cpu-migrations,page-faults,major-faults'
+        doFirst {
+            def dateStr = new SimpleDateFormat("dd_MM").format(new Date())
+            def resultsDir = file("experimental_results")
+            def perfDir = file("perf_reports")
+            def memDir = file("memory_reports")
+            def timeFileName = "${dateStr}_${groupName}_time.csv"
+            def timeFile = file("${resultsDir}/${timeFileName}")
+            def perfReportName = "${dateStr}_${groupName}_perf.data"
+            def perfReportFile = file("${perfDir}/${perfReportName}")
+            def memReportName = "${dateStr}_${groupName}_mem.data"
+            def memReportFile = file("${memDir}/${memReportName}")
+            def repeat = 5
 
-tasks.register("imperativeSequentialSpectralNorm", JavaExec) {
-    group = "imperative_sequential"
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass.set("assignment2.ImperativeSequentialSpectralNorm")
+            resultsDir.mkdirs()
+            perfDir.mkdirs()
 
-    def groupName = group
-    def timeFileName = "${dateStr}_${groupName}_time.csv"
-    def timeFile = file("${resultsDir}/${timeFileName}")
-    def perfReportName = "${dateStr}_${groupName}_perf.data"
-    def perfReportFile = file("${perfDir}/${perfReportName}")
+            // Save files in task context for use in doLast
+            project.ext["${name}_timeFile"] = timeFile
+            project.ext["${name}_perfFile"] = perfReportFile
+            project.ext["${name}_memFile"] = memReportFile
 
-    doFirst {
-        timeFile.text = "input,${(1..repeat).collect { "time${it}" }.join(',')}\n"
-    }
-
-    doLast {
-        inputs.each { inputSize ->
-            println "Running with input size $inputSize"
-            def times = []
-            for (int i = 0; i < repeat; i++) {
-                def output = new ByteArrayOutputStream()
-                exec {
-                    commandLine 'perf', 'stat',
-                            '-e', perfEvents,
-                            '-o', perfReportFile.absolutePath, '--append',
-                            'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
-                    standardOutput = output
-                    errorOutput = output
-                    ignoreExitValue = true
-                }
-                def timeTaken = output.toString().trim()
-                times.add(timeTaken)
-            }
-            timeFile << "$inputSize,${times.join(',')}\n"
+            timeFile.text = isParallel ?
+                "input,thread,${(1..repeat).collect { "time${it}" }.join(',')}\n" :
+                "input,${(1..repeat).collect { "time${it}" }.join(',')}\n"
         }
-    }
-}
 
-tasks.register("imperativeParallelSpectralNorm", JavaExec) {
-    group = "imperative_parallel"
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass.set("assignment2.ImperativeParallelSpectralNorm")
+        doLast {
+            def timeFile = project.ext["${name}_timeFile"]
+            def perfReportFile = project.ext["${name}_perfFile"]
+            def memReportFile = project.ext["${name}_memFile"]
 
-    def groupName = group
-    def timeFileName = "${dateStr}_${groupName}_time.csv"
-    def timeFile = file("${resultsDir}/${timeFileName}")
-    def perfReportName = "${dateStr}_${groupName}_perf.data"
-    def perfReportFile = file("${perfDir}/${perfReportName}")
+            def inputs = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
+            def threads = [1, 2, 4, 8, 16, 32]
+            def perfEvents = 'task-clock,context-switches,cpu-migrations,page-faults,major-faults'
+            def repeat = 5 
 
-    doFirst {
-        timeFile.text = "input,thread,${(1..repeat).collect { "time${it}" }.join(',')}\n"
-    }
+            def memoryScript = file("record_memory.sh").absolutePath
 
-    doLast {
-        inputs.each { inputSize ->
-            threads.each { threadCount ->
-                println "Running with input size $inputSize and threads $threadCount"
-                def times = []
-                for (int i = 0; i < repeat; i++) {
-                    def output = new ByteArrayOutputStream()
-                    exec {
-                        commandLine 'perf', 'stat',
-                                '-e', perfEvents,
-                                '-o', perfReportFile.absolutePath, '--append',
-                                'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString(), threadCount.toString()
-                        standardOutput = output
-                        errorOutput = output
-                        ignoreExitValue = true
+            inputs.each { inputSize ->
+                def threadLoop = isParallel ? threads : [null]
+                threadLoop.each { threadCount ->
+                    println "Running with input size $inputSize" + (isParallel ? " and threads $threadCount" : "")
+                    def times = []
+                    for (int i = 0; i < repeat; i++) {
+                        def argsList = isParallel ? [inputSize.toString(), threadCount.toString()] : [inputSize.toString()]
+
+                        def processBuilder = new ProcessBuilder(
+                            "java", "-cp", classpath.asPath, mainClassName, *argsList
+                        )
+                        // def processBuilder = new ProcessBuilder(
+                        //     "perf", "stat",
+                        //     "-e", perfEvents,
+                        //     "-o", perfReportFile.absolutePath, "--append",
+                        //     "java", "-cp", classpath.asPath, mainClassName, *argsList
+                        // )
+                        // processBuilder.redirectErrorStream(true)
+                        def process = processBuilder.start()
+                        def pid = process.pid()
+
+                        // Launch memory script in background
+                        def memScriptProcess = new ProcessBuilder(
+                            "sh", memoryScript, pid.toString(), memReportFile.absolutePath, *argsList
+                        ).inheritIO().start()
+
+                        // Collect output
+                        def reader = new BufferedReader(new InputStreamReader(process.inputStream))
+                        def output = new StringBuilder()
+                        String line
+                        while ((line = reader.readLine()) != null) {
+                            output.append(line).append("\n")
+                        }
+
+                        process.waitFor()
+                        memScriptProcess.waitFor()
+
+                        def timeTaken = output.toString().trim()
+                        times.add(timeTaken)
                     }
-                    def timeTaken = output.toString().trim()
-                    times.add(timeTaken)
+
+                    def line = isParallel ? "$inputSize,$threadCount,${times.join(',')}" : "$inputSize,${times.join(',')}"
+                    timeFile << "$line\n"
                 }
-                timeFile << "$inputSize,$threadCount,${times.join(',')}\n"
             }
         }
     }
 }
 
-tasks.register("functionalSequentialSpectralNorm", JavaExec) {
-    group = "functional_sequential"
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass.set("assignment2.FunctionalSequentialSpectralNorm")
-
-    def groupName = group
-    def timeFileName = "${dateStr}_${groupName}_time.csv"
-    def timeFile = file("${resultsDir}/${timeFileName}")
-    def perfReportName = "${dateStr}_${groupName}_perf.data"
-    def perfReportFile = file("${perfDir}/${perfReportName}")
-
-    doFirst {
-        timeFile.text = "input,${(1..repeat).collect { "time${it}" }.join(',')}\n"
-    }
-
-    doLast {
-        inputs.each { inputSize ->
-            println "Running with input size $inputSize"
-            def times = []
-            for (int i = 0; i < repeat; i++) {
-                def output = new ByteArrayOutputStream()
-                exec {
-                    commandLine 'perf', 'stat',
-                            '-e', perfEvents,
-                            '-o', perfReportFile.absolutePath, '--append',
-                            'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString()
-                    standardOutput = output
-                    errorOutput = output
-                    ignoreExitValue = true
-                }
-                def timeTaken = output.toString().trim()
-                times.add(timeTaken)
-            }
-            timeFile << "$inputSize,${times.join(',')}\n"
-        }
-    }
-}
-
-tasks.register("functionalParallelSpectralNorm", JavaExec) {
-    group = "functional_parallel"
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass.set("assignment2.FunctionalParallelSpectralNorm")
-
-    def groupName = group
-    def timeFileName = "${dateStr}_${groupName}_time.csv"
-    def timeFile = file("${resultsDir}/${timeFileName}")
-    def perfReportName = "${dateStr}_${groupName}_perf.data"
-    def perfReportFile = file("${perfDir}/${perfReportName}")
-
-    doFirst {
-        timeFile.text = "input,thread,${(1..repeat).collect { "time${it}" }.join(',')}\n"
-    }
-
-    doLast {
-        inputs.each { inputSize ->
-            threads.each { threadCount ->
-                println "Running with input size $inputSize and threads $threadCount"
-                def times = []
-                for (int i = 0; i < repeat; i++) {
-                    def output = new ByteArrayOutputStream()
-                    exec {
-                        commandLine 'perf', 'stat',
-                                '-e', perfEvents,
-                                '-o', perfReportFile.absolutePath, '--append',
-                                'java', '-cp', classpath.asPath, mainClass.get(), inputSize.toString(), threadCount.toString()
-                        standardOutput = output
-                        errorOutput = output
-                        ignoreExitValue = true
-                    }
-                    def timeTaken = output.toString().trim()
-                    times.add(timeTaken)
-                }
-                timeFile << "$inputSize,$threadCount,${times.join(',')}\n"
-            }
-        }
-    }
-}
+registerPerfTask("imperativeSequentialSpectralNorm", "imperative_sequential", "assignment2.ImperativeSequentialSpectralNorm", false)
+registerPerfTask("imperativeParallelSpectralNorm", "imperative_parallel", "assignment2.ImperativeParallelSpectralNorm", true)
+registerPerfTask("functionalSequentialSpectralNorm", "functional_sequential", "assignment2.FunctionalSequentialSpectralNorm", false)
+registerPerfTask("functionalParallelSpectralNorm", "functional_parallel", "assignment2.FunctionalParallelSpectralNorm", true)
