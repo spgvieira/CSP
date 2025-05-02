@@ -26,9 +26,11 @@ def registerMemoryTask(name, groupName, mainClassName, algo, isParallel = false)
             def fileName = "${dateStr}_${groupName}.csv"
             def timeFile = file("${resultsDir}/${algo}/${fileName}")
             def memFile = file("${memDir}/${algo}/${fileName}")
+            def memPidFile = file("${memPidDir}/${algo}/${fileName}")
 
             project.ext["${name}_timeFile"] = timeFile
             project.ext["${name}_memFile"] = memFile
+            project.ext["${name}_memPidFile"] = memPidFile
 
             timeFile.text = isParallel ?
                 "input,thread,${(1..repeat).collect { "time${it}" }.join(',')}\n" :
@@ -37,7 +39,8 @@ def registerMemoryTask(name, groupName, mainClassName, algo, isParallel = false)
         }
         doLast {
             def timeFile = project.ext["${name}_timeFile"]
-            def memReportFile = project.ext["${name}_memFile"]
+            def memFile = project.ext["${name}_memFile"]
+            def memPidFile = project.ext["${name}_memPidFile"]
             def inputs = project.ext.inputs
             def threads = project.ext.threads
             def repeat = project.ext.repeat 
@@ -60,12 +63,12 @@ def registerMemoryTask(name, groupName, mainClassName, algo, isParallel = false)
                         def process = processBuilder.start()
                         def pid = process.pid()
 
-                        def memScriptProcess = new ProcessBuilder(
-                            "sh", memoryScript,  memReportFile.absolutePath, *argsList
-                        ).inheritIO().start()
-                        // def memPidScriptProcess = new ProcessBuilder(
-                        //     "sh", memoryPidScript, pid.toString(), memReportFile.absolutePath, *argsList
+                        // def memScriptProcess = new ProcessBuilder(
+                        //     "sh", memoryScript,  memFile.absolutePath, *argsList
                         // ).inheritIO().start()
+                        def memPidScriptProcess = new ProcessBuilder(
+                            "sh", memoryPidScript, pid.toString(), memPidFile.absolutePath, *argsList
+                        ).inheritIO().start()
 
                         def reader = new BufferedReader(new InputStreamReader(process.inputStream))
                         def output = new StringBuilder()
@@ -75,8 +78,8 @@ def registerMemoryTask(name, groupName, mainClassName, algo, isParallel = false)
                         }
 
                         process.waitFor()
-                        memScriptProcess.waitFor()
-                        // memPidScriptProcess.waitFor()
+                        // memScriptProcess.waitFor()
+                        memPidScriptProcess.waitFor()
 
                         def timeTaken = output.toString().trim()
                         times.add(timeTaken)
