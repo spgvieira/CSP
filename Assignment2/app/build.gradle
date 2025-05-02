@@ -4,7 +4,18 @@ plugins {
     id 'java'
 }
 
-def registerPerfTask(name, groupName, mainClassName, isParallel = false) {
+ext {
+    inputs = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
+    threads = [1, 2, 4, 8, 16, 32]
+    repeat = 5
+    perfEventsList = 'task-clock,context-switches,cpu-migrations,page-faults,major-faults,dTLB-load-misses,cache-misses'
+    resultsDir = file("experimental_results")
+    memPidDir = file("mem_pid_reports")
+    memDir = file("mem_reports")
+    perfDir = file("perf_reports")
+}
+
+def registerMemoryTask(name, groupName, mainClassName, algo, isParallel = false){
     tasks.register(name, JavaExec) {
         group = groupName
         classpath = sourceSets.main.runtimeClasspath
@@ -12,38 +23,26 @@ def registerPerfTask(name, groupName, mainClassName, isParallel = false) {
 
         doFirst {
             def dateStr = new SimpleDateFormat("dd_MM").format(new Date())
-            def resultsDir = file("experimental_results")
-            def perfDir = file("perf_reports")
-            // def memDir = file("mem_pid_reports")
-            def memDir = file("mem_reports")
-            def timeFileName = "${dateStr}_${groupName}_time.csv"
-            def timeFile = file("${resultsDir}/${timeFileName}")
-            def perfReportName = "${dateStr}_${groupName}_perf.data"
-            def perfReportFile = file("${perfDir}/${perfReportName}")
-            def memReportName = "${dateStr}_${groupName}_mem_pid.csv"
-            def memReportFile = file("${memDir}/${memReportName}")
-            def repeat = 5
+            def fileName = "${dateStr}_${groupName}.csv"
+            def timeFile = file("${resultsDir}/${algo}/${fileName}")
+            def memFile = file("${memDir}/${algo}/${fileName}")
 
             project.ext["${name}_timeFile"] = timeFile
-            project.ext["${name}_perfFile"] = perfReportFile
-            project.ext["${name}_memFile"] = memReportFile
+            project.ext["${name}_memFile"] = memFile
 
             timeFile.text = isParallel ?
                 "input,thread,${(1..repeat).collect { "time${it}" }.join(',')}\n" :
                 "input,${(1..repeat).collect { "time${it}" }.join(',')}\n"
+            // memReportFile.text = "Input,Thread,Timestamp,MemoryUsage(MB)\n"
         }
-
         doLast {
             def timeFile = project.ext["${name}_timeFile"]
-            def perfReportFile = project.ext["${name}_perfFile"]
             def memReportFile = project.ext["${name}_memFile"]
+            def inputs = project.ext.inputs
+            def threads = project.ext.threads
+            def repeat = project.ext.repeat 
 
-            def inputs = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
-            def threads = [1, 2, 4, 8, 16, 32]
-            def perfEvents = 'task-clock,context-switches,cpu-migrations,page-faults,major-faults'
-            def repeat = 5 
-
-            // def memoryScript = file("record_memory_pid.sh").absolutePath
+            def memoryPidScript = file("record_memory_pid.sh").absolutePath
             def memoryScript = file("record_memory.sh").absolutePath
 
             inputs.each { inputSize ->
@@ -57,22 +56,16 @@ def registerPerfTask(name, groupName, mainClassName, isParallel = false) {
                         def processBuilder = new ProcessBuilder(
                             "java", "-cp", classpath.asPath, mainClassName, *argsList
                         )
-                        // def processBuilder = new ProcessBuilder(
-                        //     "perf", "stat",
-                        //     "-e", perfEvents,
-                        //     "-o", perfReportFile.absolutePath, "--append",
-                        //     "java", "-cp", classpath.asPath, mainClassName, *argsList
-                        // )
-                        // processBuilder.redirectErrorStream(true)
+
                         def process = processBuilder.start()
                         def pid = process.pid()
 
-                        // def memScriptProcess = new ProcessBuilder(
-                        //     "sh", memoryScript, pid.toString(), memReportFile.absolutePath, *argsList
-                        // ).inheritIO().start()
                         def memScriptProcess = new ProcessBuilder(
-                            "sh", memoryScript, memReportFile.absolutePath, *argsList
+                            "sh", memoryScript,  memReportFile.absolutePath, *argsList
                         ).inheritIO().start()
+                        // def memPidScriptProcess = new ProcessBuilder(
+                        //     "sh", memoryPidScript, pid.toString(), memReportFile.absolutePath, *argsList
+                        // ).inheritIO().start()
 
                         def reader = new BufferedReader(new InputStreamReader(process.inputStream))
                         def output = new StringBuilder()
@@ -83,6 +76,7 @@ def registerPerfTask(name, groupName, mainClassName, isParallel = false) {
 
                         process.waitFor()
                         memScriptProcess.waitFor()
+                        // memPidScriptProcess.waitFor()
 
                         def timeTaken = output.toString().trim()
                         times.add(timeTaken)
@@ -96,7 +90,74 @@ def registerPerfTask(name, groupName, mainClassName, isParallel = false) {
     }
 }
 
-registerPerfTask("imperativeSequentialSpectralNorm", "imperative_sequential", "assignment2.ImperativeSequentialSpectralNorm", false)
-registerPerfTask("imperativeParallelSpectralNorm", "imperative_parallel", "assignment2.ImperativeParallelSpectralNorm", true)
-registerPerfTask("functionalSequentialSpectralNorm", "functional_sequential", "assignment2.FunctionalSequentialSpectralNorm", false)
-registerPerfTask("functionalParallelSpectralNorm", "functional_parallel", "assignment2.FunctionalParallelSpectralNorm", true)
+def registerPerfTask(name, groupName, mainClassName, algo, isParallel = false) {
+    tasks.register(name, JavaExec) {
+        group = groupName
+        classpath = sourceSets.main.runtimeClasspath
+        mainClass.set(mainClassName)
+
+        doFirst {
+            def dateStr = new SimpleDateFormat("dd_MM").format(new Date())
+            def fileName = "${dateStr}_${groupName}"
+            def timeFile = file("${resultsDir}/${algo}/${fileName}.csv")
+            def perfReportFile = file("${perfDir}/${algo}/${fileName}.txt")
+            project.ext["${name}_timeFile"] = timeFile
+            project.ext["${name}_perfFile"] = perfReportFile
+
+            timeFile.text = isParallel ?
+                "input,thread,${(1..repeat).collect { "time${it}" }.join(',')}\n" :
+                "input,${(1..repeat).collect { "time${it}" }.join(',')}\n"
+        }
+
+        doLast {
+            def timeFile = project.ext["${name}_timeFile"]
+            def perfReportFile = project.ext["${name}_perfFile"]
+            def inputs = project.ext.inputs
+            def threads = project.ext.threads
+            def perfEvents = project.ext.perfEventsList
+            def repeat = project.ext.repeat
+
+            inputs.each { inputSize ->
+                def threadLoop = isParallel ? threads : [null]
+                threadLoop.each { threadCount ->
+                    println "Running with input size $inputSize" + (isParallel ? " and threads $threadCount" : "")
+                    def times = []
+                    for (int i = 0; i < repeat; i++) {
+                        def argsList = isParallel ? [inputSize.toString(), threadCount.toString()] : [inputSize.toString()]
+
+                        def processBuilder = new ProcessBuilder(
+                            "perf", "stat",
+                            "-e", perfEvents,
+                            "-o", perfReportFile.absolutePath, "--append",
+                            "java", "-cp", classpath.asPath, mainClassName, *argsList
+                        )
+                        def process = processBuilder.start()
+
+                        def reader = new BufferedReader(new InputStreamReader(process.inputStream))
+                        def output = new StringBuilder()
+                        String line
+                        while ((line = reader.readLine()) != null) {
+                            output.append(line).append("\n")
+                        }
+                        process.waitFor()
+                        def timeTaken = output.toString().trim()
+                        times.add(timeTaken)
+                    }
+
+                    def line = isParallel ? "$inputSize,$threadCount,${times.join(',')}" : "$inputSize,${times.join(',')}"
+                    timeFile << "$line\n"
+                }
+            }
+        }
+    }
+}
+
+registerMemoryTask("memoryImperativeSequential", "imperative_sequential", "assignment2.ImperativeSequentialSpectralNorm", "spectral_norm",false)
+registerMemoryTask("memoryImperativeParallel", "imperative_parallel", "assignment2.ImperativeParallelSpectralNorm", "spectral_norm",true)
+registerMemoryTask("memoryFunctionalSequential", "functional_sequential", "assignment2.FunctionalSequentialSpectralNorm", "spectral_norm",false)
+registerMemoryTask("memoryFunctionalParallel", "functional_parallel", "assignment2.FunctionalParallelSpectralNorm", "spectral_norm",true)
+
+registerPerfTask("perfImperativeSequential", "imperative_sequential", "assignment2.ImperativeSequentialSpectralNorm", "spectral_norm",false)
+registerPerfTask("perfImperativeParallel", "imperative_parallel", "assignment2.ImperativeParallelSpectralNorm", "spectral_norm",true)
+registerPerfTask("perfFunctionalSequential", "functional_sequential", "assignment2.FunctionalSequentialSpectralNorm", "spectral_norm",false)
+registerPerfTask("perfFunctionalParallel", "functional_parallel", "assignment2.FunctionalParallelSpectralNorm", "spectral_norm",true)
