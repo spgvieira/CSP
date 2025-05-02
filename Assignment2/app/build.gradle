@@ -13,6 +13,7 @@ ext {
     memPidDir = file("mem_pid_reports")
     memDir = file("mem_reports")
     perfDir = file("perf_reports")
+    // memPeakDir = file("mem_peak")
 }
 
 def registerMemoryTask(name, groupName, mainClassName, algo, isParallel = false){
@@ -27,10 +28,12 @@ def registerMemoryTask(name, groupName, mainClassName, algo, isParallel = false)
             def timeFile = file("${resultsDir}/${algo}/${fileName}")
             def memFile = file("${memDir}/${algo}/${fileName}")
             def memPidFile = file("${memPidDir}/${algo}/${fileName}")
+            // def memPeakFile = file("${memPeakDir}/${algo}/${fileName}")
 
             project.ext["${name}_timeFile"] = timeFile
             project.ext["${name}_memFile"] = memFile
             project.ext["${name}_memPidFile"] = memPidFile
+            // project.ext["${name}_memPeakFile"] = memPeakFile
 
             timeFile.text = isParallel ?
                 "input,thread,${(1..repeat).collect { "time${it}" }.join(',')}\n" :
@@ -41,12 +44,14 @@ def registerMemoryTask(name, groupName, mainClassName, algo, isParallel = false)
             def timeFile = project.ext["${name}_timeFile"]
             def memFile = project.ext["${name}_memFile"]
             def memPidFile = project.ext["${name}_memPidFile"]
+            // def memPeakFile = project.ext["${name}_memPeakFile"]
             def inputs = project.ext.inputs
             def threads = project.ext.threads
             def repeat = project.ext.repeat 
 
             def memoryPidScript = file("record_memory_pid.sh").absolutePath
             def memoryScript = file("record_memory.sh").absolutePath
+            // def memoryPeakScript = file("record_memory_peak.sh").absolutePath
 
             inputs.each { inputSize ->
                 def threadLoop = isParallel ? threads : [null]
@@ -80,6 +85,11 @@ def registerMemoryTask(name, groupName, mainClassName, algo, isParallel = false)
                         process.waitFor()
                         // memScriptProcess.waitFor()
                         memPidScriptProcess.waitFor()
+
+                        // def memPeakScriptProcess = new ProcessBuilder(
+                        //     "sh", memoryPeakScript, pid.toString(), memPeakFile.absolutePath, *argsList
+                        // ).start()
+                        // memPeakScriptProcess.waitFor()
 
                         def timeTaken = output.toString().trim()
                         times.add(timeTaken)
