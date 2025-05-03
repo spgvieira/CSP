@@ -6,122 +6,141 @@ import os
 import re #for naming output files
 from datetime import datetime #for naming output files
 import matplotlib.ticker as ticker #for more stylish/even numbered tickers along y-axis
+#=== Arguments ===
+#argument handling
+if len(sys.argv) < 2 or sys.argv[1] not in ['spec', 'fann']:
+    print("Usage: python new_plot_stuff.py [spec|fann]")
+    sys.exit(1)
 
-#define where the output plot images will be saved
-script_dir = os.path.dirname(os.path.abspath(__file__))
-project_dir = os.path.dirname(script_dir) #go up one level if script is in a plots folder itself
-plots_results_folder = os.path.join(project_dir, 'plots') #defines output folder name
+#1st argument - map input to subfolder names
+arg_map = {
+    "spec": "spectral_norm",
+    "fann": "fannkuch_redux"
+}
 
-#create plots folder if it doesn't exist
-if not os.path.exists(plots_results_folder):
-    os.makedirs(plots_results_folder)
+#2nd and 3rd arguments for script, e.g select which parallel and sequential files to use based on date.
+parallel_date = sys.argv[2]
+sequential_date = sys.argv[3] if len(sys.argv) > 3 else None
 
-#get todays date for filenames
-today_str = datetime.today().strftime('%Y%m%d_%H%M%S')
+#=== Folders and file paths ===
 
-#helper function to extract date prefix from filename
-def extract_date_prefix(filename):
-    #look for DD_MM or YYYYMMDD patterns
-    match_dd_mm = re.search(r'^(\d{2}_\d{2})', filename)
-    match_yyyymmdd = re.search(r'^(\d{8})', filename)
-    if match_dd_mm:
-        return match_dd_mm.group(1)
-    elif match_yyyymmdd:
-        # Optionally reformat YYYYMMDD to DD_MM if preferred
-        # date_obj = datetime.strptime(match_yyyymmdd.group(1), '%Y%m%d')
-        # return date_obj.strftime('%d_%m')
-        return match_yyyymmdd.group(1) # Keep YYYYMMDD for now
-    return None # Return None if no date pattern found
+#=== Input folders ===
+#selected subfolder based on 1st. argument
+selected_subfolder = arg_map[sys.argv[1]]
+#define folder paths relative to the script location
+#base folder setup
+base_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.abspath(os.path.join(base_dir, "..", "app"))
 
-# Define thread colors and markers (inspired by the provided example)
-# Extended to cover up to 128 threads
+PLOTS_FOLDER_MAP = {
+    "time": "plots_time",
+    "perf": "plots_perf",
+    "sysmem": "plots_sysmem",
+    "mem": "plots_mem"
+}
+
+#define paths to each data category selected subfolder (spectral norm or fannkuch)
+time_folder = os.path.join(parent_dir, "experimental_results", selected_subfolder)
+perf_folder = os.path.join(parent_dir, "perf_reports", selected_subfolder)
+sysmem_folder = os.path.join(parent_dir, "mem_reports", selected_subfolder)
+pidmem_folder = os.path.join(parent_dir, "mem_pid_reports", selected_subfolder)
+
+#=== Values for graph customization ===
+# Define thread colors
 thread_colors = {
-    1: 'cyan', 2: 'green', 4: 'magenta', 8: 'orange',
-    16: 'blue', 32: 'red', 64: 'purple', 128: 'brown'
-    # Add more if needed, or handle defaults
+    1: 'cyan',
+    2: 'green',
+    4: 'magenta',
+    8: 'orange',
+    16: 'blue',
+    32: 'red',
+    64: 'pink',
+    128: 'lightblue'
 }
 
+# Define thread markers
 thread_markers = {
-    1: 'o', 2: 's', 4: '^', 8: 'D',
-    16: 'X', 32: '*', 64: 'p', 128: 'h' # p=pentagon, h=hexagon
-    # Add more if needed, or handle defaults
+    1:  'o',
+    2:  's',
+    4:  '^',
+    8:  'D',
+    16: 'X',
+    32: '*'
 }
 
-#this part down here processes any sequential data stuff
-def calculate_averages_seq(csv_filepath):
+# Define marker size
+thread_markersize = {
+    1: 8,   #make the circle marker noticeably bigger
+    2: 8,
+    4: 8,
+    8: 8,
+    16: 8,
+    32: 8
+}
+
+#dictionary to control which perf metrics to plot
+perf_metrics_collection = {
+    "task_clock_msec": False,
+    "context_switches": True,
+    "cpu_migrations": False,
+    "page_faults": True,
+    "cycles": False,
+    "instructions": False,
+    "branches": False,
+    "branch_misses": False,
+    "time_elapsed_sec": False,
+    "user_time_sec": False,
+    "sys_time_sec": False,
+    "ipc": True
+}
+
+#define which metrics you don't want to scale y-graph between imp. and func:
+indep = {
+    "context_switches"
+}
+
+#=== HELPER FUNCTIONS ===
+#filters files based on date and keyword (e.g parallel or sequential)
+def filter_files(files, date_str, keyword):
+    return [f for f in files if os.path.basename(f).startswith(date_str) and keyword in os.path.basename(f).lower()]
+
+#helper function to split whether they are functional or imperative
+def split_by_style(files, styles=('functional', 'imperative')):
+    result = {style: [] for style in styles}
+    for f in files:
+        basename = os.path.basename(f).lower()
+        for style in styles:
+            if style in basename:
+                result[style].append(f)
+    return result
+
+#helper function for listing all files inside a folder, and returns them as a list. 
+def list_files(folder_path, extensions=None):
+    if not os.path.isdir(folder_path):
+        print(f"Warning: Folder {folder_path} not found.")
+        return []
+    files = [os.path.join(folder_path, f) for f in os.listdir(folder_path)
+             if os.path.isfile(os.path.join(folder_path, f))]
+    if extensions:
+        files = [f for f in files if f.lower().endswith(tuple(ext.strip() for ext in extensions))]
+    return files
+
+#calculates the average time per inputsize from a sequential csv time file
+def calculate_averages_seq(time_csv_filepath):
     #reads a sequential CSV (input, time1, time2...)
     #and then calculates the average time for each input size row
     #load the csv as a dataframe
-    df = pd.read_csv(csv_filepath, index_col='input')
+    df = pd.read_csv(time_csv_filepath, index_col='input')
 
     time_columns = df.columns #assumes all remaining columns are time data compared to input.
     averages = df[time_columns].mean(axis=1) #calculate mean across columns for each row (input size) using dataframe lib.
     return averages #returns those averages for each row
 
-def plot_comparison_seq(averages1, averages2, label1, label2, base_filename, date_prefix):
-    #plots the comparison for sequential data and saves it in one graph
-
-    #just in case... checks to see both input sizes are present in both csv's using intersection to see
-    common_index = averages1.index.intersection(averages2.index).sort_values()
-
-    #filter the data from both csvs to only include the common inputs from both csv's.
-    #e.g if the only input size/argument both csv's have is 5000, then the final graph will only show two columns comparing time
-    #for input size/argument 5000!
-    avg1_filtered = averages1.loc[common_index]
-    avg2_filtered = averages2.loc[common_index]
-
-    #basic plot setup stuff
-    x = np.arange(len(common_index))
-    width = 0.35
-    fig, ax = plt.subplots(figsize=(12, 7))
-
-    #draws the bars - smart trick is to slightly offset them so they are side-by-side and easier to compare!
-    rects1 = ax.bar(x - width/2, avg1_filtered, width, label=label1, color='skyblue')
-    rects2 = ax.bar(x + width/2, avg2_filtered, width, label=label2, color='lightcoral')
-
-    #labels, title, and ticks for the plot
-    ax.set_ylabel('Average Wall Time (ms)') # Added (s) for clarity
-    ax.set_xlabel('Input Size')
-    ax.set_xticks(x)
-    ax.set_xticklabels(common_index)
-    ax.legend() #show the legend using the labels provided
-
-    #make layout more neat and add a grid like in og csv_and_plot from ass1.
-    fig.tight_layout()
-    plt.xticks(rotation=45, ha='right') #rotate labels if they get crowded
-    plt.grid(axis='y', linestyle='--', alpha=0.7) #add horizontal grid lines
-
-
-    #automatically determine nice, rounded tick locations on the y-axis
-    ax.yaxis.set_major_locator(ticker.MaxNLocator(nbins=20, prune='both', integer=True)) 
-
-    #save the plot to a file
-    clean_base = re.sub(r'_?sequential_?', '', base_filename, flags=re.IGNORECASE).strip('_-. ')
-    if not clean_base: #fallback if cleaning removed everything
-        clean_base = "sequential_data"
-
-    filename_parts = []
-    if date_prefix:#just incase file doesn't have a date prefix.
-        filename_parts.append(date_prefix)
-    filename_parts.append("imp_vs_func") #fixed string - might change later to also include the program/algo name.
-    filename_parts.append("seq_comparison.png")
-
-    output_filename = "_".join(filter(None, filename_parts)) #filter removes empty strings if date_prefix is none
-
-    #remove potential double underscores if date_prefix was Nnne and clean_base started or ends with _
-    output_filename = output_filename.replace("__", "_")
-
-    output_path = os.path.join(plots_results_folder, output_filename)
-    plt.savefig(output_path, dpi=300, bbox_inches='tight')
-    print(f"Saved sequential plot: {output_path}")
-    plt.close(fig) #close the figure
-
-
-#parallel part
-def calculate_averages_parallel(csv_filepath):
+#calculates the average time per inputsize/thread combo from a parallel csv time file
+def calculate_averages_parallel(time_csv_filepath):
     #reads a parallel CSV (input, thread, time1, time2...) and
     #calculates the average time for each (input, thread) combo
-    df = pd.read_csv(csv_filepath)
+    df = pd.read_csv(time_csv_filepath)
 
 
     #this assumes that the "time" columns start from the 3rd position in the csv aka index 2.
@@ -138,186 +157,559 @@ def calculate_averages_parallel(csv_filepath):
     return grouped_averages
 
 
-# NEW parallel plotting function using line graphs
-def plot_performance_lines(grouped_averages, data_label, base_filename, date_prefix, max_y_value):
+def compute_max_y(parallel_csvs, sequential_csvs=None, metrics=None):
     """
-    generates a line plot for a single parallel dataset, imperative or functional.
-    x-axis: argument/input size
-    y-axis: average time in ms
-    lines: Different thread counts
-
-    args:
-        grouped_averages (pd.Series): multi-indexed Series (input, thread) -> avg_time.
-        data_label (str): Label for the dataset (e.g., filename, "Imperative").
-        base_filename (str): Base name for the output plot file.
-        max_y_value (float): The maximum y-value for the plot axis (for normalization).
+    Determine maximum grouped mean across parallel and sequential CSV files.
+    parallel_csvs: list of file paths
+    sequential_csvs: list of file paths (optional)
+    metrics: list of column names to consider; e.g. ['avg_time'] or ['cycles','instructions']
+    Returns: dict of {metric: max_value} if multiple metrics, or single float if len(metrics)==1
     """
+    if metrics is None:
+        metrics = ['avg_time']
+    max_vals = {m: 0 for m in metrics}
 
-    #get unique sorted thread counts and input sizes from the multi-index
-    thread_counts = sorted(grouped_averages.index.get_level_values('thread').unique())
-    input_sizes = sorted(grouped_averages.index.get_level_values('input').unique())
+    # Process parallel CSVs
+    for csv in parallel_csvs:
+        try:
+            df = pd.read_csv(csv)
+        except Exception:
+            continue
+        for m in metrics:
+            if m == 'avg_time':
+                grp = calculate_averages_parallel(csv)
+                max_vals[m] = max(max_vals[m], grp.max())
+            elif m in df.columns:
+                grp = df.groupby(['input', 'thread'])[m].mean()
+                max_vals[m] = max(max_vals[m], grp.max())
 
-    min_input_size = min(input_sizes)
-    max_input_size = max(input_sizes)
+    # Process sequential CSVs
+    if sequential_csvs:
+        for csv in sequential_csvs:
+            try:
+                df = pd.read_csv(csv)
+            except Exception:
+                continue
+            for m in metrics:
+                if m == 'avg_time':
+                    seq = calculate_averages_seq(csv)
+                    max_vals[m] = max(max_vals[m], seq.max())
+                elif m in df.columns:
+                    if 'thread' in df.columns:
+                        grp = df.groupby(['input', 'thread'])[m].mean()
+                    else:
+                        grp = df.groupby('input')[m].mean()
+                    max_vals[m] = max(max_vals[m], grp.max())
 
-    #basic plot setup stuff
+    return max_vals if len(metrics) > 1 else max_vals[metrics[0]]
+
+#converts .txt files from perf to csv:
+def parse_perf_data(input_path: str, output_csv: str):
+    """
+    Read a perf stat .data/.txt file and dump it as a clean CSV.
+    Uses two regexes to capture:
+      • Parallel runs: InputSize + Threads
+      • Sequential runs: InputSize only (no Threads column)
+    """
+    # Regex for parallel runs (two numbers at end)
+    par_re = re.compile(
+        r"Performance counter stats for '.*\s+"
+        r"(?P<InputSize>\d+)\s+"       # e.g. 1000
+        r"(?P<Threads>\d+)"            # e.g. 1, 2, 4, ...
+        r"'\s*:"
+    )
+    # Regex for sequential runs (one number at end)
+    seq_re = re.compile(
+        r"Performance counter stats for '.*\s+"
+        r"(?P<InputSize>\d+)"          # e.g. 1000
+        r"'\s*:"
+    )
+
+    metric_pats = {
+        "task_clock_msec":  re.compile(r"^\s*([\d,\.]+)\s+msec\s+task-clock"),
+        "context_switches": re.compile(r"^\s*([\d,]+)\s+context-switches"),
+        "cpu_migrations":   re.compile(r"^\s*([\d,]+)\s+cpu-migrations"),
+        "page_faults":      re.compile(r"^\s*([\d,]+)\s+page-faults"),
+        "cycles":           re.compile(r"^\s*([\d,]+)\s+cycles"),
+        "instructions":     re.compile(r"^\s*([\d,]+)\s+instructions"),
+        "branches":         re.compile(r"^\s*([\d,]+)\s+branches"),
+        "branch_misses":    re.compile(r"^\s*([\d,]+)\s+branch-misses"),
+        "time_elapsed_sec": re.compile(r"^\s*([\d\.]+)\s+seconds time elapsed"),
+        "user_time_sec":    re.compile(r"^\s*([\d\.]+)\s+seconds user"),
+        "sys_time_sec":     re.compile(r"^\s*([\d\.]+)\s+seconds sys"),
+    }
+
+    records = []
+    current = None
+    seen_parallel = False
+
+    with open(input_path, 'r') as f:
+        for raw in f:
+            line = raw.strip()
+
+            # Try parallel first
+            m = par_re.search(line)
+            if m:
+                if current:
+                    records.append(current)
+                current = { k: None for k in ("InputSize","Threads", *metric_pats) }
+                current["InputSize"] = int(m.group("InputSize"))
+                current["Threads"]   = int(m.group("Threads"))
+                seen_parallel = True
+                continue
+
+            # If not parallel, try sequential
+            m2 = seq_re.search(line)
+            if m2:
+                if current:
+                    records.append(current)
+                current = { k: None for k in ("InputSize", *metric_pats) }
+                current["InputSize"] = int(m2.group("InputSize"))
+                seen_parallel = seen_parallel or False
+                continue
+
+            # Inside a block, pick up metrics
+            if current:
+                for name, pat in metric_pats.items():
+                    m3 = pat.match(line)
+                    if m3:
+                        s = m3.group(1).replace(',', '')
+                        current[name] = float(s) if '.' in s else int(s)
+                        break
+
+    # Append final block
+    if current:
+        records.append(current)
+
+    if not records:
+        print(f"[parse_perf_data] no records parsed from {input_path}")
+        return
+
+    df = pd.DataFrame(records)
+
+    df['ipc'] = df['instructions'] / df['cycles']
+    df['ipc'].replace([float('inf'), -float('inf')], 0, inplace=True)
+    df['ipc'].fillna(0, inplace=True)
+
+    # Rename the columns to match your other functions:
+    #   InputSize → input
+    #   Threads   → thread
+    rename_map = {"InputSize": "input", "Threads": "thread"}
+    df.rename(columns=rename_map, inplace=True)
+
+    # Build column list: input, thread (only if we saw any parallel), then metrics
+    cols = ["input"]
+    if seen_parallel:
+        cols.append("thread")
+    cols.extend(metric_pats.keys())
+    cols.append('ipc')
+
+    df.to_csv(output_csv, columns=cols, index=False)
+    print(f"[parse_perf_data] wrote {len(df)} rows to {output_csv}")
+
+#=== Graph plotting functions ===
+def graph_time(parallel_csv, sequential_csv=None, data_label="", date_prefix="", max_y=None,
+                output_dir=None):
+    """
+    Params:
+        parallel_csv (str): filepath to parallel time CSV
+        sequential_csv (str, optional): filepath to sequential time CSV
+        data_label (str): descriptive label for dataset
+        date_prefix (str): date prefix for filenames
+        max_y (float, optional): max Y-axis value; if None, computed automatically
+    """
+    # Calculate averages
+
+    # Compute or validate max_y
+    if max_y is None:
+        max_y = compute_max_y([parallel_csv], [sequential_csv] if sequential_csv else None)
+
+    # Calculate averages
+    par_grouped = calculate_averages_parallel(parallel_csv)
+    seq_averages = calculate_averages_seq(sequential_csv) if sequential_csv else None
+
+    # Plot setup
     fig, ax = plt.subplots(figsize=(12, 7))
-
-    #plot a line for each thread count
+    thread_counts = sorted(par_grouped.index.get_level_values('thread').unique())
+    input_sizes = sorted(par_grouped.index.get_level_values('input').unique())
     for thread in thread_counts:
-
-        
-        #extract data for the current thread (Series indexed by input_size)
-        # Unstacking or selecting works. xs is concise here.
-        # Need to handle cases where a thread might not have data for all input sizes
-        if thread in grouped_averages.index.get_level_values('thread'):
-            thread_data = grouped_averages.xs(thread, level='thread').reindex(input_sizes).sort_index()
-        else:
-            continue # Skip if this thread somehow isn't in the main index
-
-        #get color and marker, use defaults if not defined
-        color = thread_colors.get(thread, 'black') # Default to black
-        marker = thread_markers.get(thread, '.')   # Default to point marker
-
-        #plot the line for this thread
+        thread_data = par_grouped.xs(thread, level='thread').reindex(input_sizes).sort_index()
+        color = thread_colors.get(thread, 'black')
+        marker = thread_markers.get(thread, '.')
         ax.plot(thread_data.index, thread_data.values,
-                marker=marker,
-                linestyle='--', #dashed lines
-                linewidth=2,
-                markersize=8,  #standard marker size for lines
-                label=f'{thread} Thread(s)',
-                color=color)
+                marker=marker, linestyle='--', linewidth=2,
+                markersize=8, label=f'{thread} Thread(s)', color=color)
+    if seq_averages is not None:
+        ax.plot(seq_averages.index, seq_averages.values,
+                marker='x', linestyle='-', linewidth=2,
+                markersize=8, label='Sequential', color='black')
 
-    #labels, title, and ticks for the plot
+    # Labels, limits, legend
+    ax.set_xlabel('Input Size')
     ax.set_ylabel('Average Wall Time (ms)')
-    ax.set_xlabel('Arguments')
-    #ax.set_title(f'Parallel Performance: {data_label}\nTime vs. Argument per Thread Count')
-
-    #set x-axis ticks to be the actual input sizes
     ax.set_xticks(input_sizes)
-
-    #set precise x-axis limits, e.g we don't start at 0.
-    ax.set_xlim(left=min_input_size, right=max_input_size)
-
-    ax.legend(title="Threads") #show the legend using the labels provided
-
-    #set y-axis limit based on the calculated maximum across both datasets
-    ax.set_ylim(bottom=0, top=max_y_value * 1.05) #add 5% padding to the top
-
-    #it looks better if you add a tiny padding to y_max
-    y_axis_max = max_y_value * 1.05
-
-    #automatically determine nice rounded tick locations on the y-axis -
-    #try aiming for around 10 ticks, prune removes ticks too close to edges
-    ax.yaxis.set_major_locator(ticker.MaxNLocator(nbins=20, prune='both', integer=True)) #use integer=True if times are whole ms
-
-    #make layout more neat and add a grid
+    ax.set_xlim(left=min(input_sizes), right=max(input_sizes))
+    ax.set_ylim(bottom=0, top=max_y * 1.05)
+    ax.yaxis.set_major_locator(ticker.MaxNLocator(nbins=20, prune='both'))
+    ax.legend(title="Threads / Seq")
     fig.tight_layout()
-    ax.grid(True, linestyle='--', alpha=0.7) #add grid lines
+    ax.grid(True, linestyle='--', alpha=0.7)
 
-
-    #clean up base_filename further if needed, remove date if extracted
-    if date_prefix:
-        base_filename_cleaned = base_filename.replace(date_prefix, "").strip('_-. ')
-    else:
-        base_filename_cleaned = base_filename
-    #save the plot to a file
-    #modify filename to indicate line plot and dataset
-    filename_parts = []
-    if date_prefix:
-        filename_parts.append(date_prefix)
-    filename_parts.append(data_label) #use provided clean label
-    filename_parts.append("vs_argument_per_thread.png")
-
-    output_filename = "_".join(filename_parts)
-    #remove potential double underscores
-    #output_filename = output_filename.replace("__", "_")
-
-    output_path = os.path.join(plots_results_folder, output_filename)
+    # Save plot
+    filename_parts = [date_prefix, data_label, "wall_time.png"] if date_prefix else [data_label, "wall_time.png"]
+    output_filename = "_".join([p for p in filename_parts if p])
+    output_path = os.path.join(output_dir, output_filename)
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
-    print(f"saved parallel line plot: {output_path}")
-    plt.close(fig) #close the figure
+    print(f"saved time comparison plot: {output_path}")
+    plt.close(fig)
 
 
-if __name__ == "__main__":
-    #basic check for correct number of command-line arguments
-    if len(sys.argv) != 3:
-        script_name = os.path.basename(sys.argv[0])
-        print(f"Usage: python {script_name} <csv_file_1> <csv_file_2>")
-        print("Example: python plot_script.py imperative_results.csv functional_results.csv")
-        print("\nFiles must both contain 'sequential' or 'parallel' in their names.")
-        sys.exit(1)
+def graph_perf_values(parallel_csv, sequential_csv=None, data_label="", date_prefix="", metrics_dict=None, max_y=None,
+output_dir=None, independent_metrics=None,):
+    """
+    Plots selected perf metrics for parallel (multi-thread) and optional sequential runs.
+    
+    Params:
+        parallel_csv (str): path to the parallel perf CSV
+        sequential_csv (str, optional): path to the sequential perf CSV
+        data_label (str): descriptive label (e.g. 'spectral_norm_functional')
+        date_prefix (str): prefix used in filenames (e.g. '30-04')
+        metrics_dict (dict): maps metric names → bool (True to plot)
+        max_y (float, optional): global Y-axis max; if None, computed per metric
+        output_dir (str, optional): where to save each plot (defaults to plots_time folder)
+    """
 
-    #grab the file paths from the command line
-    csv_file1 = sys.argv[1]
-    csv_file2 = sys.argv[2]
+    # 1) default to global perf_metrics_collection if none passed
+    if metrics_dict is None:
+        metrics_dict = perf_metrics_collection
 
-    # --- Filename Processing ---
-    basename1 = os.path.basename(csv_file1)
-    basename2 = os.path.basename(csv_file2)
+    # 2) load and sanitize
+    df_par = pd.read_csv(parallel_csv)
+    df_par.columns = df_par.columns.str.strip()
+    df_seq = None
+    if sequential_csv:
+        df_seq = pd.read_csv(sequential_csv)
+        df_seq.columns = df_seq.columns.str.strip()
 
-    # Extract date prefix (preferring file1, fallback to file2, then today)
-    date_prefix = extract_date_prefix(basename1)
-    if not date_prefix:
-        date_prefix = extract_date_prefix(basename2)
-    # Use today's date only if needed later, maybe not for filename prefix itself
+    # 3) pick only the metrics one has defined up in the about and actually exist
+    metrics_to_plot = [
+        m for m, enabled in metrics_dict.items()
+        if enabled and ((m in df_par.columns) or (df_seq is not None and m in df_seq.columns))
+    ]
+    if not metrics_to_plot:
+        print("⚠️  No perf metrics to plot for:", parallel_csv, "(or missing columns)")
+        return
 
-    # Use filename without extension for labels
-    label1_base = os.path.splitext(basename1)[0]
-    label2_base = os.path.splitext(basename2)[0]
+    # 4) build categorical x-axis (all input sizes seen in either file)
+    inputs_par = set(df_par['input'].unique())
+    inputs_seq = set(df_seq['input'].unique()) if df_seq is not None else set()
+    input_sizes = sorted(inputs_par | inputs_seq)
+    x_index = {size: i for i, size in enumerate(input_sizes)}
 
-    # Remove date prefix from labels if found
-    label1_cleaned = label1_base.replace(date_prefix + "_", "") if date_prefix else label1_base
-    label2_cleaned = label2_base.replace(date_prefix + "_", "") if date_prefix else label2_base
+    # 5) know thread counts for parallel
+    thread_counts = sorted(df_par['thread'].unique())
 
-    # Determine file type based on cleaned labels (lowercase)
-    file_type = None
-    if "sequential" in label1_cleaned.lower() and "sequential" in label2_cleaned.lower():
-        file_type = "sequential"
-        # Further clean labels by removing "sequential"
-        label1_final = label1_cleaned.lower().replace("_sequential", "").replace("sequential", "").strip('_-. ')
-        label2_final = label2_cleaned.lower().replace("_sequential", "").replace("sequential", "").strip('_-. ')
-    elif "parallel" in label1_cleaned.lower() and "parallel" in label2_cleaned.lower():
-        file_type = "parallel"
-         # Further clean labels by removing "parallel"
-        label1_final = label1_cleaned.lower().replace("_parallel", "").replace("parallel", "").strip('_-. ')
-        label2_final = label2_cleaned.lower().replace("_parallel", "").replace("parallel", "").strip('_-. ')
-    else:
-        #if mismatch or keywords missing, just stop
-        print("\nError: Files must both contain 'sequential' or both contain 'parallel' in their names.")
-        print(f"       File 1: {basename1}")
-        print(f"       File 2: {basename2}")
-        sys.exit(1)
+    # 6) for each metric, make one plot
+    for metric in metrics_to_plot:
+    # 1) if this metric should be independent, always recompute per-style
+        if independent_metrics and metric in independent_metrics:
+            max_y_metric = compute_max_y(
+                [parallel_csv],
+                [sequential_csv] if sequential_csv else None,
+                metrics=[metric]
+            )
+        # 2) else if we got a shared dict, use that
+        elif isinstance(max_y, dict):
+            max_y_metric = max_y.get(metric)
+        # 3) else if a single float was passed, use it
+        elif isinstance(max_y, (int, float)):
+            max_y_metric = max_y
+        # 4) otherwise, auto‑compute across both files
+        else:
+            max_y_metric = compute_max_y(
+                [parallel_csv],
+                [sequential_csv] if sequential_csv else None,
+                metrics=[metric]
+            )
 
-    # Create a base name for sequential comparison (less critical now)
-    base_plot_name_seq = os.path.commonprefix([label1_final, label2_final]).rstrip('_-. ')
-    if not base_plot_name_seq:
-        base_plot_name_seq = label1_final # Fallback
+        fig, ax = plt.subplots(figsize=(12, 7))
+        # --- parallel ---
+        grp_par = df_par.groupby(['input', 'thread'])[metric].mean().reset_index()
+        for thr in thread_counts:
+            sub = grp_par[grp_par['thread'] == thr].sort_values('input')
+            x_vals = sub['input'].map(x_index)
+            ax.plot(x_vals, sub[metric],
+                    marker=thread_markers.get(thr, '.'),
+                    linestyle='-',
+                    markersize=thread_markersize.get(thr, 8),
+                    color=thread_colors.get(thr, 'black'),
+                    label=f"{thr} threads")
 
-    # --- Processing and Plotting ---
-    if file_type == "sequential":
-        print(f"\nProcessing Sequential Files:\n - {basename1}\n - {basename2}")
-        averages1 = calculate_averages_seq(csv_file1)
-        averages2 = calculate_averages_seq(csv_file2)
-        # Use the cleaned labels and base name for plotting
-        plot_comparison_seq(averages1, averages2, label1_final, label2_final, base_plot_name_seq, date_prefix)
+        # --- sequential ---
+        if df_seq is not None and metric in df_seq.columns:
+            grp_seq = df_seq.groupby('input')[metric].mean().reset_index().sort_values('input')
+            x_vals = grp_seq['input'].map(x_index)
+            ax.plot(x_vals, grp_seq[metric],
+                    marker='x', linestyle='--',
+                    markersize=8, color='black',
+                    label="Sequential")
 
-    elif file_type == "parallel":
-        print(f"\nProcessing Parallel Files:\n - {basename1}\n - {basename2}")
-        averages1 = calculate_averages_parallel(csv_file1) # Returns time in ms
-        averages2 = calculate_averages_parallel(csv_file2) # Returns time in ms
+        # --- labels & styling ---
+        ax.set_xlabel("Input Size")
+        ax.set_ylabel(metric.replace("_", " ").title())
+        ax.set_xticks(list(x_index.values()))
+        ax.set_xticklabels(input_sizes)
+        ax.set_xlim(0, len(input_sizes) - 1)
+        ax.set_ylim(0, max_y_metric * 1.05)
+        ax.yaxis.set_major_locator(ticker.MaxNLocator(nbins=10, prune='both'))
+        ax.legend(title="Threads / Seq")
+        ax.grid(True, linestyle='--', alpha=0.7)
+        fig.tight_layout()
 
-        #calculate the overall maximum average time across BOTH datasets
-        max_time1_ms = averages1.max() 
-        max_time2_ms = averages2.max() 
-        global_max_y_ms = max(max_time1_ms, max_time2_ms)
+        # --- save ---
+        parts = [date_prefix, data_label, metric + ".png"] if date_prefix else [data_label, metric + ".png"]
+        filename = "_".join(p for p in parts if p)
+        outdir = output_dir or plots_results_folder_time
+        os.makedirs(outdir, exist_ok=True)
+        outpath = os.path.join(outdir, filename)
+        plt.savefig(outpath, dpi=300, bbox_inches='tight')
+        plt.close(fig)
+        print(f"saved perf metric plot '{metric}' → {outpath}")
 
-        print(f"   Global Max Avg Time (for Y-axis): {global_max_y_ms:.2f} ms")
+def graph_sys_mem(csv_imp_seq,csv_imp_parallel,csv_func_seq,csv_func_parallel):
+    '''
+    Params:
+    (all optional) csv_imp/func_seq, csv_imp/func_parallel
+    Returns:
+    - Two graphs of system memory usage from running the programs. One showing imperative results, 
+    the other functional results.
+    '''
 
-        #plot each dataset separately using the new line plot function
-        # Pass the final cleaned labels and the date prefix
-        plot_performance_lines(averages1, label1_final, label1_final, date_prefix, global_max_y_ms)
-        plot_performance_lines(averages2, label2_final, label2_final, date_prefix, global_max_y_ms)
+def graph_pid_mem(csv_imp_seq,csv_imp_parallel,csv_func_seq,csv_func_parallel):
+    '''
+    Params:
+    (all optional) csv_imp/func_seq, csv_imp/func_parallel
+    Returns:
+    - Two graphs of PID memory usage from running the programs. One showing imperative results, 
+    the other functional results.
+    '''
+#=== Main ===
+#convert all perf .txt/.data files to CSV
+#convert every perf .data or .txt in this subfolder (parallel + sequential)
+for fname in os.listdir(perf_folder):
+    in_path = os.path.join(perf_folder, fname)
+    # skip directories and already‑CSV files
+    if not os.path.isfile(in_path) or fname.lower().endswith('.csv'):
+        continue
+
+    out_name = os.path.splitext(fname)[0] + '.csv'
+    out_path = os.path.join(perf_folder, out_name)
+    print(f"[parse_perf_data] {fname} → {out_name}")
+    parse_perf_data(in_path, out_path)
+# Load all files from each program type folder
+time_files_all = list_files(time_folder, extensions=['.csv'])
+perf_files_all = list_files(perf_folder, extensions=['.data', '.csv'])
+mem_files_all = list_files(sysmem_folder, extensions=['.csv'])
+mem_pid_files_all = list_files(pidmem_folder, extensions=['.csv'])
 
 
-    print("\nDone plotting. Can I go home now? I wanna play Minecraft!!!")
+# Parallel files (required)
+time_files = filter_files(time_files_all, parallel_date, "parallel")
+perf_files = filter_files(perf_files_all, parallel_date, "parallel")
+mem_files = filter_files(mem_files_all, parallel_date, "parallel")
+mem_pid_files = filter_files(mem_pid_files_all, parallel_date, "parallel")
+
+# Sequential files (optional)
+if sequential_date:
+    time_files_seq = filter_files(time_files_all, sequential_date, "sequential")
+    perf_files_seq = filter_files(perf_files_all, sequential_date, "sequential")
+    mem_files_seq = filter_files(mem_files_all, sequential_date, "sequential")
+    mem_pid_files_seq = filter_files(mem_pid_files_all, sequential_date, "sequential")
+else:
+    time_files_seq = []
+    perf_files_seq = []
+    mem_files_seq = []
+    mem_pid_files_seq = []
+
+# Split parallel files by implementation style
+time_files_by_style = split_by_style(time_files)
+perf_files_by_style = split_by_style(perf_files)
+mem_files_by_style = split_by_style(mem_files)
+mem_pid_files_by_style = split_by_style(mem_pid_files)
+
+# Split sequential files by implementation style
+time_files_seq_by_style = split_by_style(time_files_seq)
+perf_files_seq_by_style = split_by_style(perf_files_seq)
+mem_files_seq_by_style = split_by_style(mem_files_seq)
+mem_pid_files_seq_by_style = split_by_style(mem_pid_files_seq)
+
+
+# === Plotting wall time versus inputsize ===
+plots_results_folder_time = os.path.join(base_dir, PLOTS_FOLDER_MAP["time"])
+os.makedirs(plots_results_folder_time, exist_ok=True)
+
+#imperative plot
+if time_files_by_style['imperative']:
+    imp_par_list = time_files_by_style['imperative']
+    imp_seq_list = time_files_seq_by_style.get('imperative', [])
+
+imp_par_list  = time_files_by_style['imperative']
+imp_seq_list  = time_files_seq_by_style.get('imperative', [])
+func_par_list = time_files_by_style['functional']
+func_seq_list = time_files_seq_by_style.get('functional', [])
+
+#determine whether to use a common max_y or keep the max_y seperate in case of missing second parallel results
+#e.g func parallel or imp parallel is missing.
+if imp_par_list and func_par_list:
+    # both parallel CSVs present -> use the common scale
+    combined_par = imp_par_list + func_par_list
+    combined_seq = imp_seq_list + func_seq_list
+    common_max_y = compute_max_y(combined_par, combined_seq, metrics=['avg_time'])
+    max_y_imp  = max_y_func = common_max_y
+else:
+    # else, fall back to per‐style scaling
+    max_y_imp  = compute_max_y(imp_par_list,  imp_seq_list,  metrics=['avg_time']) if imp_par_list else None
+    max_y_func = compute_max_y(func_par_list, func_seq_list, metrics=['avg_time']) if func_par_list else None
+
+# Imperative plot
+if imp_par_list:
+    graph_time(
+        parallel_csv   = imp_par_list[0],
+        sequential_csv = imp_seq_list[0] if imp_seq_list else None,
+        data_label     = f"{selected_subfolder}_imperative",
+        date_prefix    = parallel_date,
+        max_y          = max_y_imp,
+        output_dir     = plots_results_folder_time
+    )
+
+# Functional plot
+if func_par_list:
+    graph_time(
+        parallel_csv   = func_par_list[0],
+        sequential_csv = func_seq_list[0] if func_seq_list else None,
+        data_label     = f"{selected_subfolder}_functional",
+        date_prefix    = parallel_date,
+        max_y          = max_y_func,
+        output_dir     = plots_results_folder_time
+    )
+
+
+# === Plotting perf values versus inputsize ===
+# prepare folders
+plots_results_folder_perf = os.path.join(base_dir, PLOTS_FOLDER_MAP["perf"])
+os.makedirs(plots_results_folder_perf, exist_ok=True)
+
+# Lists for each style
+imp_par_list  = perf_files_by_style['imperative']
+imp_seq_list  = perf_files_seq_by_style.get('imperative', [])
+func_par_list = perf_files_by_style['functional']
+func_seq_list = perf_files_seq_by_style.get('functional', [])
+
+#which perf metrics are we plotting?
+metrics_list = [m for m, flag in perf_metrics_collection.items() if flag]
+
+#decide on common vs. per‑style
+if imp_par_list and func_par_list:
+    combined_par = imp_par_list + func_par_list
+    combined_seq = imp_seq_list + func_seq_list
+    # compute_max_y with multiple metrics returns a dict {metric: max_val}
+    max_y_perf = compute_max_y(combined_par, combined_seq, metrics=metrics_list)
+else:
+    # fallback to per‐style: here we only need two separate dicts
+    max_y_imp  = compute_max_y(imp_par_list,  imp_seq_list,  metrics=metrics_list) if imp_par_list else {}
+    max_y_func = compute_max_y(func_par_list, func_seq_list, metrics=metrics_list) if func_par_list else {}
+    # Then pick the right dict for each style:
+    #   for imp call → max_y_imp
+    #   for func call → max_y_func
+
+# imperative
+if perf_files_by_style['imperative']:
+    graph_perf_values(
+        parallel_csv = perf_files_by_style['imperative'][0],
+        sequential_csv = perf_files_seq_by_style.get('imperative', [None])[0],
+        data_label = f"{selected_subfolder}_imp",
+        date_prefix = parallel_date,
+        max_y = max_y_perf if (imp_par_list and func_par_list) else max_y_imp,
+        output_dir = plots_results_folder_perf,
+        independent_metrics = indep
+    )
+
+# functional
+if perf_files_by_style['functional']:
+    graph_perf_values(
+        parallel_csv = perf_files_by_style['functional'][0],
+        sequential_csv = perf_files_seq_by_style.get('functional', [None])[0],
+        data_label = f"{selected_subfolder}_func",
+        max_y = max_y_perf if (imp_par_list and func_par_list) else max_y_imp,
+        date_prefix = parallel_date,
+        output_dir = plots_results_folder_perf,
+        independent_metrics = indep
+    )
+
+# Compute the max_y time value across different csv's
+'''def compute_max_y(parallel_csvs, sequential_csvs=None):
+    """
+    Determine the maximum average time across multiple parallel and sequential CSV files.
+    parallel_csvs: list of file paths for parallel runs
+    sequential_csvs: list of file paths for sequential runs (optional)
+    Returns a float max value.
+    """
+    max_vals = []
+    for csv in parallel_csvs:
+        try:
+            grp = calculate_averages_parallel(csv)
+            max_vals.append(grp.max())
+        except Exception:
+            continue
+    if sequential_csvs:
+        for csv in sequential_csvs:
+            try:
+                seq = calculate_averages_seq(csv)
+                max_vals.append(seq.max())
+            except Exception:
+                continue
+    return max(max_vals) if max_vals else 0'''
+
+# === Debug Output ===
+'''print("\n--- Parallel Files ---")
+print("Time:", time_files)
+print("Perf:", perf_files)
+print("Mem:", mem_files)
+print("Mem (PID):", mem_pid_files)
+
+print("\n> Functional")
+print("Time:", time_files_by_style['functional'])
+print("Perf:", perf_files_by_style['functional'])
+print("Mem:", mem_files_by_style['functional'])
+print("Mem (PID):", mem_pid_files_by_style['functional'])
+
+print("\n> Imperative")
+print("Time:", time_files_by_style['imperative'])
+print("Perf:", perf_files_by_style['imperative'])
+print("Mem:", mem_files_by_style['imperative'])
+print("Mem (PID):", mem_pid_files_by_style['imperative'])
+
+if sequential_date:
+    print("\n--- Sequential Files ---")
+    print("Time:", time_files_seq)
+    print("Perf:", perf_files_seq)
+    print("Mem:", mem_files_seq)
+    print("Mem (PID):", mem_pid_files_seq)
+
+    print("\n> Functional")
+    print("Time:", time_files_seq_by_style['functional'])
+    print("Perf:", perf_files_seq_by_style['functional'])
+    print("Mem:", mem_files_seq_by_style['functional'])
+    print("Mem (PID):", mem_pid_files_seq_by_style['functional'])
+
+    print("\n> Imperative")
+    print("Time:", time_files_seq_by_style['imperative'])
+    print("Perf:", perf_files_seq_by_style['imperative'])
+    print("Mem:", mem_files_seq_by_style['imperative'])
+    print("Mem (PID):", mem_pid_files_seq_by_style['imperative'])'''
+
+
+
+
+
+
