@@ -94,6 +94,14 @@ perf_metrics_collection = {
     "ipc": True
 }
 
+#dictionary to control which sys_mem metrics to plot
+sys_mem_metrics_collection = {
+    "total_mem" : True,
+    "free_mem" : True,
+    "used_mem" : True,
+    "buff_cache" : True
+}
+
 #define which metrics you don't want to scale y-graph between imp. and func:
 indep = {
     "context_switches"
@@ -203,6 +211,66 @@ def compute_max_y(parallel_csvs, sequential_csvs=None, metrics=None):
 
     return max_vals if len(metrics) > 1 else max_vals[metrics[0]]
 
+#minimum instead of max
+def compute_min_y(parallel_csvs, sequential_csvs=None, metrics=None):
+    """
+    Determine minimum grouped mean across parallel and sequential CSV files.
+    parallel_csvs: list of file paths
+    sequential_csvs: list of file paths (optional)
+    metrics: list of column names to consider; e.g. ['avg_time'] or ['cycles','instructions']
+    Returns: dict of {metric: min_value} if multiple metrics, or single float if len(metrics)==1
+    """
+    if metrics is None:
+        metrics = ['avg_time']
+    # Initialize mins to +inf so any real value will be smaller
+    min_vals = {m: float('inf') for m in metrics}
+
+    # helper to update a metric’s min
+    def _update_min(m, value):
+        if value is not None and not np.isnan(value):
+            min_vals[m] = min(min_vals[m], value)
+
+    # Process parallel CSVs
+    for csv in parallel_csvs:
+        try:
+            df = pd.read_csv(csv)
+        except Exception:
+            continue
+
+        for m in metrics:
+            if m == 'avg_time':
+                grp = calculate_averages_parallel(csv)
+                _update_min(m, grp.min())
+            elif m in df.columns:
+                grp = df.groupby(['input', 'thread'])[m].mean()
+                _update_min(m, grp.min())
+
+    # Process sequential CSVs
+    if sequential_csvs:
+        for csv in sequential_csvs:
+            try:
+                df = pd.read_csv(csv)
+            except Exception:
+                continue
+
+            for m in metrics:
+                if m == 'avg_time':
+                    seq = calculate_averages_seq(csv)
+                    _update_min(m, seq.min())
+                elif m in df.columns:
+                    if 'thread' in df.columns:
+                        grp = df.groupby(['input', 'thread'])[m].mean()
+                    else:
+                        grp = df.groupby('input')[m].mean()
+                    _update_min(m, grp.min())
+
+    # If a metric was never found, drop it (or you could leave inf)
+    for m in metrics:
+        if min_vals[m] == float('inf'):
+            min_vals[m] = None
+
+    return min_vals if len(metrics) > 1 else min_vals[metrics[0]]
+
 #converts .txt files from perf to csv:
 def parse_perf_data(input_path: str, output_csv: str):
     """
@@ -307,6 +375,107 @@ def parse_perf_data(input_path: str, output_csv: str):
     df.to_csv(output_csv, columns=cols, index=False)
     print(f"[parse_perf_data] wrote {len(df)} rows to {output_csv}")
 
+def add_missing_column_names_and_clean(list_of_csv_paths):
+    """
+    For each CSV in `paths` (single path or list), ensure it has the correct header row
+    (based on 'parallel' vs 'sequential' in filename) and clean memory columns from textual
+    entries (e.g., 'MiB Mem : 15690.9 total') down to pure floats.
+    """
+    # handle list of paths
+    if isinstance(list_of_csv_paths, (list, tuple)):
+        for p in list_of_csv_paths:
+            add_missing_column_names_and_clean(p)
+        return
+    path = list_of_csv_paths
+
+    basename = os.path.basename(path).lower()
+    # Determine expected headers
+    if 'parallel' in basename:
+        headers = ['input', 'thread', 'total_mem', 'free_mem', 'used_mem', 'buff_cache']
+    elif 'sequential' in basename:
+        headers = ['input', 'total_mem', 'free_mem', 'used_mem', 'buff_cache']
+    else:
+        print(f"Skipping {path}: cannot determine type from filename.")
+        return
+
+    # Read file lines to check/add header
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+    except FileNotFoundError:
+        print(f"File not found: {path}")
+        return
+    if not lines:
+        print(f"Empty file: {path}")
+        return
+
+    # Prepend header if missing
+    first_tokens = lines[0].strip().lower().split(',')
+    if not (first_tokens and first_tokens[0] == 'input'):
+        header_line = ','.join(headers) + '\n'
+        lines.insert(0, header_line)
+        with open(path, 'w', encoding='utf-8') as f:
+            f.writelines(lines)
+        print(f"Added header to {path}")
+    else:
+        print(f"Header exists in {path}, skipping header insertion.")
+
+    # Load with pandas to clean mem columns
+    try:
+        df = pd.read_csv(path)
+    except Exception as e:
+        print(f"Failed to read CSV {path}: {e}")
+        return
+
+    # Regex to extract first float
+    num_pat = re.compile(r"([0-9]+(?:\.[0-9]+)?)")
+    def extract_num(s):
+        if pd.isna(s):
+            return s
+        m = num_pat.search(str(s))
+        return float(m.group(1)) if m else pd.NA
+
+    # Clean each memory column to floats
+    for col in headers[2:]:  # skip 'input' and optional 'thread'
+        if col in df.columns:
+            df[col] = df[col].apply(extract_num)
+
+    # Write back cleaned CSV
+    try:
+        df.to_csv(path, index=False)
+        print(f"Cleaned memory columns in {path}")
+    except Exception as e:
+        print(f"Failed to write cleaned CSV {path}: {e}")
+
+    # Read file contents
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+    except FileNotFoundError:
+        print(f"File not found: {path}")
+        return
+    if not lines:
+        print(f"Empty file: {path}")
+        return
+
+    # If header already present, skip
+    first_tokens = lines[0].strip().lower().split(',')
+    if first_tokens and first_tokens[0] == 'input':
+        print(f"Header exists in {path}, skipping.")
+        return
+
+    # Prepend header
+    header_line = ','.join(headers) + '\n'
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(header_line)
+        f.writelines(lines)
+    print(f"Added header to {path}")
+
+#cleans out strings in columns of sysmemory csv's
+def clean_mem_col(series):
+    # extract the first floating‑point number found in each cell
+    return series.astype(str).str.extract(r"([0-9]+(?:\.[0-9]+)?)")[0].astype(float)
+
 #=== Graph plotting functions ===
 def graph_time(parallel_csv, sequential_csv=None, data_label="", date_prefix="", max_y=None,
                 output_dir=None):
@@ -365,7 +534,7 @@ def graph_time(parallel_csv, sequential_csv=None, data_label="", date_prefix="",
 
 
 def graph_perf_values(parallel_csv, sequential_csv=None, data_label="", date_prefix="", metrics_dict=None, max_y=None,
-output_dir=None, independent_metrics=None,):
+output_dir=None, independent_metrics=None):
     """
     Plots selected perf metrics for parallel (multi-thread) and optional sequential runs.
     
@@ -476,7 +645,8 @@ output_dir=None, independent_metrics=None,):
         plt.close(fig)
         print(f"saved perf metric plot '{metric}' → {outpath}")
 
-def graph_sys_mem(csv_imp_seq,csv_imp_parallel,csv_func_seq,csv_func_parallel):
+def graph_sys_mem(parallel_csv, sequential_csv=None, data_label="", date_prefix="", metrics_dict=None, max_y=None, min_y=None,
+output_dir=None,):
     '''
     Params:
     (all optional) csv_imp/func_seq, csv_imp/func_parallel
@@ -484,6 +654,105 @@ def graph_sys_mem(csv_imp_seq,csv_imp_parallel,csv_func_seq,csv_func_parallel):
     - Two graphs of system memory usage from running the programs. One showing imperative results, 
     the other functional results.
     '''
+    # 1) default to global perf_metrics_collection if none passed
+    if metrics_dict is None:
+        metrics_dict = sys_mem_metrics_collection
+
+    # 2) load and sanitize
+    df_par = pd.read_csv(parallel_csv)
+    df_par.columns = df_par.columns.str.strip()
+    df_seq = None
+    if sequential_csv:
+        df_seq = pd.read_csv(sequential_csv)
+        df_seq.columns = df_seq.columns.str.strip()
+
+    # 3) pick only the metrics one has defined up in the about and actually exist
+    metrics_to_plot = [
+        m for m, enabled in metrics_dict.items()
+        if enabled and ((m in df_par.columns) or (df_seq is not None and m in df_seq.columns))
+    ]
+    if not metrics_to_plot:
+        print("⚠️  No perf metrics to plot for:", parallel_csv, "(or missing columns)")
+        return
+
+    # 4) build categorical x-axis (all input sizes seen in either file)
+    inputs_par = set(df_par['input'].unique())
+    inputs_seq = set(df_seq['input'].unique()) if df_seq is not None else set()
+    input_sizes = sorted(inputs_par | inputs_seq)
+    x_index = {size: i for i, size in enumerate(input_sizes)}
+
+    # 5) know thread counts for parallel
+    thread_counts = sorted(df_par['thread'].unique())
+
+    # 6) for each metric, make one plot
+    for metric in metrics_to_plot:
+    # Decide y‐limits
+        # min
+        if isinstance(min_y, dict):
+            y0 = min_y.get(metric, 0)
+        elif isinstance(min_y, (int,float)):
+            y0 = min_y
+        else:
+            # auto‐compute
+            mins = compute_min_y([parallel_csv],
+                                 [sequential_csv] if sequential_csv else None,
+                                 metrics=[metric])
+            y0 = mins if isinstance(mins, (int,float)) else mins.get(metric, 0)
+        # max
+        if isinstance(max_y, dict):
+            y1 = max_y.get(metric, None)
+        elif isinstance(max_y, (int,float)):
+            y1 = max_y
+        else:
+            y1 = compute_max_y([parallel_csv],
+                               [sequential_csv] if sequential_csv else None,
+                               metrics=[metric])
+
+        fig, ax = plt.subplots(figsize=(12, 7))
+        # --- parallel ---
+        grp_par = df_par.groupby(['input', 'thread'])[metric].mean().reset_index()
+        for thr in thread_counts:
+            sub = grp_par[grp_par['thread'] == thr].sort_values('input')
+            x_vals = sub['input'].map(x_index)
+            ax.plot(x_vals, sub[metric],
+                    marker=thread_markers.get(thr, '.'),
+                    linestyle='-',
+                    markersize=thread_markersize.get(thr, 8),
+                    color=thread_colors.get(thr, 'black'),
+                    label=f"{thr} threads")
+
+        # --- sequential ---
+        if df_seq is not None and metric in df_seq.columns:
+            grp_seq = df_seq.groupby('input')[metric].mean().reset_index().sort_values('input')
+            x_vals = grp_seq['input'].map(x_index)
+            ax.plot(x_vals, grp_seq[metric],
+                    marker='x', linestyle='--',
+                    markersize=8, color='black',
+                    label="Sequential")
+
+        # --- labels & styling ---
+        ax.set_xlabel("Input Size")
+        ax.set_ylabel(metric.replace("_", " ").title())
+        ax.set_xticks(list(x_index.values()))
+        ax.set_xticklabels(input_sizes)
+        ax.set_xlim(0, len(input_sizes) - 1)
+        ax.set_ylim(y0, y1 * 1.05)
+        ax.yaxis.set_major_locator(ticker.MaxNLocator(nbins=10, prune='both'))
+        ax.legend(title="Threads / Seq")
+        ax.grid(True, linestyle='--', alpha=0.7)
+        fig.tight_layout()
+
+        # --- save ---
+        parts = [date_prefix, data_label, metric + ".png"] if date_prefix else [data_label, metric + ".png"]
+        filename = "_".join(p for p in parts if p)
+        outdir = output_dir or plots_results_folder_time
+        os.makedirs(outdir, exist_ok=True)
+        outpath = os.path.join(outdir, filename)
+        plt.savefig(outpath, dpi=300, bbox_inches='tight')
+        plt.close(fig)
+        print(f"saved system memory metric plot '{metric}' → {outpath}")
+
+    
 
 def graph_pid_mem(csv_imp_seq,csv_imp_parallel,csv_func_seq,csv_func_parallel):
     '''
@@ -645,6 +914,66 @@ if perf_files_by_style['functional']:
         output_dir = plots_results_folder_perf,
         independent_metrics = indep
     )
+
+#=== Plotting sys mem versus inputsize ===
+add_missing_column_names_and_clean(mem_files_all)
+plots_results_folder_mem = os.path.join(base_dir, PLOTS_FOLDER_MAP["mem"])
+os.makedirs(plots_results_folder_mem, exist_ok=True)
+
+# Lists for each style
+imp_par_list  = mem_files_by_style['imperative']
+imp_seq_list  = mem_files_seq_by_style.get('imperative', [])
+func_par_list = mem_files_by_style['functional']
+func_seq_list = mem_files_seq_by_style.get('functional', [])
+
+#which perf metrics are we plotting?
+metrics_list = [m for m, flag in sys_mem_metrics_collection.items() if flag]
+
+#decide on common vs. per‑style
+if imp_par_list and func_par_list:
+    combined_par = imp_par_list + func_par_list
+    combined_seq = imp_seq_list + func_seq_list
+    # compute_max_y with multiple metrics returns a dict {metric: max_val}
+    max_y_mem = compute_max_y(combined_par, combined_seq, metrics=metrics_list)
+    min_y_mem = compute_min_y(combined_par, combined_seq, metrics=metrics_list)
+else:
+    # fallback to per‐style: here we only need two separate dicts
+    max_y_imp  = compute_max_y(imp_par_list,  imp_seq_list,  metrics=metrics_list) if imp_par_list else {}
+    max_y_func = compute_max_y(func_par_list, func_seq_list, metrics=metrics_list) if func_par_list else {}
+
+    min_y_imp  = compute_min_y(imp_par_list,  imp_seq_list,  metrics=metrics_list) if imp_par_list else {}
+    min_y_func = compute_min_y(func_par_list, func_seq_list, metrics=metrics_list) if func_par_list else {}
+    # Then pick the right dict for each style:
+    #   for imp call → max_y_imp and min_y_imp
+    #   for func call → max_y_func and min_y_func
+
+imp_seq = imp_seq_list[0] if imp_seq_list else None
+func_seq = func_seq_list[0] if func_seq_list else None
+
+# imperative
+if mem_files_by_style['imperative']:
+    graph_sys_mem(
+        parallel_csv = mem_files_by_style['imperative'][0],
+        sequential_csv =imp_seq, # error here! index out of range???
+        data_label = f"{selected_subfolder}_imp",
+        date_prefix = parallel_date,
+        max_y = max_y_mem if (imp_par_list and func_par_list) else max_y_imp,
+        min_y = min_y_mem if (imp_par_list and func_par_list) else min_y_imp,
+        output_dir = plots_results_folder_mem #wrong follllder!
+    )
+
+# functional
+if mem_files_by_style['functional']:
+    graph_perf_values(
+        parallel_csv = mem_files_by_style['functional'][0],
+        sequential_csv = func_seq ,
+        data_label = f"{selected_subfolder}_func",
+        max_y = max_y_mem if (imp_par_list and func_par_list) else max_y_imp,
+        min_y = min_y_mem if (imp_par_list and func_par_list) else min_y_imp,
+        date_prefix = parallel_date,
+        output_dir = plots_results_folder_mem
+    )
+
 
 # Compute the max_y time value across different csv's
 '''def compute_max_y(parallel_csvs, sequential_csvs=None):
