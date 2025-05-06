@@ -174,3 +174,13 @@ registerPerfTask("perfImperativeSequential", "imperative_sequential", "assignmen
 registerPerfTask("perfImperativeParallel", "imperative_parallel", "assignment2.SepctralNorm.ImperativeParallelSpectralNorm", "spectral_norm",true)
 registerPerfTask("perfFunctionalSequential", "functional_sequential", "assignment2.SepctralNorm.FunctionalSequentialSpectralNorm", "spectral_norm",false)
 registerPerfTask("perfFunctionalParallel", "functional_parallel", "assignment2.SepctralNorm.FunctionalParallelSpectralNorm", "spectral_norm",true)
+
+tasks.register("runAllMemoryTasks") {
+    dependsOn("memoryImperativeSequential", "memoryImperativeParallel", "memoryFunctionalSequential", "memoryFunctionalParallel")
+    group = "memory"
+}
+
+tasks.register("runAllPerfTasks") {
+    dependsOn("perfImperativeSequential", "perfImperativeParallel", "perfFunctionalSequential", "perfFunctionalParallel")
+    group = "performance"
+}
