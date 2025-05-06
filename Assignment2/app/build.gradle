@@ -165,12 +165,12 @@ def registerPerfTask(name, groupName, mainClassName, algo, isParallel = false) {
     }
 }
 
-registerMemoryTask("memoryImperativeSequential", "imperative_sequential", "assignment2.ImperativeSequentialSpectralNorm", "spectral_norm",false)
-registerMemoryTask("memoryImperativeParallel", "imperative_parallel", "assignment2.ImperativeParallelSpectralNorm", "spectral_norm",true)
-registerMemoryTask("memoryFunctionalSequential", "functional_sequential", "assignment2.FunctionalSequentialSpectralNorm", "spectral_norm",false)
-registerMemoryTask("memoryFunctionalParallel", "functional_parallel", "assignment2.FunctionalParallelSpectralNorm", "spectral_norm",true)
+registerMemoryTask("memoryImperativeSequential", "imperative_sequential", "assignment2.SepctralNorm.ImperativeSequentialSpectralNorm", "spectral_norm",false)
+registerMemoryTask("memoryImperativeParallel", "imperative_parallel", "assignment2.SepctralNorm.ImperativeParallelSpectralNorm", "spectral_norm",true)
+registerMemoryTask("memoryFunctionalSequential", "functional_sequential", "assignment2.SepctralNorm.FunctionalSequentialSpectralNorm", "spectral_norm",false)
+registerMemoryTask("memoryFunctionalParallel", "functional_parallel", "assignment2.SepctralNorm.FunctionalParallelSpectralNorm", "spectral_norm",true)
 
-registerPerfTask("perfImperativeSequential", "imperative_sequential", "assignment2.ImperativeSequentialSpectralNorm", "spectral_norm",false)
-registerPerfTask("perfImperativeParallel", "imperative_parallel", "assignment2.ImperativeParallelSpectralNorm", "spectral_norm",true)
-registerPerfTask("perfFunctionalSequential", "functional_sequential", "assignment2.FunctionalSequentialSpectralNorm", "spectral_norm",false)
-registerPerfTask("perfFunctionalParallel", "functional_parallel", "assignment2.FunctionalParallelSpectralNorm", "spectral_norm",true)
+registerPerfTask("perfImperativeSequential", "imperative_sequential", "assignment2.SepctralNorm.ImperativeSequentialSpectralNorm", "spectral_norm",false)
+registerPerfTask("perfImperativeParallel", "imperative_parallel", "assignment2.SepctralNorm.ImperativeParallelSpectralNorm", "spectral_norm",true)
+registerPerfTask("perfFunctionalSequential", "functional_sequential", "assignment2.SepctralNorm.FunctionalSequentialSpectralNorm", "spectral_norm",false)
+registerPerfTask("perfFunctionalParallel", "functional_parallel", "assignment2.SepctralNorm.FunctionalParallelSpectralNorm", "spectral_norm",true)

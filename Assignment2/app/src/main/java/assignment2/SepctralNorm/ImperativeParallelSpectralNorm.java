@@ -41,6 +41,7 @@ public class ImperativeParallelSpectralNorm {
         // System.out.println(formatter.format(Math.sqrt(vBv / vv)));
         double result = Math.sqrt(vBv / vv);
         formatter.format(result);
+        // System.out.println(formatter.format(result));
         long estimatedTime = System.currentTimeMillis() - startTime;
         System.out.println(estimatedTime);
     }

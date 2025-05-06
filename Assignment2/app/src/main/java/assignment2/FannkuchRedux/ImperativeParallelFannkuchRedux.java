@@ -1,4 +1,5 @@
 package assignment2.FannkuchRedux;
+
 /*
  * The Computer Language Benchmarks Game
  * https://salsa.debian.org/benchmarksgame-team/benchmarksgame/
@@ -135,7 +136,7 @@ package assignment2.FannkuchRedux;
  
      public static void main( String[] args )
      {        
-         n = args.length > 0 ? Integer.parseInt( args[0] ) : 12;
+         n = args.length > 0 ? Integer.parseInt( args[0] ) : 5;
          if ( n < 0 || n > 12 ) {         // 13! won't fit into int
              printResult( n, -1, -1 );
              return;
@@ -160,7 +161,7 @@ package assignment2.FannkuchRedux;
          int nthreads = 1;
          Thread[] threads = new Thread[nthreads];
          for ( int i=0; i<nthreads; ++i ) {
-             threads[i] = new Thread( new fannkuchredux() );
+             threads[i] = new Thread( new ImperativeParallelFannkuchRedux() );
              threads[i].start();
          }
          for ( Thread t : threads ) {
