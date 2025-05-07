@@ -136,7 +136,7 @@ package assignment2.FannkuchRedux;
  
      public static void main( String[] args )
      {        
-         n = args.length > 0 ? Integer.parseInt( args[0] ) : 5;
+         n = args.length > 0 ? Integer.parseInt( args[0] ) : 3;
          if ( n < 0 || n > 12 ) {         // 13! won't fit into int
              printResult( n, -1, -1 );
              return;
