@@ -1,4 +1,4 @@
-package assignment2.SepctralNorm;
+package assignment2.SpectralNorm;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

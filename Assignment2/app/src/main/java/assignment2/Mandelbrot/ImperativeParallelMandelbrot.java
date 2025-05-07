@@ -13,8 +13,6 @@ package assignment2.Mandelbrot;
  // JAVA NAOT #6
  // https://benchmarksgame-team.pages.debian.net/benchmarksgame/program/mandelbrot-graalvmaot-6.html
 
-import java.io.BufferedOutputStream;
-import java.io.OutputStream;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 
@@ -86,7 +84,9 @@ public class ImperativeParallelMandelbrot {
     public static void main(String[] args) throws Exception {
         int N = 6000;
         if (args.length >= 1) N = Integer.parseInt(args[0]);
+        int threads = args.length >= 2 ? Integer.parseInt(args[1]) : Runtime.getRuntime().availableProcessors();
 
+        long startTime = System.currentTimeMillis();
         Crb = new double[N + 7];
         Cib = new double[N + 7];
         double invN = 2.0 / N;
@@ -97,13 +97,16 @@ public class ImperativeParallelMandelbrot {
 
         out = new byte[N][(N + 7) / 8];
 
-        ForkJoinPool pool = new ForkJoinPool();
+        ForkJoinPool pool = new ForkJoinPool(threads);
         pool.invoke(new MandelbrotTask(0, N));
 
-        OutputStream stream = new BufferedOutputStream(System.out);
-        stream.write(("P4\n" + N + " " + N + "\n").getBytes());
-        for (int i = 0; i < N; i++) stream.write(out[i]);
-        stream.close();
+        // OutputStream stream = new BufferedOutputStream(System.out);
+        // stream.write(("P4\n" + N + " " + N + "\n").getBytes());
+        // for (int i = 0; i < N; i++) stream.write(out[i]);
+        // stream.close();
+        
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println(estimatedTime);
     }
 }
 

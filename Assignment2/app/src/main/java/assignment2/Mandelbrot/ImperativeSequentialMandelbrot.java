@@ -12,7 +12,11 @@ import java.io.PrintStream;
 public class ImperativeSequentialMandelbrot {
 
    public static void main(String[] args) throws Exception {
-       new Mandelbrot(Integer.parseInt(args[0])).compute();
+        long startTime = System.currentTimeMillis();
+        int size = args.length >= 1 ? Integer.parseInt(args[0]) : 200;
+        new Mandelbrot(size).compute();
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println(estimatedTime);
    }
 
    public static class Mandelbrot {
@@ -33,11 +37,11 @@ public class ImperativeSequentialMandelbrot {
 
       public void compute() throws IOException
       {
-         out.format("P4\n%d %d\n",size,size);
+        //  out.format("P4\n%d %d\n",size,size);
          for (int y = 0; y<size; y++)
             computeRow(y);
-         out.write( buf, 0, bufLen);
-         out.close();
+        //  out.write( buf, 0, bufLen);
+        //  out.close();
       }
 
       private void computeRow(int y) throws IOException

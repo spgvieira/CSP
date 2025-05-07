@@ -1,5 +1,5 @@
 
-package assignment2.SepctralNorm;
+package assignment2.SpectralNorm;
 /*
 The Computer Language Benchmarks Game
 https://salsa.debian.org/benchmarksgame-team/benchmarksgame/

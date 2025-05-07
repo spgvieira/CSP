@@ -10,8 +10,10 @@ public class FunctionalParallelMandelbrot {
         public static void main(String[] args) throws IOException {
         int size = args.length >= 1 ? Integer.parseInt(args[0]) : 200;
         int threads = args.length >= 2 ? Integer.parseInt(args[1]) : Runtime.getRuntime().availableProcessors();
-
+        long startTime = System.currentTimeMillis();
         generateAndSave(size, threads,"mandelbrot.pbm");
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println(estimatedTime);
     }
 
     private static void generateAndSave(int size, int threads, String filename) throws IOException {
@@ -44,6 +46,7 @@ public class FunctionalParallelMandelbrot {
     double ci = coordinates[y] - 1.0;
 
     return IntStream.range(0, (size + 7) / 8)
+            .parallel()
             .mapToObj(xb -> (byte) (computeByte(xb * 8, y, ci, coordinates, size) ^ 0xFF))
             .collect(
                 ByteArrayOutputStream::new,

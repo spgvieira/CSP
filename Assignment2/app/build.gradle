@@ -11,16 +11,17 @@ plugins {
 }
 
 ext {
-    inputs = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
+    spectralNormInputs = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
+    mandelbrotInputs = [256, 512, 1024, 2048, 4096, 8192, 16384]
     threads = [1, 2, 4, 8, 16, 32]
     repeat = 5
-    perfEventsList = 'task-clock,context-switches,cpu-migrations,page-faults,major-faults,dTLB-load-misses,cache-misses'
+    perfEventsList = 'cpu_cycles,context-switches,cpu-migrations,page-faults,major-faults,dTLB-load-misses,cache-misses,instructions'
     resultsDir = file("experimental_results")
     memDir = file("mem_reports")
     perfDir = file("perf_reports")
 }
 
-def registerMemoryTask(name, groupName, mainClassName, algo, isParallel = false){
+def registerMemoryTask(name, groupName, mainClassName, algo, isParallel = false, inputList){
     tasks.register(name, JavaExec) {
         group = groupName
         classpath = sourceSets.main.runtimeClasspath
@@ -43,7 +44,7 @@ def registerMemoryTask(name, groupName, mainClassName, algo, isParallel = false)
         doLast {
             def timeFile = project.ext["${name}_timeFile"]
             def memFile = project.ext["${name}_memFile"]
-            def inputs = project.ext.inputs
+            def inputs = inputList
             def threads = project.ext.threads
             def repeat = project.ext.repeat 
 
@@ -90,7 +91,7 @@ def registerMemoryTask(name, groupName, mainClassName, algo, isParallel = false)
     }
 }
 
-def registerPerfTask(name, groupName, mainClassName, algo, isParallel = false) {
+def registerPerfTask(name, groupName, mainClassName, algo, isParallel = false, inputList) {
     tasks.register(name, JavaExec) {
         group = groupName
         classpath = sourceSets.main.runtimeClasspath
@@ -112,7 +113,7 @@ def registerPerfTask(name, groupName, mainClassName, algo, isParallel = false) {
         doLast {
             def timeFile = project.ext["${name}_timeFile"]
             def perfReportFile = project.ext["${name}_perfFile"]
-            def inputs = project.ext.inputs
+            def inputs = inputList
             def threads = project.ext.threads
             def perfEvents = project.ext.perfEventsList
             def repeat = project.ext.repeat
@@ -169,7 +170,7 @@ tasks.register('recordBaselineMemory', Exec) {
         println "Baseline memory recording finished. Data saved to: $baselineMemFile"
         // Attempt to gracefully kill the process if it's still running (though the while loop should handle this)
         try {
-            def pid = project.exec { commandLine 'pgrep', '-f', "sh ${memoryPidScript} baseline" }.standardOutput.text.trim()
+            def pid = project.exec { commandLine 'pgrep', '-f', "sh ${memoryScript} baseline" }.standardOutput.text.trim()
             if (pid) {
                 project.exec { commandLine 'kill', pid }
                 println "Successfully terminated baseline recording process (if it was still running)."
@@ -192,29 +193,49 @@ tasks.register('stopBaselineMemoryRecording', Exec) {
     }
     onlyIf {
         try {
-            return !project.exec { commandLine 'pgrep', '-f', "sh ${memoryPidScript} baseline" }.standardOutput.text.trim().isEmpty()
+            return !project.exec { commandLine 'pgrep', '-f', "sh ${memoryScript} baseline" }.standardOutput.text.trim().isEmpty()
         } catch (Exception e) {
             return false // Process likely not running
         }
     }
 }
 
-registerMemoryTask("memoryImperativeSequential", "imperative_sequential", "assignment2.SepctralNorm.ImperativeSequentialSpectralNorm", "spectral_norm",false)
-registerMemoryTask("memoryImperativeParallel", "imperative_parallel", "assignment2.SepctralNorm.ImperativeParallelSpectralNorm", "spectral_norm",true)
-registerMemoryTask("memoryFunctionalSequential", "functional_sequential", "assignment2.SepctralNorm.FunctionalSequentialSpectralNorm", "spectral_norm",false)
-registerMemoryTask("memoryFunctionalParallel", "functional_parallel", "assignment2.SepctralNorm.FunctionalParallelSpectralNorm", "spectral_norm",true)
+registerMemoryTask("memoryImperativeSequentialSpectralNorm", "imperative_sequential", "assignment2.SpectralNorm.ImperativeSequentialSpectralNorm", "spectral_norm",false, spectralNormInputs)
+registerMemoryTask("memoryImperativeParallelSpectralNorm", "imperative_parallel", "assignment2.SpectralNorm.ImperativeParallelSpectralNorm", "spectral_norm",true, spectralNormInputs)
+registerMemoryTask("memoryFunctionalSequentialSpectralNorm", "functional_sequential", "assignment2.SpectralNorm.FunctionalSequentialSpectralNorm", "spectral_norm",false, spectralNormInputs)
+registerMemoryTask("memoryFunctionalParallelSpectralNorm", "functional_parallel", "assignment2.SpectralNorm.FunctionalParallelSpectralNorm", "spectral_norm",true, spectralNormInputs)
 
-registerPerfTask("perfImperativeSequential", "imperative_sequential", "assignment2.SepctralNorm.ImperativeSequentialSpectralNorm", "spectral_norm",false)
-registerPerfTask("perfImperativeParallel", "imperative_parallel", "assignment2.SepctralNorm.ImperativeParallelSpectralNorm", "spectral_norm",true)
-registerPerfTask("perfFunctionalSequential", "functional_sequential", "assignment2.SepctralNorm.FunctionalSequentialSpectralNorm", "spectral_norm",false)
-registerPerfTask("perfFunctionalParallel", "functional_parallel", "assignment2.SepctralNorm.FunctionalParallelSpectralNorm", "spectral_norm",true)
+registerPerfTask("perfImperativeSequentialSpectralNorm", "imperative_sequential", "assignment2.SpectralNorm.ImperativeSequentialSpectralNorm", "spectral_norm",false, spectralNormInputs)
+registerPerfTask("perfImperativeParallelSpectralNorm", "imperative_parallel", "assignment2.SpectralNorm.ImperativeParallelSpectralNorm", "spectral_norm",true, spectralNormInputs)
+registerPerfTask("perfFunctionalSequentialSpectralNorm", "functional_sequential", "assignment2.SpectralNorm.FunctionalSequentialSpectralNorm", "spectral_norm",false, spectralNormInputs)
+registerPerfTask("perfFunctionalParallelSpectralNorm", "functional_parallel", "assignment2.SpectralNorm.FunctionalParallelSpectralNorm", "spectral_norm",true, spectralNormInputs)
 
-tasks.register("runAllMemoryTasks") {
-    dependsOn("memoryImperativeSequential", "memoryImperativeParallel", "memoryFunctionalSequential", "memoryFunctionalParallel")
+registerMemoryTask("memoryImperativeSequentialMandelbrot", "imperative_sequential", "assignment2.Mandelbrot.ImperativeSequentialMandelbrot", "mandelbrot",false, mandelbrotInputs)
+registerMemoryTask("memoryImperativeParallelMandelbrot", "imperative_parallel", "assignment2.SMandelbrot.ImperativeParallelMandelbrot", "mandelbrot",true, mandelbrotInputs)
+registerMemoryTask("memoryFunctionalSequentialMandelbrot", "functional_sequential", "assignment2.Mandelbrot.FunctionalSequentialMandelbrot", "mandelbrot",false, mandelbrotInputs)
+registerMemoryTask("memoryFunctionalParallelMandelbrot", "functional_parallel", "assignment2.Mandelbrot.FunctionalParallelMandelbrot", "mandelbrot",true, mandelbrotInputs)
+
+registerPerfTask("perfImperativeSequentialMandelbrot", "imperative_sequential", "assignment2.Mandelbrot.ImperativeSequentialMandelbrot", "mandelbrot",false, mandelbrotInputs)
+registerPerfTask("perfImperativeParallelMandelbrot", "imperative_parallel", "assignment2.Mandelbrot.ImperativeParallelMandelbrot", "mandelbrot",true, mandelbrotInputs)
+registerPerfTask("perfFunctionalSequentialMandelbrot", "functional_sequential", "assignment2.Mandelbrot.FunctionalSequentialMandelbrot", "mandelbrot",false, mandelbrotInputs)
+registerPerfTask("perfFunctionalParallelMandelbrot", "functional_parallel", "assignment2.Mandelbrot.FunctionalParallelMandelbrot", "mandelbrot",true, mandelbrotInputs)
+
+tasks.register("runMemorySpectralNorm") {
+    dependsOn("memoryImperativeSequentialSpectralNorm", "memoryImperativeParallelSpectralNorm", "memoryFunctionalSequentialSpectralNorm", "memoryFunctionalParallelSpectralNorm","recordBaselineMemory")
     group = "memory"
 }
 
-tasks.register("runAllPerfTasks") {
-    dependsOn("perfImperativeSequential", "perfImperativeParallel", "perfFunctionalSequential", "perfFunctionalParallel")
+tasks.register("runPerfSpectralNorm") {
+    dependsOn("perfImperativeSequentialSpectralNorm", "perfImperativeParallelSpectralNorm", "perfFunctionalSequentialSpectralNorm", "perfFunctionalParallelSpectralNorm")
+    group = "performance"
+}
+
+tasks.register("runMemoryMandelbrot") {
+    dependsOn("memoryImperativeSequentialMandelbrot", "memoryImperativeParallelMandelbrot", "memoryFunctionalSequentialMandelbrot", "memoryFunctionalParallelMandelbrot","recordBaselineMemory")
+    group = "memory"
+}
+
+tasks.register("runPerfMandelbrot") {
+    dependsOn("perfImperativeSequentialMandelbrot", "perfImperativeParallelMandelbrot", "perfFunctionalSequentialMandelbrot", "perfFunctionalParallelMandelbrot")
     group = "performance"
 }

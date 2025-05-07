@@ -8,7 +8,10 @@ import java.util.stream.IntStream;
 public class FunctionalSequentialMandelbrot {
     public static void main(String[] args) throws IOException {
         int size = args.length >= 1 ? Integer.parseInt(args[0]) : 200;
+        long startTime = System.currentTimeMillis();
         generateAndSave(size, "mandelbrot.pbm");
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println(estimatedTime);
     }
 
     private static void generateAndSave(int size, String filename) throws IOException {
