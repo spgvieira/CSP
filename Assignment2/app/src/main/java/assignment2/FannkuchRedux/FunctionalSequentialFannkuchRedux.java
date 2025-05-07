@@ -1,81 +1,51 @@
 package assignment2.FannkuchRedux;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class FunctionalSequentialFannkuchRedux {
+
+        public static void main(String[] args) {
+            int n = 12; // Change this value as needed
     
-    public static int fannkuch(int n) {
-        return permutations(n)
-                .mapToInt(perm -> {
-                    int flipsCount = 0;
-                    int[] p = Arrays.copyOf(perm, n);
-                    while (p[0] != 0) {
-                        int k = p[0];
-                        int k2 = (k + 1) >> 1;
-                        for (int i = 0; i < k2; i++) {
-                            int temp = p[i];
-                            p[i] = p[k - i];
-                            p[k - i] = temp;
-                        }
-                        flipsCount++;
-                    }
-                    return flipsCount;
-                })
-                .reduce(0, Math::max);
-    }
-
-    public static Stream<int[]> permutations(int n) {
-        if (n == 0) {
-            return Stream.of(new int[0]);
+            int maxFlips = generatePermutations(IntStream.rangeClosed(1, n).boxed().collect(Collectors.toList()))
+                .mapToInt(FunctionalSequentialFannkuchRedux ::countFlips)
+                .max()
+                .orElse(0);
+    
+            System.out.println("Max Flips: " + maxFlips);
         }
-        return permutations(n - 1)
-                .flatMap(prevPermutation -> IntStream.rangeClosed(0, prevPermutation.length)
-                        .mapToObj(i -> {
-                            int[] permutation = new int[n];
-                            System.arraycopy(prevPermutation, 0, permutation, 0, i);
-                            permutation[i] = n - 1;
-                            System.arraycopy(prevPermutation, i, permutation, i + 1, prevPermutation.length - i);
-                            return permutation;
-                        }));
-    }
-
-    public static void main(String[] args) {
-        int n = 12;
-        if (args.length > 0) {
-            n = Integer.parseInt(args[0]);
-        }
-        int maxFlips = fannkuch(n);
-        long checksum = calculateChecksum(n);
-        System.out.println(checksum);
-        System.out.println("Pfannkuchen(" + n + ") = " + maxFlips);
-    }
-
-    public static long calculateChecksum(int n) {
-        IntStream flipsStream = permutations(n)
-                .mapToInt(perm -> {
-                    int flipsCount = 0;
-                    int[] p = Arrays.copyOf(perm, n);
-                    while (p[0] != 0) {
-                        int k = p[0];
-                        int k2 = (k + 1) >> 1;
-                        for (int i = 0; i < k2; i++) {
-                            int temp = p[i];
-                            p[i] = p[k - i];
-                            p[k - i] = temp;
-                        }
-                        flipsCount++;
-                    }
-                    return flipsCount;
+    
+        // Generate all permutations functionally
+        static Stream<List<Integer>> generatePermutations(List<Integer> list) {
+            if (list.isEmpty()) {
+                return Stream.of(Collections.emptyList());
+            }
+            return IntStream.range(0, list.size()).boxed()
+                .flatMap(i -> {
+                    List<Integer> rest = new ArrayList<>(list);
+                    Integer head = rest.remove((int) i);
+                    return generatePermutations(rest)
+                        .map(perm -> {
+                            List<Integer> newPerm = new ArrayList<>();
+                            newPerm.add(head);
+                            newPerm.addAll(perm);
+                            return newPerm;
+                        });
                 });
+        }
     
-        return IntStream.range(0, (int) permutations(n).count()) // Generate indices
-                .mapToLong(index -> {
-                    int flips = flipsStream.skip(index).findFirst().orElse(0); // Get the corresponding flip count
-                    return (index % 2 == 0) ? flips : -flips;
-                })
-                .sum();
-    }
+        // Count flips recursively
+        static int countFlips(List<Integer> list) {
+            if (list.get(0) == 1) return 0;
+            List<Integer> flipped = new ArrayList<>(list);
+            int k = flipped.get(0);
+            Collections.reverse(flipped.subList(0, k));
+            return 1 + countFlips(flipped);
+        }
+    
 }
-
