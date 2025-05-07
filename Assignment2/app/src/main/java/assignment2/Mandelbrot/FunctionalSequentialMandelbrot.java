@@ -1,8 +1,6 @@
 package assignment2.Mandelbrot;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.stream.IntStream;
@@ -19,7 +17,7 @@ public class FunctionalSequentialMandelbrot {
                 .toArray();
 
         byte[][] imageData = generateMandelbrotImage(size, coordinates);
-        writeToFile(size, imageData, filename);
+        // writeToFile(size, imageData, filename);
     }
 
     private static byte[][] generateMandelbrotImage(int size, double[] coordinates) {
@@ -71,13 +69,13 @@ public class FunctionalSequentialMandelbrot {
         return hasEscaped(cr, ci, temp, newZi, iter - 1);
     }
 
-    private static void writeToFile(int size, byte[][] imageData, String filename) throws IOException {
-        try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(filename))) {
-            out.write(String.format("P4\n%d %d\n", size, size).getBytes());
-            for (byte[] row : imageData) {
-                out.write(row);
-            }
-        }
-        System.out.println("Mandelbrot set image saved to " + filename);
-    }
+    // private static void writeToFile(int size, byte[][] imageData, String filename) throws IOException {
+    //     try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(filename))) {
+    //         out.write(String.format("P4\n%d %d\n", size, size).getBytes());
+    //         for (byte[] row : imageData) {
+    //             out.write(row);
+    //         }
+    //     }
+    //     System.out.println("Mandelbrot set image saved to " + filename);
+    // }
 }
