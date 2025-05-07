@@ -1,5 +1,11 @@
 import java.text.SimpleDateFormat
 
+/**
+    To run the experiement on the server you need to make that we are using java14. 
+    To do so we first need to run $export JAVA_HOME = /usr/lib/jvm/java-14-openjdk-amd64
+    Then inside Assignment2 directory we can run ./gradlew
+ */
+
 plugins {
     id 'java'
 }
