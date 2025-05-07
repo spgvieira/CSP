@@ -2,7 +2,7 @@ import java.text.SimpleDateFormat
 
 /**
     To run the experiement on the server you need to make that we are using java14. 
-    To do so we first need to run $export JAVA_HOME = /usr/lib/jvm/java-14-openjdk-amd64
+    To do so we first need to run $export JAVA_HOME/usr/lib/jvm/java-14-openjdk-amd64
     Then inside Assignment2 directory we can run ./gradlew
  */
 
@@ -148,6 +148,53 @@ def registerPerfTask(name, groupName, mainClassName, algo, isParallel = false) {
                     timeFile << "$line\n"
                 }
             }
+        }
+    }
+}
+
+// New task to record baseline memory usage for 3 minutes
+tasks.register('recordBaselineMemory', Exec) {
+    group = 'memory'
+    def dateStr = new SimpleDateFormat("dd_MM").format(new Date())
+    def baselineMemFile = file("${memDir}/baseline/${dateStr}_baseline.csv").absolutePath
+    def memoryScript = file("memory.sh").absolutePath // Assuming your combined script is named this
+
+    commandLine 'sh', memoryScript, 'baseline', baselineMemFile
+
+    // Keep the script running for 3 minutes (180 seconds) and then kill it
+    doFirst {
+        println "Starting baseline memory recording for 3 minutes..."
+    }
+    doLast {
+        println "Baseline memory recording finished. Data saved to: $baselineMemFile"
+        // Attempt to gracefully kill the process if it's still running (though the while loop should handle this)
+        try {
+            def pid = project.exec { commandLine 'pgrep', '-f', "sh ${memoryPidScript} baseline" }.standardOutput.text.trim()
+            if (pid) {
+                project.exec { commandLine 'kill', pid }
+                println "Successfully terminated baseline recording process (if it was still running)."
+            }
+        } catch (Exception e) {
+            println "Could not find and terminate the baseline recording process (it might have already finished)."
+        }
+    }
+    finalizedBy 'stopBaselineMemoryRecording'
+}
+
+// Task to stop the baseline memory recording (in case it runs longer than expected)
+tasks.register('stopBaselineMemoryRecording', Exec) {
+    group = 'memory'
+    def memoryScript = file("memory.sh").absolutePath
+
+    commandLine 'pkill', '-f', "sh ${memoryScript} baseline"
+    doLast {
+        println "Attempted to stop baseline memory recording."
+    }
+    onlyIf {
+        try {
+            return !project.exec { commandLine 'pgrep', '-f', "sh ${memoryPidScript} baseline" }.standardOutput.text.trim().isEmpty()
+        } catch (Exception e) {
+            return false // Process likely not running
         }
     }
 }
