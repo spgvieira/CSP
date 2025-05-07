@@ -8,14 +8,14 @@ from datetime import datetime #for naming output files
 import matplotlib.ticker as ticker #for more stylish/even numbered tickers along y-axis
 #=== Arguments ===
 #argument handling
-if len(sys.argv) < 2 or sys.argv[1] not in ['spec', 'fann']:
-    print("Usage: python new_plot_stuff.py [spec|fann]")
+if len(sys.argv) < 2 or sys.argv[1] not in ['spec', 'mann']:
+    print("Usage: python new_plot_stuff.py [spec|mann]")
     sys.exit(1)
 
 #1st argument - map input to subfolder names
 arg_map = {
     "spec": "spectral_norm",
-    "fann": "fannkuch_redux"
+    "mann": "mandelbrot"
 }
 
 #2nd and 3rd arguments for script, e.g select which parallel and sequential files to use based on date.
@@ -39,7 +39,7 @@ PLOTS_FOLDER_MAP = {
     "mem": "plots_mem"
 }
 
-#define paths to each data category selected subfolder (spectral norm or fannkuch)
+#define paths to each data category selected subfolder (spectral norm or mandelbrot)
 time_folder = os.path.join(parent_dir, "experimental_results", selected_subfolder)
 perf_folder = os.path.join(parent_dir, "perf_reports", selected_subfolder)
 sysmem_folder = os.path.join(parent_dir, "mem_reports", selected_subfolder)
@@ -381,21 +381,24 @@ def add_missing_column_names_and_clean(list_of_csv_paths):
     (based on 'parallel' vs 'sequential' in filename) and clean memory columns from textual
     entries (e.g., 'MiB Mem : 15690.9 total') down to pure floats.
     """
-    # handle list of paths
     if isinstance(list_of_csv_paths, (list, tuple)):
         for p in list_of_csv_paths:
-            add_missing_column_names_and_clean(p)
+            add_missing_column_names_and_clean(p) # Recursive call
         return
-    path = list_of_csv_paths
+    
+    path = list_of_csv_paths # Now path is a single file path
 
     basename = os.path.basename(path).lower()
+    is_parallel = 'parallel' in basename
+    is_sequential = 'sequential' in basename
+
     # Determine expected headers
-    if 'parallel' in basename:
-        headers = ['input', 'thread', 'total_mem', 'free_mem', 'used_mem', 'buff_cache']
-    elif 'sequential' in basename:
-        headers = ['input', 'total_mem', 'free_mem', 'used_mem', 'buff_cache']
+    if is_parallel:
+        expected_headers = ['input', 'thread', 'total_mem', 'free_mem', 'used_mem', 'buff_cache']
+    elif is_sequential:
+        expected_headers = ['input', 'total_mem', 'free_mem', 'used_mem', 'buff_cache']
     else:
-        print(f"Skipping {path}: cannot determine type from filename.")
+        print(f"Skipping {path}: cannot determine type (parallel/sequential) from filename.")
         return
 
     # Read file lines to check/add header
@@ -405,71 +408,101 @@ def add_missing_column_names_and_clean(list_of_csv_paths):
     except FileNotFoundError:
         print(f"File not found: {path}")
         return
+    
+    header_added_or_file_empty = False
     if not lines:
-        print(f"Empty file: {path}")
-        return
-
-    # Prepend header if missing
-    first_tokens = lines[0].strip().lower().split(',')
-    if not (first_tokens and first_tokens[0] == 'input'):
-        header_line = ','.join(headers) + '\n'
-        lines.insert(0, header_line)
-        with open(path, 'w', encoding='utf-8') as f:
-            f.writelines(lines)
-        print(f"Added header to {path}")
+        print(f"Empty file: {path}. Adding headers.")
+        header_line = ','.join(expected_headers) + '\n'
+        lines.append(header_line) # Add header to empty file
+        header_added_or_file_empty = True
+        # Fall through to write this single-line (header-only) file
     else:
-        print(f"Header exists in {path}, skipping header insertion.")
+        # Check current header
+        first_tokens = lines[0].strip().lower().split(',')
+        if not (first_tokens and first_tokens[0] == 'input'):
+            header_line = ','.join(expected_headers) + '\n'
+            lines.insert(0, header_line)
+            print(f"Added header to {path}")
+            header_added_or_file_empty = True
+        # else:
+            # print(f"Header seems to exist in {path} (starts with 'input').")
+
+    # If header was added, need to write lines back before pandas reads,
+    # OR use io.StringIO if we want to avoid intermediate write.
+    # The original code wrote, then re-read. Let's stick to that pattern for minimal change.
+    if header_added_or_file_empty: # Only write if header was added or file was empty
+        try:
+            with open(path, 'w', encoding='utf-8') as f:
+                f.writelines(lines)
+        except Exception as e:
+            print(f"Error writing header to {path}: {e}")
+            return
+
 
     # Load with pandas to clean mem columns
     try:
         df = pd.read_csv(path)
     except Exception as e:
-        print(f"Failed to read CSV {path}: {e}")
+        print(f"Failed to read CSV {path} into DataFrame: {e}")
         return
+    
+    if df.empty and not header_added_or_file_empty : # If df is empty and it wasn't an empty file we just put headers in
+        print(f"DataFrame loaded from {path} is empty. Skipping cleaning. File might only contain headers or be malformed.")
+        # If it was an empty file we added headers to, df will be empty, and that's fine.
+        # We don't need to write it again unless other cleaning happens.
+        if header_added_or_file_empty: # if it's an empty file we just wrote headers to
+             # df.to_csv(path, index=False) # Ensures it's a valid CSV structure if it was just headers
+             # print(f"Initialized {path} with headers.")
+             return # Nothing to clean
+        return
+
 
     # Regex to extract first float
     num_pat = re.compile(r"([0-9]+(?:\.[0-9]+)?)")
     def extract_num(s):
         if pd.isna(s):
             return s
+        # Convert to string in case it's already a number (float/int)
         m = num_pat.search(str(s))
-        return float(m.group(1)) if m else pd.NA
+        return float(m.group(1)) if m else pd.NA # Use pd.NA for consistency
 
-    # Clean each memory column to floats
-    for col in headers[2:]:  # skip 'input' and optional 'thread'
-        if col in df.columns:
-            df[col] = df[col].apply(extract_num)
+    # Determine which columns to clean based on file type (parallel/sequential)
+    if is_parallel:
+        # For parallel: ['input', 'thread', 'total_mem', 'free_mem', 'used_mem', 'buff_cache']
+        # Memory columns start at index 2 of expected_headers
+        cols_to_clean_names = expected_headers[2:]
+    else: # is_sequential
+        # For sequential: ['input', 'total_mem', 'free_mem', 'used_mem', 'buff_cache']
+        # Memory columns start at index 1 of expected_headers
+        cols_to_clean_names = expected_headers[1:]
+
+    cleaned_at_least_one_column = False
+    for col_name in cols_to_clean_names:
+        if col_name in df.columns:
+            # Check if column needs cleaning (i.e., is not already numeric)
+            # This avoids errors if a column is already float/int
+            if df[col_name].dtype == 'object': # 'object' dtype usually means strings
+                df[col_name] = df[col_name].apply(extract_num)
+                df[col_name] = pd.to_numeric(df[col_name], errors='coerce') # Ensure numeric type
+                cleaned_at_least_one_column = True
+        # else:
+            # This case should ideally not happen if headers were correctly added/matched
+            # print(f"Warning: Expected column '{col_name}' not found in DataFrame from {path} for cleaning.")
 
     # Write back cleaned CSV
-    try:
-        df.to_csv(path, index=False)
-        print(f"Cleaned memory columns in {path}")
-    except Exception as e:
-        print(f"Failed to write cleaned CSV {path}: {e}")
+    if cleaned_at_least_one_column or header_added_or_file_empty : # Write if we cleaned something or if we added/fixed header initially
+        try:
+            df.to_csv(path, index=False)
+            if cleaned_at_least_one_column :
+                print(f"Cleaned memory columns in {path}")
+            # If only header was added and no cleaning, the earlier message "Added header to {path}" suffices.
+        except Exception as e:
+            print(f"Failed to write cleaned CSV {path}: {e}")
+    # else:
+        # print(f"No cleaning performed or header modifications needed for {path}.")
+        
+    # The redundant block that was here is now removed.
 
-    # Read file contents
-    try:
-        with open(path, 'r', encoding='utf-8') as f:
-            lines = f.readlines()
-    except FileNotFoundError:
-        print(f"File not found: {path}")
-        return
-    if not lines:
-        print(f"Empty file: {path}")
-        return
-
-    # If header already present, skip
-    first_tokens = lines[0].strip().lower().split(',')
-    if first_tokens and first_tokens[0] == 'input':
-        print(f"Header exists in {path}, skipping.")
-        return
-
-    # Prepend header
-    header_line = ','.join(headers) + '\n'
-    with open(path, 'w', encoding='utf-8') as f:
-        f.write(header_line)
-        f.writelines(lines)
-    print(f"Added header to {path}")
 
 #cleans out strings in columns of sysmemory csv's
 def clean_mem_col(series):
