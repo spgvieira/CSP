@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.stream.IntStream;
 
-public class FunctionalSequentialMandelBrot {
+public class FunctionalSequentialMandelbrot {
     public static void main(String[] args) throws IOException {
         int size = args.length >= 1 ? Integer.parseInt(args[0]) : 200;
         generateAndSave(size, "mandelbrot.pbm");
