@@ -15,7 +15,7 @@ ext {
     mandelbrotInputs = [256, 512, 1024, 2048, 4096, 8192, 16384]
     threads = [1, 2, 4, 8, 16, 32]
     repeat = 5
-    perfEventsList = 'cpu_cycles,context-switches,cpu-migrations,page-faults,major-faults,dTLB-load-misses,cache-misses,instructions'
+    perfEventsList = 'cpu-cycles,context-switches,cpu-migrations,page-faults,major-faults,dTLB-load-misses,cache-misses,instructions'
     resultsDir = file("experimental_results")
     memDir = file("mem_reports")
     perfDir = file("perf_reports")
@@ -221,7 +221,7 @@ registerPerfTask("perfFunctionalSequentialMandelbrot", "functional_sequential", 
 registerPerfTask("perfFunctionalParallelMandelbrot", "functional_parallel", "assignment2.Mandelbrot.FunctionalParallelMandelbrot", "mandelbrot",true, mandelbrotInputs)
 
 tasks.register("runMemorySpectralNorm") {
-    dependsOn("memoryImperativeSequentialSpectralNorm", "memoryImperativeParallelSpectralNorm", "memoryFunctionalSequentialSpectralNorm", "memoryFunctionalParallelSpectralNorm","recordBaselineMemory")
+    dependsOn("memoryImperativeSequentialSpectralNorm", "memoryImperativeParallelSpectralNorm", "memoryFunctionalSequentialSpectralNorm", "memoryFunctionalParallelSpectralNorm")
     group = "memory"
 }
 
@@ -231,7 +231,7 @@ tasks.register("runPerfSpectralNorm") {
 }
 
 tasks.register("runMemoryMandelbrot") {
-    dependsOn("memoryImperativeSequentialMandelbrot", "memoryImperativeParallelMandelbrot", "memoryFunctionalSequentialMandelbrot", "memoryFunctionalParallelMandelbrot","recordBaselineMemory")
+    dependsOn("memoryImperativeSequentialMandelbrot", "memoryImperativeParallelMandelbrot", "memoryFunctionalSequentialMandelbrot", "memoryFunctionalParallelMandelbrot")
     group = "memory"
 }
 
