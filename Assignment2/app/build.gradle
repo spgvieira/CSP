@@ -211,7 +211,7 @@ registerPerfTask("perfFunctionalSequentialSpectralNorm", "functional_sequential"
 registerPerfTask("perfFunctionalParallelSpectralNorm", "functional_parallel", "assignment2.SpectralNorm.FunctionalParallelSpectralNorm", "spectral_norm",true, spectralNormInputs)
 
 registerMemoryTask("memoryImperativeSequentialMandelbrot", "imperative_sequential", "assignment2.Mandelbrot.ImperativeSequentialMandelbrot", "mandelbrot",false, mandelbrotInputs)
-registerMemoryTask("memoryImperativeParallelMandelbrot", "imperative_parallel", "assignment2.SMandelbrot.ImperativeParallelMandelbrot", "mandelbrot",true, mandelbrotInputs)
+registerMemoryTask("memoryImperativeParallelMandelbrot", "imperative_parallel", "assignment2.Mandelbrot.ImperativeParallelMandelbrot", "mandelbrot",true, mandelbrotInputs)
 registerMemoryTask("memoryFunctionalSequentialMandelbrot", "functional_sequential", "assignment2.Mandelbrot.FunctionalSequentialMandelbrot", "mandelbrot",false, mandelbrotInputs)
 registerMemoryTask("memoryFunctionalParallelMandelbrot", "functional_parallel", "assignment2.Mandelbrot.FunctionalParallelMandelbrot", "mandelbrot",true, mandelbrotInputs)
 

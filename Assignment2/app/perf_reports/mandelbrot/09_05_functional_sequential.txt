@@ -1,0 +1,700 @@
+# started on Fri May  9 15:02:38 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 256':
+
+       425,276,820      cpu-cycles                                                            
+               445      context-switches                                                      
+                 5      cpu-migrations                                                        
+             6,077      page-faults                                                           
+                 0      major-faults                                                          
+            87,290      dTLB-load-misses                                                      
+           702,625      cache-misses                                                          
+       306,833,925      instructions                     #    0.72  insn per cycle            
+
+       0.178013026 seconds time elapsed
+
+       0.229071000 seconds user
+       0.055501000 seconds sys
+
+
+# started on Fri May  9 15:02:38 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 256':
+
+       424,251,888      cpu-cycles                                                            
+               417      context-switches                                                      
+                 9      cpu-migrations                                                        
+             6,063      page-faults                                                           
+                 0      major-faults                                                          
+            87,949      dTLB-load-misses                                                      
+           668,368      cache-misses                                                          
+       308,028,150      instructions                     #    0.73  insn per cycle            
+
+       0.177598197 seconds time elapsed
+
+       0.238793000 seconds user
+       0.061461000 seconds sys
+
+
+# started on Fri May  9 15:02:38 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 256':
+
+       429,346,284      cpu-cycles                                                            
+               494      context-switches                                                      
+                11      cpu-migrations                                                        
+             6,125      page-faults                                                           
+                 0      major-faults                                                          
+            84,999      dTLB-load-misses                                                      
+           708,983      cache-misses                                                          
+       313,122,755      instructions                     #    0.73  insn per cycle            
+
+       0.176536531 seconds time elapsed
+
+       0.235694000 seconds user
+       0.046531000 seconds sys
+
+
+# started on Fri May  9 15:02:38 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 256':
+
+       419,092,114      cpu-cycles                                                            
+               475      context-switches                                                      
+                 8      cpu-migrations                                                        
+             6,082      page-faults                                                           
+                 0      major-faults                                                          
+            84,008      dTLB-load-misses                                                      
+           653,691      cache-misses                                                          
+       307,242,184      instructions                     #    0.73  insn per cycle            
+
+       0.177761843 seconds time elapsed
+
+       0.245297000 seconds user
+       0.051103000 seconds sys
+
+
+# started on Fri May  9 15:02:39 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 256':
+
+       428,631,896      cpu-cycles                                                            
+               479      context-switches                                                      
+                 7      cpu-migrations                                                        
+             6,138      page-faults                                                           
+                 0      major-faults                                                          
+            88,461      dTLB-load-misses                                                      
+           660,526      cache-misses                                                          
+       309,544,853      instructions                     #    0.72  insn per cycle            
+
+       0.179229314 seconds time elapsed
+
+       0.236537000 seconds user
+       0.050392000 seconds sys
+
+
+# started on Fri May  9 15:02:39 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 512':
+
+       657,018,562      cpu-cycles                                                            
+               594      context-switches                                                      
+                12      cpu-migrations                                                        
+             6,698      page-faults                                                           
+                 0      major-faults                                                          
+           100,394      dTLB-load-misses                                                      
+           840,833      cache-misses                                                          
+       529,285,025      instructions                     #    0.81  insn per cycle            
+
+       0.221749158 seconds time elapsed
+
+       0.390876000 seconds user
+       0.066336000 seconds sys
+
+
+# started on Fri May  9 15:02:39 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 512':
+
+       662,852,567      cpu-cycles                                                            
+               619      context-switches                                                      
+                 9      cpu-migrations                                                        
+             6,754      page-faults                                                           
+                 0      major-faults                                                          
+           104,490      dTLB-load-misses                                                      
+           820,407      cache-misses                                                          
+       531,011,774      instructions                     #    0.80  insn per cycle            
+
+       0.223189936 seconds time elapsed
+
+       0.390278000 seconds user
+       0.068399000 seconds sys
+
+
+# started on Fri May  9 15:02:39 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 512':
+
+       669,259,882      cpu-cycles                                                            
+               736      context-switches                                                      
+                13      cpu-migrations                                                        
+             6,832      page-faults                                                           
+                 0      major-faults                                                          
+           108,391      dTLB-load-misses                                                      
+           873,579      cache-misses                                                          
+       532,565,294      instructions                     #    0.80  insn per cycle            
+
+       0.234666448 seconds time elapsed
+
+       0.396769000 seconds user
+       0.078558000 seconds sys
+
+
+# started on Fri May  9 15:02:40 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 512':
+
+       660,368,222      cpu-cycles                                                            
+               574      context-switches                                                      
+                17      cpu-migrations                                                        
+             6,705      page-faults                                                           
+                 0      major-faults                                                          
+           100,228      dTLB-load-misses                                                      
+           824,685      cache-misses                                                          
+       530,116,569      instructions                     #    0.80  insn per cycle            
+
+       0.220044480 seconds time elapsed
+
+       0.391530000 seconds user
+       0.071746000 seconds sys
+
+
+# started on Fri May  9 15:02:40 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 512':
+
+       656,241,319      cpu-cycles                                                            
+               590      context-switches                                                      
+                14      cpu-migrations                                                        
+             6,697      page-faults                                                           
+                 0      major-faults                                                          
+            98,539      dTLB-load-misses                                                      
+           833,886      cache-misses                                                          
+       528,873,413      instructions                     #    0.81  insn per cycle            
+
+       0.222493813 seconds time elapsed
+
+       0.382228000 seconds user
+       0.067040000 seconds sys
+
+
+# started on Fri May  9 15:02:40 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 1024':
+
+     1,047,623,829      cpu-cycles                                                            
+               639      context-switches                                                      
+                10      cpu-migrations                                                        
+             6,778      page-faults                                                           
+                 0      major-faults                                                          
+           103,578      dTLB-load-misses                                                      
+           859,019      cache-misses                                                          
+       929,831,065      instructions                     #    0.89  insn per cycle            
+
+       0.410867586 seconds time elapsed
+
+       0.601331000 seconds user
+       0.070038000 seconds sys
+
+
+# started on Fri May  9 15:02:41 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 1024':
+
+     1,047,410,632      cpu-cycles                                                            
+               610      context-switches                                                      
+                10      cpu-migrations                                                        
+             6,782      page-faults                                                           
+                 0      major-faults                                                          
+           102,356      dTLB-load-misses                                                      
+           819,707      cache-misses                                                          
+       929,997,815      instructions                     #    0.89  insn per cycle            
+
+       0.409152544 seconds time elapsed
+
+       0.595288000 seconds user
+       0.065250000 seconds sys
+
+
+# started on Fri May  9 15:02:41 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 1024':
+
+     1,051,560,537      cpu-cycles                                                            
+               643      context-switches                                                      
+                10      cpu-migrations                                                        
+             6,791      page-faults                                                           
+                 0      major-faults                                                          
+           103,244      dTLB-load-misses                                                      
+           877,527      cache-misses                                                          
+       931,766,694      instructions                     #    0.89  insn per cycle            
+
+       0.411289900 seconds time elapsed
+
+       0.590726000 seconds user
+       0.069914000 seconds sys
+
+
+# started on Fri May  9 15:02:42 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 1024':
+
+     1,048,035,918      cpu-cycles                                                            
+               632      context-switches                                                      
+                10      cpu-migrations                                                        
+             6,842      page-faults                                                           
+                 0      major-faults                                                          
+           108,227      dTLB-load-misses                                                      
+           873,728      cache-misses                                                          
+       927,932,297      instructions                     #    0.89  insn per cycle            
+
+       0.411109092 seconds time elapsed
+
+       0.587840000 seconds user
+       0.060498000 seconds sys
+
+
+# started on Fri May  9 15:02:42 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 1024':
+
+     1,053,794,314      cpu-cycles                                                            
+               629      context-switches                                                      
+                 9      cpu-migrations                                                        
+             6,784      page-faults                                                           
+                 0      major-faults                                                          
+           105,512      dTLB-load-misses                                                      
+           834,117      cache-misses                                                          
+       923,621,063      instructions                     #    0.88  insn per cycle            
+
+       0.405269934 seconds time elapsed
+
+       0.554539000 seconds user
+       0.077966000 seconds sys
+
+
+# started on Fri May  9 15:02:43 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 2048':
+
+     2,528,517,925      cpu-cycles                                                            
+               680      context-switches                                                      
+                10      cpu-migrations                                                        
+             7,687      page-faults                                                           
+                 0      major-faults                                                          
+           114,328      dTLB-load-misses                                                      
+           870,821      cache-misses                                                          
+     2,457,669,299      instructions                     #    0.97  insn per cycle            
+
+       1.150948316 seconds time elapsed
+
+       1.336801000 seconds user
+       0.070883000 seconds sys
+
+
+# started on Fri May  9 15:02:44 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 2048':
+
+     2,524,781,608      cpu-cycles                                                            
+               664      context-switches                                                      
+                14      cpu-migrations                                                        
+             7,672      page-faults                                                           
+                 0      major-faults                                                          
+           115,083      dTLB-load-misses                                                      
+           878,795      cache-misses                                                          
+     2,459,776,417      instructions                     #    0.97  insn per cycle            
+
+       1.146782044 seconds time elapsed
+
+       1.331692000 seconds user
+       0.072819000 seconds sys
+
+
+# started on Fri May  9 15:02:45 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 2048':
+
+     2,522,595,598      cpu-cycles                                                            
+               699      context-switches                                                      
+                 9      cpu-migrations                                                        
+             7,701      page-faults                                                           
+                 0      major-faults                                                          
+           119,030      dTLB-load-misses                                                      
+           878,456      cache-misses                                                          
+     2,453,686,077      instructions                     #    0.97  insn per cycle            
+
+       1.143426558 seconds time elapsed
+
+       1.313518000 seconds user
+       0.057240000 seconds sys
+
+
+# started on Fri May  9 15:02:46 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 2048':
+
+     2,531,661,622      cpu-cycles                                                            
+               652      context-switches                                                      
+                 8      cpu-migrations                                                        
+             7,711      page-faults                                                           
+                 0      major-faults                                                          
+           118,025      dTLB-load-misses                                                      
+           854,835      cache-misses                                                          
+     2,456,411,286      instructions                     #    0.97  insn per cycle            
+
+       1.146559877 seconds time elapsed
+
+       1.328607000 seconds user
+       0.074362000 seconds sys
+
+
+# started on Fri May  9 15:02:47 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 2048':
+
+     2,526,414,343      cpu-cycles                                                            
+               612      context-switches                                                      
+                10      cpu-migrations                                                        
+             7,746      page-faults                                                           
+                 0      major-faults                                                          
+           121,166      dTLB-load-misses                                                      
+           894,273      cache-misses                                                          
+     2,458,564,069      instructions                     #    0.97  insn per cycle            
+
+       1.148518870 seconds time elapsed
+
+       1.338680000 seconds user
+       0.067386000 seconds sys
+
+
+# started on Fri May  9 15:02:48 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 4096':
+
+     8,333,498,768      cpu-cycles                                                            
+               750      context-switches                                                      
+                11      cpu-migrations                                                        
+             9,438      page-faults                                                           
+                 0      major-faults                                                          
+           126,666      dTLB-load-misses                                                      
+           971,549      cache-misses                                                          
+     8,485,649,843      instructions                     #    1.02  insn per cycle            
+
+       4.060085877 seconds time elapsed
+
+       4.248933000 seconds user
+       0.072049000 seconds sys
+
+
+# started on Fri May  9 15:02:53 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 4096':
+
+     8,355,628,914      cpu-cycles                                                            
+               749      context-switches                                                      
+                11      cpu-migrations                                                        
+             9,677      page-faults                                                           
+                 0      major-faults                                                          
+           133,151      dTLB-load-misses                                                      
+         1,005,626      cache-misses                                                          
+     8,497,267,594      instructions                     #    1.02  insn per cycle            
+
+       4.072098296 seconds time elapsed
+
+       4.260090000 seconds user
+       0.079001000 seconds sys
+
+
+# started on Fri May  9 15:02:57 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 4096':
+
+     8,344,598,998      cpu-cycles                                                            
+               749      context-switches                                                      
+                10      cpu-migrations                                                        
+             9,484      page-faults                                                           
+                 0      major-faults                                                          
+           130,188      dTLB-load-misses                                                      
+           989,858      cache-misses                                                          
+     8,499,639,828      instructions                     #    1.02  insn per cycle            
+
+       4.064181805 seconds time elapsed
+
+       4.252365000 seconds user
+       0.073075000 seconds sys
+
+
+# started on Fri May  9 15:03:01 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 4096':
+
+     8,330,313,116      cpu-cycles                                                            
+               727      context-switches                                                      
+                12      cpu-migrations                                                        
+             9,465      page-faults                                                           
+                 0      major-faults                                                          
+           133,614      dTLB-load-misses                                                      
+           992,945      cache-misses                                                          
+     8,499,999,615      instructions                     #    1.02  insn per cycle            
+
+       4.056191058 seconds time elapsed
+
+       4.243795000 seconds user
+       0.083897000 seconds sys
+
+
+# started on Fri May  9 15:03:05 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 4096':
+
+     8,337,589,649      cpu-cycles                                                            
+               789      context-switches                                                      
+                16      cpu-migrations                                                        
+             9,517      page-faults                                                           
+                 0      major-faults                                                          
+           140,605      dTLB-load-misses                                                      
+           995,682      cache-misses                                                          
+     8,495,568,253      instructions                     #    1.02  insn per cycle            
+
+       4.060251140 seconds time elapsed
+
+       4.223351000 seconds user
+       0.082947000 seconds sys
+
+
+# started on Fri May  9 15:03:09 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 8192':
+
+    31,579,191,834      cpu-cycles                                                            
+             1,220      context-switches                                                      
+                17      cpu-migrations                                                        
+            16,257      page-faults                                                           
+                 0      major-faults                                                          
+           208,423      dTLB-load-misses                                                      
+         1,375,722      cache-misses                                                          
+    32,745,383,702      instructions                     #    1.04  insn per cycle            
+
+      15.596222555 seconds time elapsed
+
+      15.967756000 seconds user
+       0.134938000 seconds sys
+
+
+# started on Fri May  9 15:03:25 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 8192':
+
+    31,604,681,573      cpu-cycles                                                            
+             1,130      context-switches                                                      
+                22      cpu-migrations                                                        
+            16,718      page-faults                                                           
+                 0      major-faults                                                          
+           205,265      dTLB-load-misses                                                      
+         1,378,003      cache-misses                                                          
+    32,758,533,576      instructions                     #    1.04  insn per cycle            
+
+      15.592792513 seconds time elapsed
+
+      15.947117000 seconds user
+       0.122993000 seconds sys
+
+
+# started on Fri May  9 15:03:40 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 8192':
+
+    31,694,359,163      cpu-cycles                                                            
+             1,218      context-switches                                                      
+                11      cpu-migrations                                                        
+            16,652      page-faults                                                           
+                 0      major-faults                                                          
+           213,878      dTLB-load-misses                                                      
+         1,417,545      cache-misses                                                          
+    32,857,811,028      instructions                     #    1.04  insn per cycle            
+
+      15.615932855 seconds time elapsed
+
+      15.990827000 seconds user
+       0.146943000 seconds sys
+
+
+# started on Fri May  9 15:03:56 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 8192':
+
+    31,630,936,301      cpu-cycles                                                            
+             1,145      context-switches                                                      
+                14      cpu-migrations                                                        
+            16,885      page-faults                                                           
+                 0      major-faults                                                          
+           201,960      dTLB-load-misses                                                      
+         1,398,181      cache-misses                                                          
+    32,771,681,626      instructions                     #    1.04  insn per cycle            
+
+      15.609743131 seconds time elapsed
+
+      15.985800000 seconds user
+       0.112984000 seconds sys
+
+
+# started on Fri May  9 15:04:12 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 8192':
+
+    31,676,417,468      cpu-cycles                                                            
+             1,257      context-switches                                                      
+                12      cpu-migrations                                                        
+            16,841      page-faults                                                           
+                 0      major-faults                                                          
+           207,197      dTLB-load-misses                                                      
+         1,449,376      cache-misses                                                          
+    32,824,861,125      instructions                     #    1.04  insn per cycle            
+
+      15.606564572 seconds time elapsed
+
+      16.027570000 seconds user
+       0.125996000 seconds sys
+
+
+# started on Fri May  9 15:04:27 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 16384':
+
+   124,138,528,416      cpu-cycles                                                            
+             3,013      context-switches                                                      
+                75      cpu-migrations                                                        
+            64,904      page-faults                                                           
+                 0      major-faults                                                          
+           725,942      dTLB-load-misses                                                      
+         3,797,684      cache-misses                                                          
+   129,140,867,191      instructions                     #    1.04  insn per cycle            
+
+      61.614455998 seconds time elapsed
+
+      61.997515000 seconds user
+       0.641808000 seconds sys
+
+
+# started on Fri May  9 15:05:29 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 16384':
+
+   124,106,685,047      cpu-cycles                                                            
+             3,036      context-switches                                                      
+               102      cpu-migrations                                                        
+            64,938      page-faults                                                           
+                 0      major-faults                                                          
+           736,401      dTLB-load-misses                                                      
+         3,931,908      cache-misses                                                          
+   128,999,620,334      instructions                     #    1.04  insn per cycle            
+
+      61.668280835 seconds time elapsed
+
+      61.944100000 seconds user
+       0.598397000 seconds sys
+
+
+# started on Fri May  9 15:06:31 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 16384':
+
+   124,243,114,416      cpu-cycles                                                            
+             2,998      context-switches                                                      
+                80      cpu-migrations                                                        
+            62,971      page-faults                                                           
+                 0      major-faults                                                          
+           654,446      dTLB-load-misses                                                      
+         3,825,612      cache-misses                                                          
+   129,139,830,244      instructions                     #    1.04  insn per cycle            
+
+      61.638363787 seconds time elapsed
+
+      62.049840000 seconds user
+       0.619918000 seconds sys
+
+
+# started on Fri May  9 15:07:32 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 16384':
+
+   124,071,528,998      cpu-cycles                                                            
+             2,911      context-switches                                                      
+                83      cpu-migrations                                                        
+            66,200      page-faults                                                           
+                 0      major-faults                                                          
+           647,104      dTLB-load-misses                                                      
+         3,846,483      cache-misses                                                          
+   128,998,088,445      instructions                     #    1.04  insn per cycle            
+
+      61.671216572 seconds time elapsed
+
+      61.947018000 seconds user
+       0.618399000 seconds sys
+
+
+# started on Fri May  9 15:08:34 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.Mandelbrot.FunctionalSequentialMandelbrot 16384':
+
+   124,072,342,349      cpu-cycles                                                            
+             3,075      context-switches                                                      
+                93      cpu-migrations                                                        
+            63,892      page-faults                                                           
+                 0      major-faults                                                          
+           721,328      dTLB-load-misses                                                      
+         3,678,838      cache-misses                                                          
+   128,991,908,473      instructions                     #    1.04  insn per cycle            
+
+      61.641200268 seconds time elapsed
+
+      61.987955000 seconds user
+       0.593028000 seconds sys
+
+

@@ -70,7 +70,7 @@ public class ImperativeSequentialMandelbrot {
             if (x%8 == 7) {
                 bufLocal[bufLen++] = (byte) bits;
                 if ( bufLen == BUFFER_SIZE) {
-                    out.write(bufLocal, 0, BUFFER_SIZE);
+                  //   out.write(bufLocal, 0, BUFFER_SIZE);
                     bufLen = 0;
                 }
                bits = 0;
@@ -80,7 +80,7 @@ public class ImperativeSequentialMandelbrot {
             bits = bits << shift;
             bufLocal[bufLen++] = (byte) bits;
             if ( bufLen == BUFFER_SIZE) {
-                out.write(bufLocal, 0, BUFFER_SIZE);
+               //  out.write(bufLocal, 0, BUFFER_SIZE);
                 bufLen = 0;
             }
          }
