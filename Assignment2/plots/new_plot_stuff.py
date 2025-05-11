@@ -111,11 +111,11 @@ indep = {
 }
 
 #Other values:
-baseline_mem = 2797105 #calculated by taking sum of all baseline values and dividing by 60.
+baseline_mem = 0 #calculated by taking sum of all baseline values and dividing by 60.
 baseline_subtract_true = True #subtract or not from free/total memory.
 
 #enable log scale for wall_time?:
-log_scale = False
+log_scale = True
 #change log base to something else, e.g 2, 4, 6, etc.
 log_base = 10
 
@@ -586,7 +586,7 @@ def graph_time(parallel_csv, sequential_csv=None, data_label="", date_prefix="",
 
     # labels & grid
     ax.set_xlabel('Input Size')
-    ax.set_ylabel('Average Wall Time (ms)')
+    ax.set_ylabel('Wall Time Log Scale (ms)')
     ax.set_xticks(x_positions)
     ax.set_xticklabels(input_sizes)
     ax.set_xlim(left=min(x_positions), right=max(x_positions))
@@ -595,11 +595,11 @@ def graph_time(parallel_csv, sequential_csv=None, data_label="", date_prefix="",
     
     #checks to see if the file is imperative. otherwise, even if log scale is enabled, it won't do it for 
     #functional paradigm plots.
-    lcname = os.path.basename(parallel_csv).lower()
-    is_imp = ("imp" in lcname) or ("imperative" in lcname)
+    #lcname = os.path.basename(parallel_csv).lower()
+    #is_imp = ("imp" in lcname) or ("imperative" in lcname)
 
     # y-scale: log or linear
-    if log_scale and is_imp:
+    if log_scale:
         
         ax.set_yscale('log', base=log_base)
 
