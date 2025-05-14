@@ -66,7 +66,7 @@ def registerMemoryTask(name, groupName, mainClassName, algo, isParallel = false,
                         def pid = process.pid()
 
                         def memScriptProcess = new ProcessBuilder(
-                            "sh", memoryScript, pid.toString(), memFile.absolutePath, *argsList
+                            "sh", memoryScript, pid.toString(), i.toString(), memFile.absolutePath, *argsList
                         ).inheritIO().start()
 
                         def reader = new BufferedReader(new InputStreamReader(process.inputStream))
@@ -221,7 +221,7 @@ registerPerfTask("perfFunctionalSequentialMandelbrot", "functional_sequential", 
 registerPerfTask("perfFunctionalParallelMandelbrot", "functional_parallel", "assignment2.Mandelbrot.FunctionalParallelMandelbrot", "mandelbrot",true, mandelbrotInputs)
 
 tasks.register("runMemorySpectralNorm") {
-    dependsOn("memoryImperativeSequentialSpectralNorm", "memoryImperativeParallelSpectralNorm", "memoryFunctionalSequentialSpectralNorm", "memoryFunctionalParallelSpectralNorm")
+    dependsOn("memoryImperativeSequentialSpectralNorm", "memoryImperativeParallelSpectralNorm", "memoryFunctionalSequentialSpectralNorm", "memoryFunctionalParallelSpectralNorm","recordBaselineMemory")
     group = "memory"
 }
 
@@ -231,7 +231,7 @@ tasks.register("runPerfSpectralNorm") {
 }
 
 tasks.register("runMemoryMandelbrot") {
-    dependsOn("memoryImperativeSequentialMandelbrot", "memoryImperativeParallelMandelbrot", "memoryFunctionalSequentialMandelbrot", "memoryFunctionalParallelMandelbrot")
+    dependsOn("memoryImperativeSequentialMandelbrot", "memoryImperativeParallelMandelbrot", "memoryFunctionalSequentialMandelbrot", "memoryFunctionalParallelMandelbrot","recordBaselineMemory")
     group = "memory"
 }
 

@@ -1,21 +1,19 @@
 #!/bin/bash
 
 PID="$1"
-OUTPUT_FILE="$2"
+REPEAT_NUMBER="$2"
+OUTPUT_FILE="$3"
 
-if [ -z "$PID" ] || [ -z "$OUTPUT_FILE" ]; then
-    echo "Usage: $0 <PID> <OUTPUT_FILE> [PROGRAM_ARGS...]"
-exit 1
-fi
-
-shift 2
+shift 3
 PROGRAM_ARGS=$(printf "%s," "$@")
 PROGRAM_ARGS=${PROGRAM_ARGS%,}
 
-# echo "timestamp,program_args,total_mem_mib,pid_mem_kb" >> "$OUTPUT_FILE"
+# timestamp,program_args,run_number,total_mem_mib,pid_mem_kb
+# program_args are the algorithm argument and the number of threas (if relevant)
 while kill -0 "$PID" 2> /dev/null; do
+    TIMESTAMP=$(date +"%m-%d %H:%M:%S")
     FREE_MEM=$(cat /proc/meminfo | grep MemFree | awk '{print $2}')
     PID_MEM_KB=$(grep VmRSS /proc/$PID/status | awk '{ print $2 }')
-    echo "$PROGRAM_ARGS,$FREE_MEM,$PID_MEM_KB" >> "$OUTPUT_FILE"
+    echo "$TIMESTAMP,$REPEAT_NUMBER,$PROGRAM_ARGS,$FREE_MEM,$PID_MEM_KB" >> "$OUTPUT_FILE"
     sleep 1
 done 
