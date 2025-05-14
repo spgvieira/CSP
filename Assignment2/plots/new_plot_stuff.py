@@ -8,14 +8,14 @@ from datetime import datetime #for naming output files
 import matplotlib.ticker as ticker #for more stylish/even numbered tickers along y-axis
 #=== Arguments ===
 #argument handling
-if len(sys.argv) < 2 or sys.argv[1] not in ['spec', 'fann']:
-    print("Usage: python new_plot_stuff.py [spec|fann]")
+if len(sys.argv) < 2 or sys.argv[1] not in ['spec', 'mand']:
+    print("Usage: python new_plot_stuff.py [spec|mand]")
     sys.exit(1)
 
 #1st argument - map input to subfolder names
 arg_map = {
     "spec": "spectral_norm",
-    "fann": "fannkuch_redux"
+    "mand": "mandelbrot"
 }
 
 #2nd and 3rd arguments for script, e.g select which parallel and sequential files to use based on date.
@@ -35,15 +35,14 @@ parent_dir = os.path.abspath(os.path.join(base_dir, "..", "app"))
 PLOTS_FOLDER_MAP = {
     "time": "plots_time",
     "perf": "plots_perf",
-    "sysmem": "plots_sysmem",
     "mem": "plots_mem"
 }
 
-#define paths to each data category selected subfolder (spectral norm or fannkuch)
+#define paths to each data category selected subfolder (spectral norm or mandelbrot)
 time_folder = os.path.join(parent_dir, "experimental_results", selected_subfolder)
 perf_folder = os.path.join(parent_dir, "perf_reports", selected_subfolder)
-sysmem_folder = os.path.join(parent_dir, "mem_reports", selected_subfolder)
-pidmem_folder = os.path.join(parent_dir, "mem_pid_reports", selected_subfolder)
+mem_folder = os.path.join(parent_dir, "mem_reports", selected_subfolder)
+#pidmem_folder = os.path.join(parent_dir, "mem_pid_reports", selected_subfolder)
 
 #=== Values for graph customization ===
 # Define thread colors
@@ -78,6 +77,8 @@ thread_markersize = {
     32: 8
 }
 
+#dictionary to control what to plot
+
 #dictionary to control which perf metrics to plot
 perf_metrics_collection = {
     "task_clock_msec": False,
@@ -85,27 +86,38 @@ perf_metrics_collection = {
     "cpu_migrations": False,
     "page_faults": True,
     "cycles": False,
+    "cpu-cycles": False,
     "instructions": False,
     "branches": False,
     "branch_misses": False,
     "time_elapsed_sec": False,
     "user_time_sec": False,
     "sys_time_sec": False,
+    "major_faults": False,
+    "dtlb_load_misses": True,
+    "cache_misses": True,
     "ipc": True
 }
 
-#dictionary to control which sys_mem metrics to plot
-sys_mem_metrics_collection = {
-    "total_mem" : True,
-    "free_mem" : True,
-    "used_mem" : True,
-    "buff_cache" : True
+#dictionary to control which memory metrics to plot
+mem_metrics_collection = {
+    "free_mem": True,
+    'pid_mem': True
 }
 
 #define which metrics you don't want to scale y-graph between imp. and func:
 indep = {
     "context_switches"
 }
+
+#Other values:
+baseline_mem = 0 #calculated by taking sum of all baseline values and dividing by 60.
+baseline_subtract_true = True #subtract or not from free/total memory.
+
+#enable log scale for wall_time?:
+log_scale = True
+#change log base to something else, e.g 2, 4, 6, etc.
+log_base = 10
 
 #=== HELPER FUNCTIONS ===
 #filters files based on date and keyword (e.g parallel or sequential)
@@ -293,18 +305,22 @@ def parse_perf_data(input_path: str, output_csv: str):
         r"'\s*:"
     )
 
+    #updated metric patterns to match new perf outputs from 07-04 and 08-04
     metric_pats = {
-        "task_clock_msec":  re.compile(r"^\s*([\d,\.]+)\s+msec\s+task-clock"),
-        "context_switches": re.compile(r"^\s*([\d,]+)\s+context-switches"),
-        "cpu_migrations":   re.compile(r"^\s*([\d,]+)\s+cpu-migrations"),
-        "page_faults":      re.compile(r"^\s*([\d,]+)\s+page-faults"),
-        "cycles":           re.compile(r"^\s*([\d,]+)\s+cycles"),
-        "instructions":     re.compile(r"^\s*([\d,]+)\s+instructions"),
-        "branches":         re.compile(r"^\s*([\d,]+)\s+branches"),
-        "branch_misses":    re.compile(r"^\s*([\d,]+)\s+branch-misses"),
-        "time_elapsed_sec": re.compile(r"^\s*([\d\.]+)\s+seconds time elapsed"),
-        "user_time_sec":    re.compile(r"^\s*([\d\.]+)\s+seconds user"),
-        "sys_time_sec":     re.compile(r"^\s*([\d\.]+)\s+seconds sys"),
+        "task_clock_msec":    re.compile(r"^\s*([\d,\.]+)\s+msec\s+task-clock"),
+        "context_switches":   re.compile(r"^\s*([\d,]+)\s+context-switches"),
+        "cpu_migrations":     re.compile(r"^\s*([\d,]+)\s+cpu-migrations"),
+        "page_faults":        re.compile(r"^\s*([\d,]+)\s+page-faults"),
+        "major_faults":       re.compile(r"^\s*([\d,]+)\s+major-faults"),
+        "dtlb_load_misses":   re.compile(r"^\s*([\d,]+)\s+dTLB-load-misses"),
+        "cache_misses":       re.compile(r"^\s*([\d,]+)\s+cache-misses"),
+        "cpu_cycles":         re.compile(r"^\s*([\d,]+)\s+cpu-cycles"),
+        "instructions":       re.compile(r"^\s*([\d,]+)\s+instructions"),
+        "branches":           re.compile(r"^\s*([\d,]+)\s+branches"),
+        "branch_misses":      re.compile(r"^\s*([\d,]+)\s+branch-misses"),
+        "time_elapsed_sec":   re.compile(r"^\s*([\d\.]+)\s+seconds time elapsed"),
+        "user_time_sec":      re.compile(r"^\s*([\d\.]+)\s+seconds user"),
+        "sys_time_sec":       re.compile(r"^\s*([\d\.]+)\s+seconds sys"),
     }
 
     records = []
@@ -355,11 +371,11 @@ def parse_perf_data(input_path: str, output_csv: str):
 
     df = pd.DataFrame(records)
 
-    df['ipc'] = df['instructions'] / df['cycles']
+    df['ipc'] = df['instructions'] / df['cpu_cycles']
     df['ipc'].replace([float('inf'), -float('inf')], 0, inplace=True)
     df['ipc'].fillna(0, inplace=True)
 
-    # Rename the columns to match your other functions:
+    # Rename the columns to match other functions:
     #   InputSize → input
     #   Threads   → thread
     rename_map = {"InputSize": "input", "Threads": "thread"}
@@ -381,21 +397,24 @@ def add_missing_column_names_and_clean(list_of_csv_paths):
     (based on 'parallel' vs 'sequential' in filename) and clean memory columns from textual
     entries (e.g., 'MiB Mem : 15690.9 total') down to pure floats.
     """
-    # handle list of paths
     if isinstance(list_of_csv_paths, (list, tuple)):
         for p in list_of_csv_paths:
-            add_missing_column_names_and_clean(p)
+            add_missing_column_names_and_clean(p) # Recursive call
         return
-    path = list_of_csv_paths
+    
+    path = list_of_csv_paths # Now path is a single file path
 
     basename = os.path.basename(path).lower()
+    is_parallel = 'parallel' in basename
+    is_sequential = 'sequential' in basename
+
     # Determine expected headers
-    if 'parallel' in basename:
-        headers = ['input', 'thread', 'total_mem', 'free_mem', 'used_mem', 'buff_cache']
-    elif 'sequential' in basename:
-        headers = ['input', 'total_mem', 'free_mem', 'used_mem', 'buff_cache']
+    if is_parallel:
+        expected_headers = ['input', 'thread', 'free_mem', 'pid_mem']
+    elif is_sequential:
+        expected_headers = ['input', 'free_mem', 'pid_mem']
     else:
-        print(f"Skipping {path}: cannot determine type from filename.")
+        print(f"Skipping {path}: cannot determine type (parallel/sequential) from filename.")
         return
 
     # Read file lines to check/add header
@@ -405,73 +424,103 @@ def add_missing_column_names_and_clean(list_of_csv_paths):
     except FileNotFoundError:
         print(f"File not found: {path}")
         return
+    
+    header_added_or_file_empty = False
     if not lines:
-        print(f"Empty file: {path}")
-        return
-
-    # Prepend header if missing
-    first_tokens = lines[0].strip().lower().split(',')
-    if not (first_tokens and first_tokens[0] == 'input'):
-        header_line = ','.join(headers) + '\n'
-        lines.insert(0, header_line)
-        with open(path, 'w', encoding='utf-8') as f:
-            f.writelines(lines)
-        print(f"Added header to {path}")
+        print(f"Empty file: {path}. Adding headers.")
+        header_line = ','.join(expected_headers) + '\n'
+        lines.append(header_line) # Add header to empty file
+        header_added_or_file_empty = True
+        # Fall through to write this single-line (header-only) file
     else:
-        print(f"Header exists in {path}, skipping header insertion.")
+        # Check current header
+        first_tokens = lines[0].strip().lower().split(',')
+        if not (first_tokens and first_tokens[0] == 'input'):
+            header_line = ','.join(expected_headers) + '\n'
+            lines.insert(0, header_line)
+            print(f"Added header to {path}")
+            header_added_or_file_empty = True
+        # else:
+            # print(f"Header seems to exist in {path} (starts with 'input').")
+
+    # If header was added, need to write lines back before pandas reads,
+    # OR use io.StringIO if we want to avoid intermediate write.
+    # The original code wrote, then re-read. Let's stick to that pattern for minimal change.
+    if header_added_or_file_empty: # Only write if header was added or file was empty
+        try:
+            with open(path, 'w', encoding='utf-8') as f:
+                f.writelines(lines)
+        except Exception as e:
+            print(f"Error writing header to {path}: {e}")
+            return
+
 
     # Load with pandas to clean mem columns
     try:
         df = pd.read_csv(path)
     except Exception as e:
-        print(f"Failed to read CSV {path}: {e}")
+        print(f"Failed to read CSV {path} into DataFrame: {e}")
         return
+    
+    if df.empty and not header_added_or_file_empty : # If df is empty and it wasn't an empty file we just put headers in
+        print(f"DataFrame loaded from {path} is empty. Skipping cleaning. File might only contain headers or be malformed.")
+        # If it was an empty file we added headers to, df will be empty, and that's fine.
+        # We don't need to write it again unless other cleaning happens.
+        if header_added_or_file_empty: # if it's an empty file we just wrote headers to
+             # df.to_csv(path, index=False) # Ensures it's a valid CSV structure if it was just headers
+             # print(f"Initialized {path} with headers.")
+             return # Nothing to clean
+        return
+
 
     # Regex to extract first float
     num_pat = re.compile(r"([0-9]+(?:\.[0-9]+)?)")
     def extract_num(s):
         if pd.isna(s):
             return s
+        # Convert to string in case it's already a number (float/int)
         m = num_pat.search(str(s))
-        return float(m.group(1)) if m else pd.NA
+        return float(m.group(1)) if m else pd.NA # Use pd.NA for consistency
 
-    # Clean each memory column to floats
-    for col in headers[2:]:  # skip 'input' and optional 'thread'
-        if col in df.columns:
-            df[col] = df[col].apply(extract_num)
+    # Determine which columns to clean based on file type (parallel/sequential)
+    if is_parallel:
+        # For parallel: ['input', 'thread', 'total_mem', 'free_mem', 'used_mem', 'buff_cache']
+        # Memory columns start at index 2 of expected_headers
+        cols_to_clean_names = expected_headers[2:]
+    else: # is_sequential
+        # For sequential: ['input', 'total_mem', 'free_mem', 'used_mem', 'buff_cache']
+        # Memory columns start at index 1 of expected_headers
+        cols_to_clean_names = expected_headers[1:]
+
+    cleaned_at_least_one_column = False
+    for col_name in cols_to_clean_names:
+        if col_name in df.columns:
+            # Check if column needs cleaning (i.e., is not already numeric)
+            # This avoids errors if a column is already float/int
+            if df[col_name].dtype == 'object': # 'object' dtype usually means strings
+                df[col_name] = df[col_name].apply(extract_num)
+                df[col_name] = pd.to_numeric(df[col_name], errors='coerce') # Ensure numeric type
+                cleaned_at_least_one_column = True
+        # else:
+            # This case should ideally not happen if headers were correctly added/matched
+            # print(f"Warning: Expected column '{col_name}' not found in DataFrame from {path} for cleaning.")
 
     # Write back cleaned CSV
-    try:
-        df.to_csv(path, index=False)
-        print(f"Cleaned memory columns in {path}")
-    except Exception as e:
-        print(f"Failed to write cleaned CSV {path}: {e}")
+    if cleaned_at_least_one_column or header_added_or_file_empty : # Write if we cleaned something or if we added/fixed header initially
+        try:
+            df.to_csv(path, index=False)
+            if cleaned_at_least_one_column :
+                print(f"Cleaned memory columns in {path}")
+            # If only header was added and no cleaning, the earlier message "Added header to {path}" suffices.
+        except Exception as e:
+            print(f"Failed to write cleaned CSV {path}: {e}")
+    # else:
+        # print(f"No cleaning performed or header modifications needed for {path}.")
+        
+    # The redundant block that was here is now removed.
 
-    # Read file contents
-    try:
-        with open(path, 'r', encoding='utf-8') as f:
-            lines = f.readlines()
-    except FileNotFoundError:
-        print(f"File not found: {path}")
-        return
-    if not lines:
-        print(f"Empty file: {path}")
-        return
 
-    # If header already present, skip
-    first_tokens = lines[0].strip().lower().split(',')
-    if first_tokens and first_tokens[0] == 'input':
-        print(f"Header exists in {path}, skipping.")
-        return
-
-    # Prepend header
-    header_line = ','.join(headers) + '\n'
-    with open(path, 'w', encoding='utf-8') as f:
-        f.write(header_line)
-        f.writelines(lines)
-    print(f"Added header to {path}")
-
-#cleans out strings in columns of sysmemory csv's
+#cleans out strings in columns of memory csv's
 def clean_mem_col(series):
     # extract the first floating‑point number found in each cell
     return series.astype(str).str.extract(r"([0-9]+(?:\.[0-9]+)?)")[0].astype(float)
@@ -486,9 +535,11 @@ def graph_time(parallel_csv, sequential_csv=None, data_label="", date_prefix="",
         data_label (str): descriptive label for dataset
         date_prefix (str): date prefix for filenames
         max_y (float, optional): max Y-axis value; if None, computed automatically
+        log_scale (bool or None): 
+            - True/False forces log vs. linear scale.
+            - None (default) auto-enables log if 'imp' or 'imperative' appears in parallel_csv name.
+        log_base (float): base of log scale (e.g. 2, 10, math.e)
     """
-    # Calculate averages
-
     # Compute or validate max_y
     if max_y is None:
         max_y = compute_max_y([parallel_csv], [sequential_csv] if sequential_csv else None)
@@ -497,32 +548,80 @@ def graph_time(parallel_csv, sequential_csv=None, data_label="", date_prefix="",
     par_grouped = calculate_averages_parallel(parallel_csv)
     seq_averages = calculate_averages_seq(sequential_csv) if sequential_csv else None
 
-    # Plot setup
-    fig, ax = plt.subplots(figsize=(12, 7))
+    # Determine input sizes and create uniform x positions
     thread_counts = sorted(par_grouped.index.get_level_values('thread').unique())
     input_sizes = sorted(par_grouped.index.get_level_values('input').unique())
+    x_positions = list(range(len(input_sizes)))
+
+    # Plot setup
+    fig, ax = plt.subplots(figsize=(12, 7))
     for thread in thread_counts:
-        thread_data = par_grouped.xs(thread, level='thread').reindex(input_sizes).sort_index()
+        thread_data = par_grouped.xs(thread, level='thread') \
+                                .reindex(input_sizes).sort_index()
         color = thread_colors.get(thread, 'black')
         marker = thread_markers.get(thread, '.')
-        ax.plot(thread_data.index, thread_data.values,
-                marker=marker, linestyle='--', linewidth=2,
-                markersize=8, label=f'{thread} Thread(s)', color=color)
-    if seq_averages is not None:
-        ax.plot(seq_averages.index, seq_averages.values,
-                marker='x', linestyle='-', linewidth=2,
-                markersize=8, label='Sequential', color='black')
+        ax.plot(
+            x_positions,
+            thread_data.values,
+            marker=marker,
+            linestyle='--',
+            linewidth=2,
+            markersize=8,
+            label=f'{thread} Thread(s)',
+            color=color
+        )
 
-    # Labels, limits, legend
+    if seq_averages is not None:
+        seq_vals = seq_averages.reindex(input_sizes).sort_index().values
+        ax.plot(
+            x_positions,
+            seq_vals,
+            marker='x',
+            linestyle='-',
+            linewidth=2,
+            markersize=8,
+            label='Sequential',
+            color='black'
+        )
+
+    # labels & grid
     ax.set_xlabel('Input Size')
-    ax.set_ylabel('Average Wall Time (ms)')
-    ax.set_xticks(input_sizes)
-    ax.set_xlim(left=min(input_sizes), right=max(input_sizes))
-    ax.set_ylim(bottom=0, top=max_y * 1.05)
-    ax.yaxis.set_major_locator(ticker.MaxNLocator(nbins=20, prune='both'))
+    ax.set_ylabel('Wall Time Log Scale (ms)')
+    ax.set_xticks(x_positions)
+    ax.set_xticklabels(input_sizes)
+    ax.set_xlim(left=min(x_positions), right=max(x_positions))
     ax.legend(title="Threads / Seq")
-    fig.tight_layout()
     ax.grid(True, linestyle='--', alpha=0.7)
+    
+    #checks to see if the file is imperative. otherwise, even if log scale is enabled, it won't do it for 
+    #functional paradigm plots.
+    #lcname = os.path.basename(parallel_csv).lower()
+    #is_imp = ("imp" in lcname) or ("imperative" in lcname)
+
+    # y-scale: log or linear
+    if log_scale:
+        
+        ax.set_yscale('log', base=log_base)
+
+        # set exact top, let bottom auto‐adjust (must be > 0)
+        ax.set_ylim(0, top=max_y * 1.05)
+
+        # put ticks at 1,2,...,base-1 × each decade, up to max_y
+        subs = list(range(1, int(log_base)))
+        locator = ticker.LogLocator(base=log_base, subs=subs, numticks=50)
+        ax.yaxis.set_major_locator(locator)
+
+        # raw number formatting
+        fmt = ticker.ScalarFormatter()
+        fmt.set_scientific(False)
+        fmt.set_useOffset(False)
+        ax.yaxis.set_major_formatter(fmt)
+
+    else:
+        ax.set_ylim(0, max_y * 1.05)
+        ax.yaxis.set_major_locator(ticker.MaxNLocator(nbins=20, prune='both'))
+
+    fig.tight_layout()
 
     # Save plot
     filename_parts = [date_prefix, data_label, "wall_time.png"] if date_prefix else [data_label, "wall_time.png"]
@@ -654,19 +753,39 @@ output_dir=None,):
     - Two graphs of system memory usage from running the programs. One showing imperative results, 
     the other functional results.
     '''
-    # 1) default to global perf_metrics_collection if none passed
+    # 1) default to global mem_metrics_collection if none passed
     if metrics_dict is None:
-        metrics_dict = sys_mem_metrics_collection
+        metrics_dict = mem_metrics_collection
 
     # 2) load and sanitize
+    #parallel csv
     df_par = pd.read_csv(parallel_csv)
     df_par.columns = df_par.columns.str.strip()
+
+    if baseline_subtract_true:
+        df_par['free_mem'] = df_par['free_mem'] - baseline_mem
+
+    #converts kb to mb
+    if 'free_mem' in df_par.columns:
+        df_par['free_mem'] = df_par['free_mem'] / 1024.0
+    if 'pid_mem' in df_par.columns:
+        df_par['pid_mem'] = df_par['pid_mem'] / 1024.0
+
+    #sequential csv - defaults to none if there is not one to begin with.
     df_seq = None
     if sequential_csv:
         df_seq = pd.read_csv(sequential_csv)
         df_seq.columns = df_seq.columns.str.strip()
 
-    # 3) pick only the metrics one has defined up in the about and actually exist
+        if baseline_subtract_true:
+            df_seq['free_mem'] = df_seq['free_mem'] - baseline_mem
+            #converts kb to mb
+        if 'free_mem' in df_seq.columns:
+            df_seq['free_mem'] = df_seq['free_mem'] / 1024.0
+        if 'pid_mem' in df_seq.columns:
+            df_seq['pid_mem'] = df_seq['pid_mem'] / 1024.0
+
+    # 3) pick only the metrics one has defined up in the top and those that actually exist
     metrics_to_plot = [
         m for m, enabled in metrics_dict.items()
         if enabled and ((m in df_par.columns) or (df_seq is not None and m in df_seq.columns))
@@ -690,6 +809,12 @@ output_dir=None,):
         # min
         if isinstance(min_y, dict):
             y0 = min_y.get(metric, 0)
+            if metric == "free_mem" or "pid_mem":
+
+                if baseline_subtract_true and metric == "free_mem":
+                    y0 = y0 - baseline_mem
+
+                y0 = y0 / 1024.0
         elif isinstance(min_y, (int,float)):
             y0 = min_y
         else:
@@ -701,6 +826,12 @@ output_dir=None,):
         # max
         if isinstance(max_y, dict):
             y1 = max_y.get(metric, None)
+            if metric == "free_mem" or "pid_mem":
+
+                if baseline_subtract_true and metric == "free_mem":
+                    y1 = y1 - baseline_mem
+
+                y1 = y1 / 1024.0
         elif isinstance(max_y, (int,float)):
             y1 = max_y
         else:
@@ -732,11 +863,11 @@ output_dir=None,):
 
         # --- labels & styling ---
         ax.set_xlabel("Input Size")
-        ax.set_ylabel(metric.replace("_", " ").title())
+        ax.set_ylabel(metric.replace("_", " ").title() + " (MB)")
         ax.set_xticks(list(x_index.values()))
         ax.set_xticklabels(input_sizes)
         ax.set_xlim(0, len(input_sizes) - 1)
-        ax.set_ylim(y0, y1 * 1.05)
+        ax.set_ylim(y0, y1)
         ax.yaxis.set_major_locator(ticker.MaxNLocator(nbins=10, prune='both'))
         ax.legend(title="Threads / Seq")
         ax.grid(True, linestyle='--', alpha=0.7)
@@ -752,16 +883,6 @@ output_dir=None,):
         plt.close(fig)
         print(f"saved system memory metric plot '{metric}' → {outpath}")
 
-    
-
-def graph_pid_mem(csv_imp_seq,csv_imp_parallel,csv_func_seq,csv_func_parallel):
-    '''
-    Params:
-    (all optional) csv_imp/func_seq, csv_imp/func_parallel
-    Returns:
-    - Two graphs of PID memory usage from running the programs. One showing imperative results, 
-    the other functional results.
-    '''
 #=== Main ===
 #convert all perf .txt/.data files to CSV
 #convert every perf .data or .txt in this subfolder (parallel + sequential)
@@ -775,42 +896,43 @@ for fname in os.listdir(perf_folder):
     out_path = os.path.join(perf_folder, out_name)
     print(f"[parse_perf_data] {fname} → {out_name}")
     parse_perf_data(in_path, out_path)
+
 # Load all files from each program type folder
 time_files_all = list_files(time_folder, extensions=['.csv'])
 perf_files_all = list_files(perf_folder, extensions=['.data', '.csv'])
-mem_files_all = list_files(sysmem_folder, extensions=['.csv'])
-mem_pid_files_all = list_files(pidmem_folder, extensions=['.csv'])
+mem_files_all = list_files(mem_folder, extensions=['.csv'])
+#mem_pid_files_all = list_files(pidmem_folder, extensions=['.csv'])
 
 
 # Parallel files (required)
 time_files = filter_files(time_files_all, parallel_date, "parallel")
 perf_files = filter_files(perf_files_all, parallel_date, "parallel")
 mem_files = filter_files(mem_files_all, parallel_date, "parallel")
-mem_pid_files = filter_files(mem_pid_files_all, parallel_date, "parallel")
+#mem_pid_files = filter_files(mem_pid_files_all, parallel_date, "parallel")
 
 # Sequential files (optional)
 if sequential_date:
     time_files_seq = filter_files(time_files_all, sequential_date, "sequential")
     perf_files_seq = filter_files(perf_files_all, sequential_date, "sequential")
     mem_files_seq = filter_files(mem_files_all, sequential_date, "sequential")
-    mem_pid_files_seq = filter_files(mem_pid_files_all, sequential_date, "sequential")
+    #mem_pid_files_seq = filter_files(mem_pid_files_all, sequential_date, "sequential")
 else:
     time_files_seq = []
     perf_files_seq = []
     mem_files_seq = []
-    mem_pid_files_seq = []
+    #mem_pid_files_seq = []
 
 # Split parallel files by implementation style
 time_files_by_style = split_by_style(time_files)
 perf_files_by_style = split_by_style(perf_files)
 mem_files_by_style = split_by_style(mem_files)
-mem_pid_files_by_style = split_by_style(mem_pid_files)
+#mem_pid_files_by_style = split_by_style(mem_pid_files)
 
 # Split sequential files by implementation style
 time_files_seq_by_style = split_by_style(time_files_seq)
 perf_files_seq_by_style = split_by_style(perf_files_seq)
 mem_files_seq_by_style = split_by_style(mem_files_seq)
-mem_pid_files_seq_by_style = split_by_style(mem_pid_files_seq)
+#mem_pid_files_seq_by_style = split_by_style(mem_pid_files_seq)
 
 
 # === Plotting wall time versus inputsize ===
@@ -927,7 +1049,7 @@ func_par_list = mem_files_by_style['functional']
 func_seq_list = mem_files_seq_by_style.get('functional', [])
 
 #which perf metrics are we plotting?
-metrics_list = [m for m, flag in sys_mem_metrics_collection.items() if flag]
+metrics_list = [m for m, flag in mem_metrics_collection.items() if flag]
 
 #decide on common vs. per‑style
 if imp_par_list and func_par_list:
@@ -964,7 +1086,7 @@ if mem_files_by_style['imperative']:
 
 # functional
 if mem_files_by_style['functional']:
-    graph_perf_values(
+    graph_sys_mem(
         parallel_csv = mem_files_by_style['functional'][0],
         sequential_csv = func_seq ,
         data_label = f"{selected_subfolder}_func",
