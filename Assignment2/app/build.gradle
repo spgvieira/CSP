@@ -158,9 +158,9 @@ tasks.register('recordBaselineMemory', Exec) {
     group = 'memory'
     def dateStr = new SimpleDateFormat("dd_MM").format(new Date())
     def baselineMemFile = file("${memDir}/baseline/${dateStr}_baseline.csv").absolutePath
-    def memoryScript = file("memory.sh").absolutePath // Assuming your combined script is named this
+    def memoryBaselineScript = file("baseline_memory.sh").absolutePath // Assuming your combined script is named this
 
-    commandLine 'sh', memoryScript, 'baseline', baselineMemFile
+    commandLine 'sh', memoryBaselineScript, baselineMemFile
 
     // Keep the script running for 3 minutes (180 seconds) and then kill it
     doFirst {
@@ -170,7 +170,7 @@ tasks.register('recordBaselineMemory', Exec) {
         println "Baseline memory recording finished. Data saved to: $baselineMemFile"
         // Attempt to gracefully kill the process if it's still running (though the while loop should handle this)
         try {
-            def pid = project.exec { commandLine 'pgrep', '-f', "sh ${memoryScript} baseline" }.standardOutput.text.trim()
+            def pid = project.exec { commandLine 'pgrep', '-f', "sh ${memoryBaselineScript}" }.standardOutput.text.trim()
             if (pid) {
                 project.exec { commandLine 'kill', pid }
                 println "Successfully terminated baseline recording process (if it was still running)."
