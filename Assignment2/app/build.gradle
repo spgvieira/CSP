@@ -30,7 +30,7 @@ def registerMemoryTask(name, groupName, mainClassName, algo, isParallel = false,
         doFirst {
             def dateStr = new SimpleDateFormat("dd_MM").format(new Date())
             def fileName = "${dateStr}_${groupName}.csv"
-            def timeFile = file("${resultsDir}/${algo}/${fileName}")
+            def timeFile = file("${resultsDir}/${algo}/${fileName}_mem")
             def memFile = file("${memDir}/${algo}/${fileName}")
 
             project.ext["${name}_timeFile"] = timeFile
@@ -154,7 +154,7 @@ def registerPerfTask(name, groupName, mainClassName, algo, isParallel = false, i
 }
 
 // New task to record baseline memory usage for 3 minutes
-tasks.register('recordBaselineMemory', Exec) {
+tasks.register('recordBaselineMemory') {
     group = 'memory'
     def dateStr = new SimpleDateFormat("dd_MM").format(new Date())
     def baselineMemFile = file("${memDir}/baseline/${dateStr}_baseline.csv").absolutePath
@@ -183,7 +183,7 @@ tasks.register('recordBaselineMemory', Exec) {
 }
 
 // Task to stop the baseline memory recording (in case it runs longer than expected)
-tasks.register('stopBaselineMemoryRecording', Exec) {
+tasks.register('stopBaselineMemoryRecording') {
     group = 'memory'
     def memoryScript = file("memory.sh").absolutePath
 
