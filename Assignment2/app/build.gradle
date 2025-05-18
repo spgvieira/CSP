@@ -11,10 +11,10 @@ plugins {
 }
 
 ext {
-    spectralNormInputs = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 15000, 25000, 50000, 100000, 250000] //500000, 1000000] these values are too great
-    mandelbrotInputs = [256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144] //524288, 1048576] these values are too great
+    spectralNormInputs = [2500, 5000, 7500, 10000, 12500, 15000] //50000] //100000, 250000] //500000, 1000000] these values are too great
+    mandelbrotInputs = [256, 512, 1024, 2048, 4096, 8192, 16384, 32768] //65536] //131072, 262144] //524288, 1048576] these values are too great
     threads = [1, 2, 4, 8, 16, 32]
-    repeat = 2
+    repeat = 5
     perfEventsList = 'cpu-cycles,context-switches,cpu-migrations,page-faults,major-faults,dTLB-load-misses,cache-misses,instructions'
     resultsDir = file("experimental_results")
     memDir = file("mem_reports")
