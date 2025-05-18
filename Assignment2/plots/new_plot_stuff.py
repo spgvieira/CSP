@@ -112,7 +112,7 @@ indep = {
 
 #Other values:
 baseline_mem = 0 #calculated by taking sum of all baseline values and dividing by 60.
-baseline_subtract_true = True #subtract or not from free/total memory.
+baseline_subtract_true = False #subtract or not from free/total memory.
 
 #enable log scale for wall_time?:
 log_scale = True
@@ -1048,7 +1048,7 @@ imp_seq_list  = mem_files_seq_by_style.get('imperative', [])
 func_par_list = mem_files_by_style['functional']
 func_seq_list = mem_files_seq_by_style.get('functional', [])
 
-#which perf metrics are we plotting?
+#which memory metrics are we plotting?
 metrics_list = [m for m, flag in mem_metrics_collection.items() if flag]
 
 #decide on common vs. per‑style
@@ -1088,10 +1088,10 @@ if mem_files_by_style['imperative']:
 if mem_files_by_style['functional']:
     graph_sys_mem(
         parallel_csv = mem_files_by_style['functional'][0],
-        sequential_csv = func_seq ,
+        sequential_csv = func_seq,
         data_label = f"{selected_subfolder}_func",
-        max_y = max_y_mem if (imp_par_list and func_par_list) else max_y_imp,
-        min_y = min_y_mem if (imp_par_list and func_par_list) else min_y_imp,
+        max_y = max_y_func, #max_y_mem if (imp_par_list and func_par_list) else max_y_imp,
+        min_y = min_y_func, # if (imp_par_list and func_par_list) else min_y_imp,
         date_prefix = parallel_date,
         output_dir = plots_results_folder_mem
     )
