@@ -258,7 +258,7 @@ tasks.register("bigExperiment") {
     group = "performance"
 }
 
-tasks.register("ruAllSpectralNorm") {
+tasks.register("runAllSpectralNorm") {
     dependsOn(
     "perfImperativeSequentialSpectralNorm", "perfImperativeParallelSpectralNorm", "perfFunctionalSequentialSpectralNorm", "perfFunctionalParallelSpectralNorm",
     "memoryImperativeSequentialSpectralNorm", "memoryImperativeParallelSpectralNorm", "memoryFunctionalSequentialSpectralNorm", "memoryFunctionalParallelSpectralNorm")
@@ -290,7 +290,7 @@ tasks.register("warmupSpectralNorm", JavaExec) {
     finalizedBy 'recordBaselineMemory'
 }
 
-tasks.register("warmupSpectralNorm", JavaExec) {
+tasks.register("warmupMandelbrot", JavaExec) {
     group = 'warmup'
     classpath = sourceSets.main.runtimeClasspath
     mainClass.set("assignment2.Mandelbrot.ImperativeParallelMandelbrot")

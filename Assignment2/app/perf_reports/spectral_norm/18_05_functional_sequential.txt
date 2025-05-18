@@ -1,0 +1,360 @@
+# started on Sun May 18 17:50:09 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.SpectralNorm.FunctionalSequentialSpectralNorm 2500':
+
+    10,346,277,339      cpu-cycles                                                            
+             1,037      context-switches                                                      
+                23      cpu-migrations                                                        
+            20,405      page-faults                                                           
+                 0      major-faults                                                          
+           297,003      dTLB-load-misses                                                      
+         1,811,689      cache-misses                                                          
+    20,119,764,645      instructions                     #    1.94  insn per cycle            
+
+       4.618016580 seconds time elapsed
+
+       5.322062000 seconds user
+       0.123163000 seconds sys
+
+
+# started on Sun May 18 17:50:13 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.SpectralNorm.FunctionalSequentialSpectralNorm 2500':
+
+    10,063,672,352      cpu-cycles                                                            
+             1,123      context-switches                                                      
+                21      cpu-migrations                                                        
+            19,182      page-faults                                                           
+                 0      major-faults                                                          
+           287,768      dTLB-load-misses                                                      
+         1,680,808      cache-misses                                                          
+    20,131,782,571      instructions                     #    2.00  insn per cycle            
+
+       4.650061811 seconds time elapsed
+
+       5.250589000 seconds user
+       0.148157000 seconds sys
+
+
+# started on Sun May 18 17:50:18 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.SpectralNorm.FunctionalSequentialSpectralNorm 2500':
+
+    10,478,179,850      cpu-cycles                                                            
+             1,140      context-switches                                                      
+                18      cpu-migrations                                                        
+            20,989      page-faults                                                           
+                 0      major-faults                                                          
+           301,413      dTLB-load-misses                                                      
+         1,847,079      cache-misses                                                          
+    20,515,578,836      instructions                     #    1.96  insn per cycle            
+
+       4.664077677 seconds time elapsed
+
+       5.368327000 seconds user
+       0.146408000 seconds sys
+
+
+# started on Sun May 18 17:50:23 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.SpectralNorm.FunctionalSequentialSpectralNorm 5000':
+
+    63,131,631,813      cpu-cycles                                                            
+             1,953      context-switches                                                      
+                18      cpu-migrations                                                        
+            26,515      page-faults                                                           
+                 0      major-faults                                                          
+           411,411      dTLB-load-misses                                                      
+         2,271,581      cache-misses                                                          
+    84,168,278,396      instructions                     #    1.33  insn per cycle            
+
+      31.267858797 seconds time elapsed
+
+      31.810288000 seconds user
+       0.194081000 seconds sys
+
+
+# started on Sun May 18 17:50:54 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.SpectralNorm.FunctionalSequentialSpectralNorm 5000':
+
+    33,783,870,687      cpu-cycles                                                            
+             1,597      context-switches                                                      
+                13      cpu-migrations                                                        
+            27,459      page-faults                                                           
+                 0      major-faults                                                          
+           409,008      dTLB-load-misses                                                      
+         1,880,484      cache-misses                                                          
+    74,941,458,389      instructions                     #    2.22  insn per cycle            
+
+      16.593982743 seconds time elapsed
+
+      17.076055000 seconds user
+       0.169069000 seconds sys
+
+
+# started on Sun May 18 17:51:11 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.SpectralNorm.FunctionalSequentialSpectralNorm 5000':
+
+    62,915,605,332      cpu-cycles                                                            
+             2,015      context-switches                                                      
+                14      cpu-migrations                                                        
+            26,542      page-faults                                                           
+                 0      major-faults                                                          
+           413,925      dTLB-load-misses                                                      
+         2,186,939      cache-misses                                                          
+    85,182,986,839      instructions                     #    1.35  insn per cycle            
+
+      31.127257442 seconds time elapsed
+
+      31.660767000 seconds user
+       0.193986000 seconds sys
+
+
+# started on Sun May 18 17:51:42 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.SpectralNorm.FunctionalSequentialSpectralNorm 7500':
+
+    79,235,582,055      cpu-cycles                                                            
+             2,110      context-switches                                                      
+                12      cpu-migrations                                                        
+            35,113      page-faults                                                           
+                 0      major-faults                                                          
+           520,025      dTLB-load-misses                                                      
+         2,589,559      cache-misses                                                          
+   171,248,927,209      instructions                     #    2.16  insn per cycle            
+
+      39.212825924 seconds time elapsed
+
+      39.926507000 seconds user
+       0.227019000 seconds sys
+
+
+# started on Sun May 18 17:52:21 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.SpectralNorm.FunctionalSequentialSpectralNorm 7500':
+
+    75,991,892,334      cpu-cycles                                                            
+             1,994      context-switches                                                      
+                14      cpu-migrations                                                        
+            39,196      page-faults                                                           
+                 0      major-faults                                                          
+           557,215      dTLB-load-misses                                                      
+         2,584,387      cache-misses                                                          
+   170,695,024,794      instructions                     #    2.25  insn per cycle            
+
+      37.591298756 seconds time elapsed
+
+      38.210421000 seconds user
+       0.240926000 seconds sys
+
+
+# started on Sun May 18 17:52:59 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.SpectralNorm.FunctionalSequentialSpectralNorm 7500':
+
+    75,263,606,462      cpu-cycles                                                            
+             1,948      context-switches                                                      
+                16      cpu-migrations                                                        
+            37,169      page-faults                                                           
+                 0      major-faults                                                          
+           536,949      dTLB-load-misses                                                      
+         2,695,750      cache-misses                                                          
+   168,515,285,019      instructions                     #    2.24  insn per cycle            
+
+      37.195810982 seconds time elapsed
+
+      37.871730000 seconds user
+       0.212998000 seconds sys
+
+
+# started on Sun May 18 17:53:36 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.SpectralNorm.FunctionalSequentialSpectralNorm 10000':
+
+   246,882,710,348      cpu-cycles                                                            
+             4,863      context-switches                                                      
+               190      cpu-migrations                                                        
+            43,339      page-faults                                                           
+                 0      major-faults                                                          
+           734,822      dTLB-load-misses                                                      
+         3,719,353      cache-misses                                                          
+   333,680,301,520      instructions                     #    1.35  insn per cycle            
+
+     123.332521743 seconds time elapsed
+
+     123.801841000 seconds user
+       0.298014000 seconds sys
+
+
+# started on Sun May 18 17:55:39 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.SpectralNorm.FunctionalSequentialSpectralNorm 10000':
+
+   242,924,276,574      cpu-cycles                                                            
+             4,910      context-switches                                                      
+               183      cpu-migrations                                                        
+            44,994      page-faults                                                           
+                 0      major-faults                                                          
+           769,794      dTLB-load-misses                                                      
+         4,039,926      cache-misses                                                          
+   333,506,732,996      instructions                     #    1.37  insn per cycle            
+
+     121.254267741 seconds time elapsed
+
+     121.911084000 seconds user
+       0.380981000 seconds sys
+
+
+# started on Sun May 18 17:57:41 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.SpectralNorm.FunctionalSequentialSpectralNorm 10000':
+
+   135,531,026,811      cpu-cycles                                                            
+             3,457      context-switches                                                      
+               228      cpu-migrations                                                        
+            45,561      page-faults                                                           
+                 0      major-faults                                                          
+           687,914      dTLB-load-misses                                                      
+         3,686,352      cache-misses                                                          
+   303,895,883,546      instructions                     #    2.24  insn per cycle            
+
+      67.338456577 seconds time elapsed
+
+      68.161688000 seconds user
+       0.257145000 seconds sys
+
+
+# started on Sun May 18 17:58:48 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.SpectralNorm.FunctionalSequentialSpectralNorm 12500':
+
+   386,605,590,478      cpu-cycles                                                            
+             6,927      context-switches                                                      
+               195      cpu-migrations                                                        
+            53,415      page-faults                                                           
+                 0      major-faults                                                          
+           938,058      dTLB-load-misses                                                      
+         5,257,393      cache-misses                                                          
+   521,802,432,862      instructions                     #    1.35  insn per cycle            
+
+     193.371204299 seconds time elapsed
+
+     193.807022000 seconds user
+       0.393026000 seconds sys
+
+
+# started on Sun May 18 18:02:02 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.SpectralNorm.FunctionalSequentialSpectralNorm 12500':
+
+   212,705,425,078      cpu-cycles                                                            
+             4,362      context-switches                                                      
+               148      cpu-migrations                                                        
+            52,344      page-faults                                                           
+                 0      major-faults                                                          
+           834,108      dTLB-load-misses                                                      
+         4,347,772      cache-misses                                                          
+   473,922,660,068      instructions                     #    2.23  insn per cycle            
+
+     106.145383049 seconds time elapsed
+
+     106.747399000 seconds user
+       0.320947000 seconds sys
+
+
+# started on Sun May 18 18:03:48 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.SpectralNorm.FunctionalSequentialSpectralNorm 12500':
+
+   387,899,477,576      cpu-cycles                                                            
+             7,075      context-switches                                                      
+               159      cpu-migrations                                                        
+            52,589      page-faults                                                           
+                 0      major-faults                                                          
+           933,878      dTLB-load-misses                                                      
+         5,181,841      cache-misses                                                          
+   521,715,772,649      instructions                     #    1.34  insn per cycle            
+
+     194.035487078 seconds time elapsed
+
+     194.492230000 seconds user
+       0.380994000 seconds sys
+
+
+# started on Sun May 18 18:07:02 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.SpectralNorm.FunctionalSequentialSpectralNorm 15000':
+
+   295,811,218,929      cpu-cycles                                                            
+             5,782      context-switches                                                      
+               153      cpu-migrations                                                        
+            60,470      page-faults                                                           
+                 0      major-faults                                                          
+           992,287      dTLB-load-misses                                                      
+         5,476,590      cache-misses                                                          
+   687,205,021,927      instructions                     #    2.32  insn per cycle            
+
+     147.680747246 seconds time elapsed
+
+     148.325742000 seconds user
+       0.398012000 seconds sys
+
+
+# started on Sun May 18 18:09:30 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.SpectralNorm.FunctionalSequentialSpectralNorm 15000':
+
+   552,613,061,699      cpu-cycles                                                            
+             9,145      context-switches                                                      
+               212      cpu-migrations                                                        
+            52,488      page-faults                                                           
+                 0      major-faults                                                          
+         1,108,315      dTLB-load-misses                                                      
+         6,557,524      cache-misses                                                          
+   750,981,884,471      instructions                     #    1.36  insn per cycle            
+
+     276.560111136 seconds time elapsed
+
+     277.103038000 seconds user
+       0.447935000 seconds sys
+
+
+# started on Sun May 18 18:14:06 2025
+
+
+ Performance counter stats for 'java -cp /home/group001/CSP/Assignment2/app/build/classes/java/main:/home/group001/CSP/Assignment2/app/build/resources/main assignment2.SpectralNorm.FunctionalSequentialSpectralNorm 15000':
+
+   556,393,377,879      cpu-cycles                                                            
+             9,291      context-switches                                                      
+               188      cpu-migrations                                                        
+            61,338      page-faults                                                           
+                 0      major-faults                                                          
+         1,178,535      dTLB-load-misses                                                      
+         6,810,234      cache-misses                                                          
+   751,010,511,535      instructions                     #    1.35  insn per cycle            
+
+     278.451228218 seconds time elapsed
+
+     278.937695000 seconds user
+       0.450999000 seconds sys
+
+
