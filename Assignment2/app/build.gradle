@@ -55,6 +55,11 @@ def registerMemoryTask(name, groupName, mainClassName, algo, isParallel = false,
                 threadLoop.each { threadCount ->
                     println "Running with input size $inputSize" + (isParallel ? " and threads $threadCount" : "")
                     def times = []
+                    if (algo == "spectral_norm" && inputSize > 1 || algo == "mandelbrot" && inputSize > 32000) {
+                        repeat = 3
+                    } else {
+                        repeat = project.ext.repeat 
+                    }
                     for (int i = 0; i < repeat; i++) {
                         def argsList = isParallel ? [inputSize.toString(), threadCount.toString()] : [inputSize.toString()]
 
@@ -82,7 +87,6 @@ def registerMemoryTask(name, groupName, mainClassName, algo, isParallel = false,
                         def timeTaken = output.toString().trim()
                         times.add(timeTaken)
                     }
-
                     def line = isParallel ? "$inputSize,$threadCount,${times.join(',')}" : "$inputSize,${times.join(',')}"
                     timeFile << "$line\n"
                 }
@@ -123,6 +127,11 @@ def registerPerfTask(name, groupName, mainClassName, algo, isParallel = false, i
                 threadLoop.each { threadCount ->
                     println "Running with input size $inputSize" + (isParallel ? " and threads $threadCount" : "")
                     def times = []
+                    if (algo == "spectral_norm" && inputSize > 1 || algo == "mandelbrot" && inputSize > 32000) {
+                        repeat = 3
+                    } else {
+                        repeat = project.ext.repeat 
+                    }
                     for (int i = 0; i < repeat; i++) {
                         def argsList = isParallel ? [inputSize.toString(), threadCount.toString()] : [inputSize.toString()]
 
@@ -221,7 +230,7 @@ registerPerfTask("perfFunctionalSequentialMandelbrot", "functional_sequential", 
 registerPerfTask("perfFunctionalParallelMandelbrot", "functional_parallel", "assignment2.Mandelbrot.FunctionalParallelMandelbrot", "mandelbrot",true, mandelbrotInputs)
 
 tasks.register("runMemorySpectralNorm") {
-    dependsOn("memoryImperativeSequentialSpectralNorm", "memoryImperativeParallelSpectralNorm", "memoryFunctionalSequentialSpectralNorm", "memoryFunctionalParallelSpectralNorm","recordBaselineMemory")
+    dependsOn("memoryImperativeSequentialSpectralNorm", "memoryImperativeParallelSpectralNorm", "memoryFunctionalSequentialSpectralNorm", "memoryFunctionalParallelSpectralNorm")
     group = "memory"
 }
 
@@ -247,4 +256,54 @@ tasks.register("bigExperiment") {
     "perfImperativeSequentialSpectralNorm", "perfImperativeParallelSpectralNorm", "perfFunctionalSequentialSpectralNorm", "perfFunctionalParallelSpectralNorm",
     "memoryImperativeSequentialSpectralNorm", "memoryImperativeParallelSpectralNorm", "memoryFunctionalSequentialSpectralNorm", "memoryFunctionalParallelSpectralNorm")
     group = "performance"
+}
+
+tasks.register("ruAllSpectralNorm") {
+    dependsOn(
+    "perfImperativeSequentialSpectralNorm", "perfImperativeParallelSpectralNorm", "perfFunctionalSequentialSpectralNorm", "perfFunctionalParallelSpectralNorm",
+    "memoryImperativeSequentialSpectralNorm", "memoryImperativeParallelSpectralNorm", "memoryFunctionalSequentialSpectralNorm", "memoryFunctionalParallelSpectralNorm")
+    group = "performance"
+}
+
+tasks.register("bigAllMandelbrot") {
+    dependsOn(
+    "perfImperativeSequentialMandelbrot", "perfImperativeParallelMandelbrot", "perfFunctionalSequentialMandelbrot", "perfFunctionalParallelMandelbrot",
+    "memoryImperativeSequentialMandelbrot", "memoryImperativeParallelMandelbrot", "memoryFunctionalSequentialMandelbrot", "memoryFunctionalParallelMandelbrot")
+    group = "performance"
+}
+
+tasks.register("warmupSpectralNorm", JavaExec) {
+    group = 'warmup'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass.set("assignment2.SpectralNorm.ImperativeParallelSpectralNorm")
+    doFirst {
+        println "Starting warm-up"
+    }
+    doLast{
+         def processBuilder = new ProcessBuilder(
+                            "java", "-cp", classpath.asPath, "assignment2.SpectralNorm.ImperativeParallelSpectralNorm", "5000", "32"
+                        )
+        def process = processBuilder.start()
+        process.waitFor()
+
+    }
+    finalizedBy 'recordBaselineMemory'
+}
+
+tasks.register("warmupSpectralNorm", JavaExec) {
+    group = 'warmup'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass.set("assignment2.Mandelbrot.ImperativeParallelMandelbrot")
+    doFirst {
+        println "Starting warm-up"
+    }
+    doLast{
+         def processBuilder = new ProcessBuilder(
+                            "java", "-cp", classpath.asPath, "assignment2.Mandelbrot.ImperativeParallelMandelbrot", "5000", "32"
+                        )
+        def process = processBuilder.start()
+        process.waitFor()
+
+    }
+    finalizedBy 'recordBaselineMemory'
 }
