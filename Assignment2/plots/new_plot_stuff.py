@@ -1090,8 +1090,8 @@ if mem_files_by_style['functional']:
         parallel_csv = mem_files_by_style['functional'][0],
         sequential_csv = func_seq,
         data_label = f"{selected_subfolder}_func",
-        max_y = max_y_func, #max_y_mem if (imp_par_list and func_par_list) else max_y_imp,
-        min_y = min_y_func, # if (imp_par_list and func_par_list) else min_y_imp,
+        max_y = max_y_mem if (imp_par_list and func_par_list) else max_y_imp,
+        min_y = min_y_mem if (imp_par_list and func_par_list) else min_y_imp,
         date_prefix = parallel_date,
         output_dir = plots_results_folder_mem
     )
