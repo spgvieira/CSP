@@ -55,7 +55,7 @@ def registerMemoryTask(name, groupName, mainClassName, algo, isParallel = false,
                 threadLoop.each { threadCount ->
                     println "Running with input size $inputSize" + (isParallel ? " and threads $threadCount" : "")
                     def times = []
-                    if (algo == "spectral_norm" && inputSize > 1 || algo == "mandelbrot" && inputSize > 32000) {
+                    if (algo == "spectral_norm" && inputSize > 10000 || algo == "mandelbrot" && inputSize > 32000) {
                         repeat = 3
                     } else {
                         repeat = project.ext.repeat 
@@ -127,7 +127,7 @@ def registerPerfTask(name, groupName, mainClassName, algo, isParallel = false, i
                 threadLoop.each { threadCount ->
                     println "Running with input size $inputSize" + (isParallel ? " and threads $threadCount" : "")
                     def times = []
-                    if (algo == "spectral_norm" && inputSize > 1 || algo == "mandelbrot" && inputSize > 32000) {
+                    if (algo == "spectral_norm" && inputSize > 10000 || algo == "mandelbrot" && inputSize > 32000) {
                         repeat = 3
                     } else {
                         repeat = project.ext.repeat 
