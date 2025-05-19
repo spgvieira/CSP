@@ -79,6 +79,12 @@ thread_markersize = {
 
 #dictionary to control what to plot
 
+metrics_to_divide_with_input_size = {
+    "cache_misses",
+    "dtlb_load_misses",
+    "page_faults"
+}
+
 #dictionary to control which perf metrics to plot
 perf_metrics_collection = {
     "task_clock_msec": False,
@@ -86,8 +92,8 @@ perf_metrics_collection = {
     "cpu_migrations": False,
     "page_faults": True,
     "cycles": False,
-    "cpu-cycles": False,
-    "instructions": False,
+    "cpu_cycles": True,
+    "instructions": True,
     "branches": False,
     "branch_misses": False,
     "time_elapsed_sec": False,
@@ -111,8 +117,11 @@ indep = {
 }
 
 #Other values:
-baseline_mem = 0 #calculated by taking sum of all baseline values and dividing by 60.
-baseline_subtract_true = False #subtract or not from free/total memory.
+#baseline_mem = 0 #calculated by taking sum of all baseline values and dividing by 60.
+baseline_subtract_true = True #subtract or not from free/total memory.
+baseline_mem_mandelbrot = round(49951697.370787)
+baseline_mem_spec_18_05 = round(50058742.58427)
+baseline_mem_spec_19_05 = round(46986934.368715)
 
 #enable log scale for wall_time?:
 log_scale = True
@@ -222,6 +231,119 @@ def compute_max_y(parallel_csvs, sequential_csvs=None, metrics=None):
                     max_vals[m] = max(max_vals[m], grp.max())
 
     return max_vals if len(metrics) > 1 else max_vals[metrics[0]]
+
+def compute_max_y_norm(parallel_csvs, sequential_csvs=None, metrics=None, metrics_to_normalize=None):
+    """
+    Determine maximum grouped mean across parallel and sequential CSV files.
+    Can optionally normalize metrics by input size squared BEFORE finding max.
+
+    parallel_csvs: list of file paths
+    sequential_csvs: list of file paths (optional)
+    metrics: list of column names to consider
+    metrics_to_normalize: set or list of metric names to normalize by input**2
+                          BEFORE finding the maximum.
+    Returns: dict of {metric: max_value} or single float if len(metrics)==1
+    """
+    if metrics is None:
+        metrics = ['avg_time']
+    if metrics_to_normalize is None:
+        metrics_to_normalize = set() # Use a set for efficient lookup
+    else:
+         metrics_to_normalize = set(metrics_to_normalize) # Convert to set
+
+    max_vals = {m: 0 for m in metrics}
+
+    # Helper to update a metric’s max
+    def _update_max(m, value):
+        if value is not None and not np.isnan(value):
+             max_vals[m] = max(max_vals[m], value)
+
+
+    # Function to process a single DataFrame (either parallel or sequential)
+    def process_df(df, is_parallel):
+        if df.empty:
+            return # Nothing to process
+
+        # Ensure 'input' column exists if any metric needs normalization
+        needs_input_for_norm = any(m in metrics_to_normalize for m in metrics)
+        if needs_input_for_norm and 'input' not in df.columns:
+             print(f"Warning: 'input' column missing in file processed by compute_max_y. Cannot normalize metrics.")
+             metrics_to_normalize.clear() # Disable normalization if input is missing
+
+        # Calculate grouped means for each metric
+        for m in metrics:
+            if m not in df.columns:
+                continue # Metric not in this file
+
+            if m in metrics_to_normalize and 'input' in df.columns:
+                # --- Handle normalization before grouping ---
+                # Create a temporary normalized series
+                normalized_series = pd.Series(np.nan, index=df.index)
+                # Avoid division by zero
+                non_zero_input_mask = df['input'] != 0
+                if non_zero_input_mask.any():
+                    normalized_series.loc[non_zero_input_mask] = df.loc[non_zero_input_mask, m] / (df.loc[non_zero_input_mask, 'input'] ** 2)
+
+                # Group the temporary normalized series
+                if is_parallel and 'thread' in df.columns:
+                    # For parallel, group by input and thread
+                    temp_df = df[['input', 'thread']].copy()
+                    temp_df['normalized_metric'] = normalized_series
+                    grp = temp_df.groupby(['input', 'thread'])['normalized_metric'].mean()
+                else: # Sequential or parallel without thread (shouldn't happen for parallel data)
+                    # For sequential, group only by input
+                    temp_df = df[['input']].copy()
+                    temp_df['normalized_metric'] = normalized_series
+                    grp = temp_df.groupby('input')['normalized_metric'].mean()
+
+                # Update max value using the mean of the normalized values
+                if not grp.empty:
+                     _update_max(m, grp.max())
+
+            else:
+                # --- Handle metrics that are NOT normalized ---
+                if is_parallel and 'thread' in df.columns:
+                     grp = df.groupby(['input', 'thread'])[m].mean()
+                else: # Sequential
+                     grp = df.groupby('input')[m].mean()
+
+                if not grp.empty:
+                     _update_max(m, grp.max())
+
+
+    # Process parallel CSVs
+    for csv in parallel_csvs:
+        try:
+            df = pd.read_csv(csv)
+            process_df(df, is_parallel=True)
+        except Exception as e:
+            print(f"Error reading or processing {csv} in compute_max_y: {e}")
+            continue
+
+
+    # Process sequential CSVs
+    if sequential_csvs:
+        for csv in sequential_csvs:
+            try:
+                df = pd.read_csv(csv)
+                # Sequential files typically don't have a 'thread' column,
+                # so pass is_parallel=False
+                process_df(df, is_parallel=False)
+            except Exception as e:
+                 print(f"Error reading or processing {csv} in compute_max_y: {e}")
+                 continue
+
+
+    # Filter out metrics for which no non-NaN max was found (e.g. column missing in all files)
+    final_max_vals = {m: v for m, v in max_vals.items() if v != 0 or all(m not in pd.read_csv(f).columns for f in parallel_csvs + (sequential_csvs or []))}
+
+    # If metrics had initial max_val 0 and weren't present in any file, keep them at 0.
+    for m in metrics:
+        if m not in final_max_vals and m in max_vals:
+             final_max_vals[m] = max_vals[m]
+
+
+    return final_max_vals if len(metrics) > 1 else final_max_vals[metrics[0]]
 
 #minimum instead of max
 def compute_min_y(parallel_csvs, sequential_csvs=None, metrics=None):
@@ -526,8 +648,8 @@ def clean_mem_col(series):
     return series.astype(str).str.extract(r"([0-9]+(?:\.[0-9]+)?)")[0].astype(float)
 
 #=== Graph plotting functions ===
-def graph_time(parallel_csv, sequential_csv=None, data_label="", date_prefix="", max_y=None,
-                output_dir=None):
+def graph_time(parallel_csv, sequential_csv=None, data_label="", date_prefix="", max_y=None, min_y=None,
+                output_dir=None, num_log_ticks=20):
     """
     Params:
         parallel_csv (str): filepath to parallel time CSV
@@ -577,7 +699,7 @@ def graph_time(parallel_csv, sequential_csv=None, data_label="", date_prefix="",
             x_positions,
             seq_vals,
             marker='x',
-            linestyle='-',
+            linestyle='--',
             linewidth=2,
             markersize=8,
             label='Sequential',
@@ -599,7 +721,7 @@ def graph_time(parallel_csv, sequential_csv=None, data_label="", date_prefix="",
     #is_imp = ("imp" in lcname) or ("imperative" in lcname)
 
     # y-scale: log or linear
-    if log_scale:
+    '''if log_scale:
         
         ax.set_yscale('log', base=log_base)
 
@@ -615,8 +737,26 @@ def graph_time(parallel_csv, sequential_csv=None, data_label="", date_prefix="",
         fmt = ticker.ScalarFormatter()
         fmt.set_scientific(False)
         fmt.set_useOffset(False)
-        ax.yaxis.set_major_formatter(fmt)
+        ax.yaxis.set_major_formatter(fmt)'''
+    if log_scale:
+        ax.set_yscale('log', base=log_base)
 
+        #bottom_limit = max(min_y if min_y is not None else 1, 0.1)
+        ax.set_ylim(min_y, top=max_y * 1.05)
+
+        # Use LogLocator to generate "nice" tick locations on the log scale.
+        # LogLocator automatically finds ticks that are powers of the base.
+        # subs=[1, 2, 5] adds ticks at 1x, 2x, and 5x within each power of the base
+        # (e.g., for base 10, this gives 10, 20, 50, 100, 200, 500, 1000, etc.).
+        # numticks provides a hint for the maximum number of ticks to aim for.
+        locator = ticker.LogLocator(base=log_base, subs=[1, 2, 5], numticks=num_log_ticks)
+        ax.yaxis.set_major_locator(locator)
+
+        # Use ScalarFormatter to display tick labels as raw numbers, not scientific notation
+        fmt = ticker.ScalarFormatter()
+        fmt.set_scientific(False)
+        fmt.set_useOffset(False)
+        ax.yaxis.set_major_formatter(fmt)
     else:
         ax.set_ylim(0, max_y * 1.05)
         ax.yaxis.set_major_locator(ticker.MaxNLocator(nbins=20, prune='both'))
@@ -633,7 +773,7 @@ def graph_time(parallel_csv, sequential_csv=None, data_label="", date_prefix="",
 
 
 def graph_perf_values(parallel_csv, sequential_csv=None, data_label="", date_prefix="", metrics_dict=None, max_y=None,
-output_dir=None, independent_metrics=None):
+output_dir=None, independent_metrics=None, metrics_to_normalize_by_input=None):
     """
     Plots selected perf metrics for parallel (multi-thread) and optional sequential runs.
     
@@ -658,6 +798,52 @@ output_dir=None, independent_metrics=None):
     if sequential_csv:
         df_seq = pd.read_csv(sequential_csv)
         df_seq.columns = df_seq.columns.str.strip()
+
+    #normalization!
+    if metrics_to_normalize_by_input:
+        # Updated print statement to reflect division by input^2
+        print(f"Normalizing metrics by 'input'^2 size: {metrics_to_normalize_by_input}")
+
+        # Normalize parallel data
+        if 'input' not in df_par.columns:
+                print("Error: 'input' column not found in parallel CSV. Cannot normalize parallel data.")
+                # Decide how to handle: continue without normalizing or return? Let's continue but skip normalization.
+        else:
+            # Check for division by zero before attempting division (input=0)
+            if (df_par['input'] == 0).any():
+                    print("Warning: Division by zero encountered in parallel data 'input' column. Skipping normalization for rows with input=0.")
+                    # Create a mask to select only rows where input is not zero
+                    non_zero_input_mask_par = df_par['input'] != 0
+            else:
+                    non_zero_input_mask_par = pd.Series(True, index=df_par.index) # All inputs are non-zero
+
+            for metric in metrics_to_normalize_by_input:
+                if metric in df_par.columns:
+                    # Perform division only for rows where input is non-zero
+                    # === CHANGE IS HERE: Divide by input squared ===
+                    df_par.loc[non_zero_input_mask_par, metric] = df_par.loc[non_zero_input_mask_par, metric] / (df_par.loc[non_zero_input_mask_par, 'input'] ** 2)
+                # else:
+                    # print(f"Warning: Metric '{metric}' specified for normalization not found in parallel data.") # Optional warning
+
+        # Normalize sequential data if it exists
+        if df_seq is not None:
+            if 'input' not in df_seq.columns:
+                    print("Error: 'input' column not found in sequential CSV. Cannot normalize sequential data.")
+                    # Continue, but sequential data won't be normalized
+            else:
+                # Check for division by zero before attempting division (input=0)
+                if (df_seq['input'] == 0).any():
+                    print("Warning: Division by zero encountered in sequential data 'input' column. Skipping normalization for rows with input=0.")
+                    # Create a mask to select only rows where input is not zero
+                    non_zero_input_mask_seq = df_seq['input'] != 0
+                else:
+                    non_zero_input_mask_seq = pd.Series(True, index=df_seq.index) # All inputs are non-zero
+
+                for metric in metrics_to_normalize_by_input:
+                    if metric in df_seq.columns:
+                            # Perform division only for rows where input is non-zero
+                            # === CHANGE IS HERE: Divide by input squared ===
+                            df_seq.loc[non_zero_input_mask_seq, metric] = df_seq.loc[non_zero_input_mask_seq, metric] / (df_seq.loc[non_zero_input_mask_seq, 'input'] ** 2)
 
     # 3) pick only the metrics one has defined up in the about and actually exist
     metrics_to_plot = [
@@ -708,7 +894,8 @@ output_dir=None, independent_metrics=None):
             x_vals = sub['input'].map(x_index)
             ax.plot(x_vals, sub[metric],
                     marker=thread_markers.get(thr, '.'),
-                    linestyle='-',
+                    linestyle='--',
+                    linewidth=2,
                     markersize=thread_markersize.get(thr, 8),
                     color=thread_colors.get(thr, 'black'),
                     label=f"{thr} threads")
@@ -718,7 +905,7 @@ output_dir=None, independent_metrics=None):
             grp_seq = df_seq.groupby('input')[metric].mean().reset_index().sort_values('input')
             x_vals = grp_seq['input'].map(x_index)
             ax.plot(x_vals, grp_seq[metric],
-                    marker='x', linestyle='--',
+                    marker='x', linestyle='--', linewidth=2,
                     markersize=8, color='black',
                     label="Sequential")
 
@@ -728,6 +915,11 @@ output_dir=None, independent_metrics=None):
         ax.set_xticks(list(x_index.values()))
         ax.set_xticklabels(input_sizes)
         ax.set_xlim(0, len(input_sizes) - 1)
+
+        #I WANT TO ADD A WAY TO NORMALIZE MAX_Y as well
+        #if metric (or is part of the metric list to normalize)
+                #max_y_metric = max_y_metric / 32768 #average of input size
+
         ax.set_ylim(0, max_y_metric * 1.05)
         ax.yaxis.set_major_locator(ticker.MaxNLocator(nbins=10, prune='both'))
         ax.legend(title="Threads / Seq")
@@ -745,7 +937,7 @@ output_dir=None, independent_metrics=None):
         print(f"saved perf metric plot '{metric}' → {outpath}")
 
 def graph_sys_mem(parallel_csv, sequential_csv=None, data_label="", date_prefix="", metrics_dict=None, max_y=None, min_y=None,
-output_dir=None,):
+output_dir=None, baseline_mem=None):
     '''
     Params:
     (all optional) csv_imp/func_seq, csv_imp/func_parallel
@@ -762,11 +954,10 @@ output_dir=None,):
     df_par = pd.read_csv(parallel_csv)
     df_par.columns = df_par.columns.str.strip()
 
-    if baseline_subtract_true:
-        df_par['free_mem'] = df_par['free_mem'] - baseline_mem
-
     #converts kb to mb
     if 'free_mem' in df_par.columns:
+        if baseline_subtract_true:
+            df_par['free_mem'] = baseline_mem - df_par['free_mem']
         df_par['free_mem'] = df_par['free_mem'] / 1024.0
     if 'pid_mem' in df_par.columns:
         df_par['pid_mem'] = df_par['pid_mem'] / 1024.0
@@ -778,7 +969,7 @@ output_dir=None,):
         df_seq.columns = df_seq.columns.str.strip()
 
         if baseline_subtract_true:
-            df_seq['free_mem'] = df_seq['free_mem'] - baseline_mem
+            df_seq['free_mem'] = - baseline_mem - df_seq['free_mem']
             #converts kb to mb
         if 'free_mem' in df_seq.columns:
             df_seq['free_mem'] = df_seq['free_mem'] / 1024.0
@@ -812,7 +1003,7 @@ output_dir=None,):
             if metric == "free_mem" or "pid_mem":
 
                 if baseline_subtract_true and metric == "free_mem":
-                    y0 = y0 - baseline_mem
+                    y0 = baseline_mem - y0
 
                 y0 = y0 / 1024.0
         elif isinstance(min_y, (int,float)):
@@ -823,13 +1014,16 @@ output_dir=None,):
                                  [sequential_csv] if sequential_csv else None,
                                  metrics=[metric])
             y0 = mins if isinstance(mins, (int,float)) else mins.get(metric, 0)
+
+
         # max
         if isinstance(max_y, dict):
             y1 = max_y.get(metric, None)
             if metric == "free_mem" or "pid_mem":
 
                 if baseline_subtract_true and metric == "free_mem":
-                    y1 = y1 - baseline_mem
+                    if y1 is not None: # Only adjust if y1 is not None
+                        y1 = baseline_mem - y1
 
                 y1 = y1 / 1024.0
         elif isinstance(max_y, (int,float)):
@@ -847,7 +1041,7 @@ output_dir=None,):
             x_vals = sub['input'].map(x_index)
             ax.plot(x_vals, sub[metric],
                     marker=thread_markers.get(thr, '.'),
-                    linestyle='-',
+                    linestyle='--', linewidth=2,
                     markersize=thread_markersize.get(thr, 8),
                     color=thread_colors.get(thr, 'black'),
                     label=f"{thr} threads")
@@ -857,13 +1051,18 @@ output_dir=None,):
             grp_seq = df_seq.groupby('input')[metric].mean().reset_index().sort_values('input')
             x_vals = grp_seq['input'].map(x_index)
             ax.plot(x_vals, grp_seq[metric],
-                    marker='x', linestyle='--',
+                    marker='x', linestyle='--', linewidth=2,
                     markersize=8, color='black',
                     label="Sequential")
 
         # --- labels & styling ---
         ax.set_xlabel("Input Size")
-        ax.set_ylabel(metric.replace("_", " ").title() + " (MB)")
+
+        ylabel_text = metric.replace("_", " ").title()
+        if metric == "free_mem" and baseline_subtract_true:
+             ylabel_text = "Memory Used (Baseline - Free Mem)" # Or similar descriptive label
+        ylabel_text += " (MB)" # Add units
+        ax.set_ylabel(ylabel_text)
         ax.set_xticks(list(x_index.values()))
         ax.set_xticklabels(input_sizes)
         ax.set_xlim(0, len(input_sizes) - 1)
@@ -956,11 +1155,15 @@ if imp_par_list and func_par_list:
     combined_par = imp_par_list + func_par_list
     combined_seq = imp_seq_list + func_seq_list
     common_max_y = compute_max_y(combined_par, combined_seq, metrics=['avg_time'])
+    #common_min_y = compute_min_y(combined_par, combined_seq, metrics=['avg_time'])
     max_y_imp  = max_y_func = common_max_y
+    #min_y_imp = min_y_func = common_min_y
 else:
     # else, fall back to per‐style scaling
     max_y_imp  = compute_max_y(imp_par_list,  imp_seq_list,  metrics=['avg_time']) if imp_par_list else None
+    #min_y_imp  = compute_min_y(imp_par_list,  imp_seq_list,  metrics=['avg_time']) if imp_par_list else None
     max_y_func = compute_max_y(func_par_list, func_seq_list, metrics=['avg_time']) if func_par_list else None
+    #min_y_func = compute_min_y(func_par_list, func_seq_list, metrics=['avg_time']) if func_par_list else None
 
 # Imperative plot
 if imp_par_list:
@@ -970,6 +1173,7 @@ if imp_par_list:
         data_label     = f"{selected_subfolder}_imperative",
         date_prefix    = parallel_date,
         max_y          = max_y_imp,
+        min_y          = 20 if (selected_subfolder == "mandelbrot") else 200,
         output_dir     = plots_results_folder_time
     )
 
@@ -981,6 +1185,7 @@ if func_par_list:
         data_label     = f"{selected_subfolder}_functional",
         date_prefix    = parallel_date,
         max_y          = max_y_func,
+        min_y          = 20 if (selected_subfolder == "mandelbrot") else 200,
         output_dir     = plots_results_folder_time
     )
 
@@ -1004,11 +1209,11 @@ if imp_par_list and func_par_list:
     combined_par = imp_par_list + func_par_list
     combined_seq = imp_seq_list + func_seq_list
     # compute_max_y with multiple metrics returns a dict {metric: max_val}
-    max_y_perf = compute_max_y(combined_par, combined_seq, metrics=metrics_list)
+    max_y_perf = compute_max_y_norm(combined_par, combined_seq, metrics=metrics_list, metrics_to_normalize = metrics_to_divide_with_input_size)
 else:
     # fallback to per‐style: here we only need two separate dicts
-    max_y_imp  = compute_max_y(imp_par_list,  imp_seq_list,  metrics=metrics_list) if imp_par_list else {}
-    max_y_func = compute_max_y(func_par_list, func_seq_list, metrics=metrics_list) if func_par_list else {}
+    max_y_imp  = compute_max_y_norm(imp_par_list,  imp_seq_list,  metrics=metrics_list, metrics_to_normalize = metrics_to_divide_with_input_size) if imp_par_list else {}
+    max_y_func = compute_max_y_norm(func_par_list, func_seq_list, metrics=metrics_list, metrics_to_normalize = metrics_to_divide_with_input_size) if func_par_list else {}
     # Then pick the right dict for each style:
     #   for imp call → max_y_imp
     #   for func call → max_y_func
@@ -1022,7 +1227,8 @@ if perf_files_by_style['imperative']:
         date_prefix = parallel_date,
         max_y = max_y_perf if (imp_par_list and func_par_list) else max_y_imp,
         output_dir = plots_results_folder_perf,
-        independent_metrics = indep
+        independent_metrics = indep,
+        metrics_to_normalize_by_input = metrics_to_divide_with_input_size
     )
 
 # functional
@@ -1034,7 +1240,8 @@ if perf_files_by_style['functional']:
         max_y = max_y_perf if (imp_par_list and func_par_list) else max_y_imp,
         date_prefix = parallel_date,
         output_dir = plots_results_folder_perf,
-        independent_metrics = indep
+        independent_metrics = indep,
+        metrics_to_normalize_by_input = metrics_to_divide_with_input_size
     )
 
 #=== Plotting sys mem versus inputsize ===
@@ -1081,7 +1288,8 @@ if mem_files_by_style['imperative']:
         date_prefix = parallel_date,
         max_y = max_y_mem if (imp_par_list and func_par_list) else max_y_imp,
         min_y = min_y_mem if (imp_par_list and func_par_list) else min_y_imp,
-        output_dir = plots_results_folder_mem #wrong follllder!
+        output_dir = plots_results_folder_mem,
+        baseline_mem = baseline_mem_mandelbrot if (selected_subfolder == "mandelbrot") else baseline_mem_spec_19_05
     )
 
 # functional
@@ -1093,7 +1301,8 @@ if mem_files_by_style['functional']:
         max_y = max_y_mem if (imp_par_list and func_par_list) else max_y_imp,
         min_y = min_y_mem if (imp_par_list and func_par_list) else min_y_imp,
         date_prefix = parallel_date,
-        output_dir = plots_results_folder_mem
+        output_dir = plots_results_folder_mem,
+        baseline_mem = baseline_mem_mandelbrot if (selected_subfolder == "mandelbrot") else baseline_mem_spec_19_05
     )
 
 
