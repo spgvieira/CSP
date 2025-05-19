@@ -6,9 +6,6 @@
 #include <time.h>
 #include <chrono>
 
-// TODO: 
-// missing affinity setting
-
 using Partition = std::vector<std::tuple<int64_t, int64_t>>;
 tuple<int64_t, int64_t>* input;
 const size_t numTuples = 16777216;
