@@ -981,7 +981,7 @@ output_dir=None, baseline_mem=None):
         df_seq.columns = df_seq.columns.str.strip()
 
         if baseline_subtract_true:
-            df_seq['free_mem'] = - baseline_mem - df_seq['free_mem']
+            df_seq['free_mem'] = baseline_mem - df_seq['free_mem']
             #converts kb to mb
         if 'free_mem' in df_seq.columns:
             df_seq['free_mem'] = df_seq['free_mem'] / 1024.0
@@ -1320,69 +1320,6 @@ if mem_files_by_style['functional']:
         output_dir = plots_results_folder_mem,
         baseline_mem = baseline_mem_mandelbrot if (selected_subfolder == "mandelbrot") else baseline_mem_spec_19_05
     )
-
-
-# Compute the max_y time value across different csv's
-'''def compute_max_y(parallel_csvs, sequential_csvs=None):
-    """
-    Determine the maximum average time across multiple parallel and sequential CSV files.
-    parallel_csvs: list of file paths for parallel runs
-    sequential_csvs: list of file paths for sequential runs (optional)
-    Returns a float max value.
-    """
-    max_vals = []
-    for csv in parallel_csvs:
-        try:
-            grp = calculate_averages_parallel(csv)
-            max_vals.append(grp.max())
-        except Exception:
-            continue
-    if sequential_csvs:
-        for csv in sequential_csvs:
-            try:
-                seq = calculate_averages_seq(csv)
-                max_vals.append(seq.max())
-            except Exception:
-                continue
-    return max(max_vals) if max_vals else 0'''
-
-# === Debug Output ===
-'''print("\n--- Parallel Files ---")
-print("Time:", time_files)
-print("Perf:", perf_files)
-print("Mem:", mem_files)
-print("Mem (PID):", mem_pid_files)
-
-print("\n> Functional")
-print("Time:", time_files_by_style['functional'])
-print("Perf:", perf_files_by_style['functional'])
-print("Mem:", mem_files_by_style['functional'])
-print("Mem (PID):", mem_pid_files_by_style['functional'])
-
-print("\n> Imperative")
-print("Time:", time_files_by_style['imperative'])
-print("Perf:", perf_files_by_style['imperative'])
-print("Mem:", mem_files_by_style['imperative'])
-print("Mem (PID):", mem_pid_files_by_style['imperative'])
-
-if sequential_date:
-    print("\n--- Sequential Files ---")
-    print("Time:", time_files_seq)
-    print("Perf:", perf_files_seq)
-    print("Mem:", mem_files_seq)
-    print("Mem (PID):", mem_pid_files_seq)
-
-    print("\n> Functional")
-    print("Time:", time_files_seq_by_style['functional'])
-    print("Perf:", perf_files_seq_by_style['functional'])
-    print("Mem:", mem_files_seq_by_style['functional'])
-    print("Mem (PID):", mem_pid_files_seq_by_style['functional'])
-
-    print("\n> Imperative")
-    print("Time:", time_files_seq_by_style['imperative'])
-    print("Perf:", perf_files_seq_by_style['imperative'])
-    print("Mem:", mem_files_seq_by_style['imperative'])
-    print("Mem (PID):", mem_pid_files_seq_by_style['imperative'])'''
 
 
 
