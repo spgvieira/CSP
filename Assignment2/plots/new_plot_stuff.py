@@ -1066,7 +1066,11 @@ output_dir=None, baseline_mem=None):
         ax.set_xticks(list(x_index.values()))
         ax.set_xticklabels(input_sizes)
         ax.set_xlim(0, len(input_sizes) - 1)
-        ax.set_ylim(y0, y1)
+
+        if metric == "free_mem" and baseline_subtract_true:
+            ax.set_ylim(y1, y0)
+        else:
+            ax.set_ylim(y0, y1)
         ax.yaxis.set_major_locator(ticker.MaxNLocator(nbins=10, prune='both'))
         ax.legend(title="Threads / Seq")
         ax.grid(True, linestyle='--', alpha=0.7)
