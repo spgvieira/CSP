@@ -928,7 +928,7 @@ output_dir=None, independent_metrics=None, metrics_to_normalize_by_input=None):
         #if metric (or is part of the metric list to normalize)
                 #max_y_metric = max_y_metric / 32768 #average of input size
 
-        ax.set_ylim(0, max_y_metric * 1.05)
+        ax.set_ylim(-1, max_y_metric * 1.05)
         ax.yaxis.set_major_locator(ticker.MaxNLocator(nbins=10, prune='both'))
         ax.legend(title="Threads / Seq")
         ax.grid(True, linestyle='--', alpha=0.7)
@@ -1080,9 +1080,15 @@ output_dir=None, baseline_mem=None):
         ax.set_xlim(0, len(input_sizes) - 1)
 
         if metric == "free_mem" and baseline_subtract_true:
-            ax.set_ylim(y1, y0)
+            if selected_subfolder == "mandelbrot":
+                ax.set_ylim(y1 * -1.001, y0)
+            else:
+                ax.set_ylim(y1 * 0.9, y0)
         else:
-            ax.set_ylim(y0, y1)
+            if selected_subfolder == "mandelbrot":
+                ax.set_ylim(y0 * -1.001, y1)
+            else:
+                ax.set_ylim(y0 * 0.5, y1)
         ax.yaxis.set_major_locator(ticker.MaxNLocator(nbins=10, prune='both'))
         ax.legend(title="Threads / Seq")
         ax.grid(True, linestyle='--', alpha=0.7)
