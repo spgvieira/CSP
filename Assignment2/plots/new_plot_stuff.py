@@ -345,6 +345,126 @@ def compute_max_y_norm(parallel_csvs, sequential_csvs=None, metrics=None, metric
 
     return final_max_vals if len(metrics) > 1 else final_max_vals[metrics[0]]
 
+def compute_peak_max_y(parallel_csvs, sequential_csvs=None, metrics=None):
+    """
+    Determine maximum grouped MAX across parallel and sequential CSV files for specific metrics.
+    This is intended for metrics like PID memory where the peak is desired per group.
+    parallel_csvs: list of file paths
+    sequential_csvs: list of file paths (optional)
+    metrics: list of column names to consider (e.g., ['pid_mem'])
+    Returns: dict of {metric: max_peak_value} if multiple metrics, or single float if len(metrics)==1
+             Returns None or {metric: None} if no data found.
+    """
+    if metrics is None:
+        metrics = [] # Default to empty if no metrics specified
+    max_vals = {m: float('-inf') for m in metrics}
+    found_any_data = {m: False for m in metrics}
+
+    all_csvs = parallel_csvs + (sequential_csvs if sequential_csvs else [])
+
+    for csv in all_csvs:
+        try:
+            df = pd.read_csv(csv)
+            df.columns = df.columns.str.strip() # Clean column names
+        except Exception:
+            continue # Skip unreadable files
+
+        # Apply KB to MB conversion for memory metrics *before* aggregation
+        # Assuming 'pid_mem' is in KB and needs conversion for comparison
+        if 'pid_mem' in df.columns and pd.api.types.is_numeric_dtype(df['pid_mem']):
+             df['pid_mem'] = df['pid_mem'] / 1024.0
+
+        for m in metrics:
+            if m in df.columns and pd.api.types.is_numeric_dtype(df[m]):
+                current_max = float('-inf')
+                # Group and find the MAX of the metric for each group
+                if 'input' in df.columns:
+                    if 'thread' in df.columns:
+                        # Parallel structure - group by input and thread, take max of metric
+                        grp = df.groupby(['input', 'thread'])[m].max()
+                    else:
+                        # Sequential structure - group by input, take max of metric
+                        grp = df.groupby('input')[m].max()
+                else:
+                    # Cannot group by input, just take max of the whole column if numeric
+                    current_max = df[m].max() # Use max of the column directly
+
+                if 'grp' in locals() and not grp.empty:
+                    # Find the overall maximum among the group maximums
+                    numeric_values = grp.dropna().replace([np.inf, -np.inf], np.nan).dropna()
+                    if not numeric_values.empty:
+                         current_max = numeric_values.max()
+
+
+                if not np.isnan(current_max) and not np.isinf(current_max):
+                     max_vals[m] = max(max_vals[m], current_max)
+                     found_any_data[m] = True
+
+    # Replace -inf with None for metrics where no data was found
+    final_max_vals = {m: (v if found_any_data[m] else None) for m, v in max_vals.items()}
+
+    return final_max_vals if len(metrics) > 1 else final_max_vals.get(metrics[0], None)
+
+def compute_peak_min_y(parallel_csvs, sequential_csvs=None, metrics=None):
+    """
+    Determine minimum grouped MAX across parallel and sequential CSV files for specific metrics.
+    This is intended for metrics like PID memory where the peak is desired per group.
+    parallel_csvs: list of file paths
+    sequential_csvs: list of file paths (optional)
+    metrics: list of column names to consider (e.g., ['pid_mem'])
+    Returns: dict of {metric: min_peak_value} if multiple metrics, or single float if len(metrics)==1
+             Returns None or {metric: None} if no data found.
+    """
+    if metrics is None:
+        metrics = [] # Default to empty if no metrics specified
+    min_vals = {m: float('inf') for m in metrics}
+    found_any_data = {m: False for m in metrics}
+
+    all_csvs = parallel_csvs + (sequential_csvs if sequential_csvs else [])
+
+    for csv in all_csvs:
+        try:
+            df = pd.read_csv(csv)
+            df.columns = df.columns.str.strip() # Clean column names
+        except Exception:
+            continue # Skip unreadable files
+
+        # Apply KB to MB conversion for memory metrics *before* aggregation
+        if 'pid_mem' in df.columns and pd.api.types.is_numeric_dtype(df['pid_mem']):
+             df['pid_mem'] = df['pid_mem'] / 1024.0
+
+
+        for m in metrics:
+            if m in df.columns and pd.api.types.is_numeric_dtype(df[m]):
+                current_min = float('inf')
+                # Group and find the MAX of the metric for each group
+                if 'input' in df.columns:
+                    if 'thread' in df.columns:
+                        # Parallel structure - group by input and thread, take max of metric
+                        grp = df.groupby(['input', 'thread'])[m].max()
+                    else:
+                        # Sequential structure - group by input, take max of metric
+                        grp = df.groupby('input')[m].max()
+                else:
+                    # Cannot group by input, just take min of the whole column if numeric
+                    current_min = df[m].min() # Use min of the column directly
+
+                if 'grp' in locals() and not grp.empty:
+                     # Find the overall minimum among the group maximums
+                     numeric_values = grp.dropna().replace([np.inf, -np.inf], np.nan).dropna()
+                     if not numeric_values.empty:
+                         current_min = numeric_values.min()
+
+
+                if not np.isnan(current_min) and not np.isinf(current_min):
+                     min_vals[m] = min(min_vals[m], current_min)
+                     found_any_data[m] = True
+
+    # Replace +inf with None for metrics where no data was found
+    final_min_vals = {m: (v if found_any_data[m] else None) for m, v in min_vals.items()}
+
+    return final_min_vals if len(metrics) > 1 else final_min_vals.get(metrics[0], None)
+
 #minimum instead of max
 def compute_min_y(parallel_csvs, sequential_csvs=None, metrics=None):
     """
@@ -646,6 +766,99 @@ def add_missing_column_names_and_clean(list_of_csv_paths):
 def clean_mem_col(series):
     # extract the first floating‑point number found in each cell
     return series.astype(str).str.extract(r"([0-9]+(?:\.[0-9]+)?)")[0].astype(float)
+
+def round_to_nice_step(value, n_intervals=10):
+    """
+    Calculates a 'nice' step size for axis ticks based on a data value
+    and desired number of intervals.
+    """
+    if value <= 0:
+        return 1.0 # Default small step for zero or negative values
+
+    # Estimate a raw step based on the value and desired intervals
+    rough_step = value / n_intervals
+
+    # Find the magnitude (power of 10) of the rough step
+    exponent = np.floor(np.log10(rough_step))
+    magnitude = 10**exponent
+
+    # Normalize the rough step to be between 1 and 10
+    fraction = rough_step / magnitude
+
+    # Round the fraction to a 'nice' number (1, 2, 5)
+    if fraction <= 1.5:
+        rounded_fraction = 1
+    elif fraction <= 3.5:
+        rounded_fraction = 2
+    elif fraction <= 7.5:
+        rounded_fraction = 5
+    else:
+        # If it's > 7.5, use 10 (and increment the exponent)
+        rounded_fraction = 10
+
+    # Calculate the nice step size
+    nice_step = rounded_fraction * magnitude
+
+    return nice_step
+
+def find_nice_axis_limits(data_min, data_max, nbins=10, min_floor=0.0):
+    """
+    Calculates nice, rounded axis limits (y0, y1) that enclose the data range,
+    respect a minimum floor (like 0), and are multiples of a 'nice' step size.
+    Also returns the calculated nice step size.
+    """
+    # --- FIX: Add return statement here ---
+    if data_min is None or data_max is None or np.isnan(data_min) or np.isnan(data_max) or np.isinf(data_min) or np.isinf(data_max): # Added checks for inf
+        print("Warning: Invalid data range for nice limits. Using default (0, 100).")
+        default_range = 100.0 - min_floor
+        step = round_to_nice_step(default_range, n_intervals=nbins) or 1.0
+        return min_floor, min_floor + 100.0, step # <-- ADDED RETURN
+
+    # Ensure data_min is not greater than data_max after potential transformations
+    # This might happen if all valid data is one point, but min/max initialization logic handles that
+    if data_min > data_max:
+         data_min, data_max = data_max, data_min # Should not happen with correct min/max init, but safe check
+
+
+    # Calculate a suitable step based on the *range* and desired number of intervals
+    # Use max(1.0, ...) to ensure a minimum step size in case of very small ranges
+    # Use the range starting from the floor or the data_min, whichever is higher
+    data_range = data_max - max(min_floor, data_min)
+    if data_range <= 0:
+         # If range is 0 or negative, step should be based on the value itself or a default
+         # Use 10% of the value if positive, otherwise default
+         step = round_to_nice_step(max(data_max, 1.0), n_intervals=nbins)
+         if step <= 0: step = 1.0 # Ensure step is positive
+         # If range is zero, limits are just below/above the value by the step
+         y0_nice = max(min_floor, data_min - step/2) # Start slightly below
+         y1_nice_padded = data_max + step/2 # End slightly above
+         # Ensure y1 is > y0
+         if y1_nice_padded <= y0_nice: y1_nice_padded = y0_nice + step
+
+         return y0_nice, y1_nice_padded, step
+
+
+    # Calculate the step based on the meaningful range
+    step = round_to_nice_step(data_range, n_intervals=nbins)
+    if step <= 0: step = 1.0 # Ensure step is positive
+
+
+    # Calculate the lower limit: nearest nice multiple <= data_min, but >= min_floor
+    # Find the nearest multiple of step <= data_min
+    y0_candidate = np.floor(data_min / step) * step
+    y0_nice = max(min_floor, y0_candidate) # Ensure it respects min_floor
+
+    # Calculate the upper limit: nearest nice multiple >= data_max
+    y1_nice = np.ceil(data_max / step) * step
+
+    # Add padding to the upper limit after rounding
+    y1_nice_padded = y1_nice * 1.05
+    # Ensure the padded upper limit is strictly greater than the lower limit if they are the same after rounding
+    if y1_nice_padded <= y0_nice:
+        y1_nice_padded = y0_nice + step # Add one step
+
+
+    return y0_nice, y1_nice_padded, step
 
 #=== Graph plotting functions ===
 def graph_time(parallel_csv, sequential_csv=None, data_label="", date_prefix="", max_y=None, min_y=None,
@@ -1104,6 +1317,186 @@ output_dir=None, baseline_mem=None):
         plt.close(fig)
         print(f"saved system memory metric plot '{metric}' → {outpath}")
 
+def graph_pid_mem_peak(parallel_csv, sequential_csv=None, data_label="", date_prefix="", output_dir=None, max_y=None, min_y=None):
+    '''
+    Plots the PEAK 'pid_mem' metric (Process Memory) versus input size.
+    Calculates the maximum pid_mem value for each (input, thread) or input group.
+    Handles KB to MB conversion and uses nice axis limits starting from 0 or minimum data.
+    Accepts optional pre-calculated max_y/min_y for shared scaling.
+
+    Params:
+    parallel_csv (str): path to the parallel memory CSV
+    sequential_csv (str, optional): path to the sequential memory CSV
+    data_label (str): descriptive label (e.g. 'spectral_norm_imperative')
+    date_prefix (str): prefix used in filenames (e.g. '30-04')
+    output_dir (str, optional): where to save each plot (defaults to plots_mem folder)
+    max_y (float or dict, optional): Optional pre-calculated max y-limit. If a dict, assumes {metric: max_val}.
+    min_y (float or dict, optional): Optional pre-calculated min y-limit. If a dict, assumes {metric: min_val}.
+    '''
+    metric = 'pid_mem' # This function is hardcoded for pid_mem
+
+    # 1) load data (Simplified: Removed try/except)
+    df_par = pd.read_csv(parallel_csv)
+    df_par.columns = df_par.columns.str.strip()
+    # Simplified: Assuming metric column exists and is numeric
+    df_par[metric] = df_par[metric] / 1024.0 # Apply KB to MB conversion
+
+    df_seq = None
+    if sequential_csv:
+        # Simplified: Removed try/except
+        df_seq = pd.read_csv(sequential_csv)
+        df_seq.columns = df_seq.columns.str.strip()
+        # Simplified: Assuming metric column exists and is numeric
+        df_seq[metric] = df_seq[metric] / 1024.0 # Apply KB to MB conversion
+
+
+    # 1) Calculate Peak data (group and take max) (Simplified checks)
+    grp_par_peaks = pd.DataFrame()
+    # Simplified: Assuming input and thread columns exist for parallel
+    grp_par_peaks = df_par.groupby(['input', 'thread'])[metric].max().reset_index()
+
+
+    grp_seq_peaks = pd.DataFrame()
+    # Simplified: Assuming input column exists for sequential if df_seq is not None
+    if df_seq is not None:
+         grp_seq_peaks = df_seq.groupby('input')[metric].max().reset_index()
+
+
+    # 2) Determine the range of the calculated peak data
+    all_peak_values = []
+    # Simplified: dropna is used, assuming data is clean enough
+    if not grp_par_peaks.empty:
+        all_peak_values.extend(grp_par_peaks[metric].dropna().tolist())
+    if not grp_seq_peaks.empty: # Keep check for empty sequential peaks
+        all_peak_values.extend(grp_seq_peaks[metric].dropna().tolist())
+
+    # Simplified: Assuming all_peak_values is not empty
+    peak_data_min = np.min(all_peak_values)
+    peak_data_max = np.max(all_peak_values)
+
+
+    # --- Determine y-axis limits ---
+    y0_final = 0.0
+    y1_final = 1.0 # Default small range in case calculation fails
+    step = 1.0   # Default step
+
+    # Check if max_y and min_y were provided externally
+    if max_y is not None and min_y is not None:
+         # Use provided limits (handle if they are in a dict)
+         provided_min = min_y.get(metric) if isinstance(min_y, dict) else min_y
+         provided_max = max_y.get(metric) if isinstance(max_y, dict) else max_y
+
+         # Simplified: Assume provided_min and provided_max are valid numbers
+         y0_final = max(0.0, provided_min) # Ensure lower bound is >= 0
+         y1_final = provided_max # Use provided max as the upper limit
+
+         # Calculate step based on the provided range
+         provided_range = y1_final - y0_final
+         step = round_to_nice_step(provided_range, n_intervals=10)
+         if step <= 0: step = 1.0 # Ensure step is positive
+
+         # No need to add padding to y1_final if limits are explicitly set?
+         # Or add padding *after* using provided max? Let's add padding consistent with the other case.
+         y1_final = y1_final * 1.05 # Add consistent padding to the upper limit
+
+         # Ensure y1_final is still > y0_final after padding/rounding quirks
+         if y1_final <= y0_final: y1_final = y0_final + step # Add a step if limits collapsed
+
+         print(f"Using provided Y limits for '{metric}': [{y0_final:.2f}, {y1_final:.2f}] with step {step:.2f}")
+
+    else:
+        # Use the calculated peak data range to find nice limits
+        # Simplified: Using the simplified find_nice_axis_limits
+        # find_nice_axis_limits already includes padding on y1
+        y0_nice, y1_nice_padded, step = find_nice_axis_limits(peak_data_min, peak_data_max, nbins=10, min_floor=0.0)
+        y0_final = y0_nice
+        y1_final = y1_nice_padded
+        print(f"Using calculated Y limits for '{metric}': [{y0_final:.2f}, {y1_final:.2f}] with step {step:.2f}")
+
+
+    # 4) build categorical x-axis (all input sizes seen in the peak dataframes)
+    # Use input sizes from the calculated peak dataframes
+    inputs_par_peaks = set(grp_par_peaks['input'].unique());
+    inputs_seq_peaks = set(grp_seq_peaks['input'].unique()) if not grp_seq_peaks.empty else set()
+    input_sizes = sorted(list(inputs_par_peaks | inputs_seq_peaks))
+    x_index = {size: i for i, size in enumerate(input_sizes)}
+
+    # Simplified: Assuming input sizes are found
+    # Simplified: Assuming thread counts are found from parallel peaks
+    thread_counts = sorted(grp_par_peaks['thread'].unique()) if not grp_par_peaks.empty else []
+
+
+    # 6) Create plot
+    fig, ax = plt.subplots(figsize=(12, 7))
+
+    # --- parallel ---
+    if not grp_par_peaks.empty: # Plot if parallel peaks were calculated
+        for thr in thread_counts:
+            # Filter for this thread from the peak dataframe
+            thread_peaks_df = grp_par_peaks[grp_par_peaks['thread'] == thr]
+            # --- FIX START: Use merge to align on 'input' column ---
+            all_inputs_df = pd.DataFrame({'input': input_sizes})
+            sub = pd.merge(all_inputs_df, thread_peaks_df, on='input', how='left').sort_values('input')
+            # --- FIX END ---
+
+            x_vals = sub['input'].map(x_index)
+            # Simplified: Assuming valid data for plotting lines
+            ax.plot(x_vals, sub[metric],
+                    marker=thread_markers.get(thr, '.'),
+                    linestyle='--', linewidth=2,
+                    markersize=thread_markersize.get(thr, 8),
+                    color=thread_colors.get(thr, 'black'),
+                    label=f"{thr} threads")
+
+
+    # --- sequential ---
+    if not grp_seq_peaks.empty: # Plot if sequential peaks were calculated
+        # --- FIX START: Use merge to align on 'input' column ---
+        all_inputs_df = pd.DataFrame({'input': input_sizes})
+        grp_seq_peaks_reindexed = pd.merge(all_inputs_df, grp_seq_peaks, on='input', how='left').sort_values('input')
+        # --- FIX END ---
+
+        x_vals = grp_seq_peaks_reindexed['input'].map(x_index)
+        # Simplified: Assuming valid data for plotting lines
+        ax.plot(x_vals, grp_seq_peaks_reindexed[metric],
+                marker='x', linestyle='--', linewidth=2,
+                markersize=8, color='black',
+                label="Sequential")
+
+
+    # --- labels & styling ---
+    ax.set_xlabel("Input Size")
+    ax.set_ylabel("Peak Process Memory (MB)") # Updated label to reflect "Peak"
+
+    ax.set_xticks(list(x_index.values())); ax.set_xticklabels(input_sizes)
+    # Simplified: Assuming x_index is not empty
+    ax.set_xlim(left=min(x_index.values()), right=max(x_index.values()));
+
+    # Set y-axis limits using the nice limits calculated from peak data range OR provided limits
+    ax.set_ylim(y0_final, y1_final) # Use the determined final limits
+
+    # Use MultipleLocator to place ticks at multiples of the nice step size
+    ax.yaxis.set_major_locator(ticker.MultipleLocator(step))
+    # Use ScalarFormatter for y-axis ticks
+    fmt = ticker.ScalarFormatter(useOffset=False, useMathText=False)
+    ax.yaxis.set_major_formatter(fmt)
+
+
+    ax.legend(title="Threads / Seq")
+    ax.grid(True, linestyle='--', alpha=0.7)
+    fig.tight_layout()
+
+    # --- save ---
+    parts = [date_prefix, data_label, "peak_" + metric + ".png"] if date_prefix else [data_label, "peak_" + metric + ".png"] # Added "peak_" to filename
+    filename = "_".join(p for p in parts if p)
+    outdir = output_dir or os.path.join(base_dir, PLOTS_FOLDER_MAP["mem"]) # Use plots_mem folder
+    os.makedirs(outdir, exist_ok=True)
+    outpath = os.path.join(outdir, filename);
+    # Simplified: Removed error handling for saving
+    plt.savefig(outpath, dpi=300, bbox_inches='tight'); print(f"saved peak process memory plot '{metric}' → {outpath}")
+
+    plt.close(fig)
+
 #=== Main ===
 #convert all perf .txt/.data files to CSV
 #convert every perf .data or .txt in this subfolder (parallel + sequential)
@@ -1277,6 +1670,9 @@ imp_seq_list  = mem_files_seq_by_style.get('imperative', [])
 func_par_list = mem_files_by_style['functional']
 func_seq_list = mem_files_seq_by_style.get('functional', [])
 
+combined_par = None
+combined_seq = None
+
 #which memory metrics are we plotting?
 metrics_list = [m for m, flag in mem_metrics_collection.items() if flag]
 
@@ -1326,6 +1722,40 @@ if mem_files_by_style['functional']:
         output_dir = plots_results_folder_mem,
         baseline_mem = baseline_mem_mandelbrot if (selected_subfolder == "mandelbrot") else baseline_mem_spec_19_05
     )
+
+#=== Plotting PID mem (Process Memory) versus inputsize ===
+print("\nPlotting Process Memory (PID)...")
+# Output folder is the same as system memory
+plots_results_folder_mem = os.path.join(base_dir, PLOTS_FOLDER_MAP["mem"])
+os.makedirs(plots_results_folder_mem, exist_ok=True)
+
+peak_mem_metrics_list = ['pid_mem']
+
+common_max_peak_mem = compute_peak_max_y(combined_par, combined_seq, metrics=peak_mem_metrics_list)
+common_min_peak_mem = compute_peak_min_y(combined_par, combined_seq, metrics=peak_mem_metrics_list)
+
+# imperative
+if mem_files_by_style['imperative']:
+    graph_pid_mem_peak(
+        parallel_csv = mem_files_by_style['imperative'][0],
+        sequential_csv = imp_seq,
+        data_label = f"{selected_subfolder}_imp",
+        date_prefix = parallel_date,
+        output_dir = plots_results_folder_mem,
+        max_y = common_max_peak_mem,
+        min_y = common_min_peak_mem)
+
+# functional
+if mem_files_by_style['functional']:
+    graph_pid_mem_peak(
+        parallel_csv = mem_files_by_style['functional'][0],
+        sequential_csv = func_seq,
+        data_label = f"{selected_subfolder}_func",
+        date_prefix = parallel_date,
+        output_dir = plots_results_folder_mem,
+        max_y = common_max_peak_mem,
+        min_y = common_min_peak_mem)
+
 
 
 
