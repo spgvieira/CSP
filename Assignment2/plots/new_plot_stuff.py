@@ -911,7 +911,15 @@ output_dir=None, independent_metrics=None, metrics_to_normalize_by_input=None):
 
         # --- labels & styling ---
         ax.set_xlabel("Input Size")
-        ax.set_ylabel(metric.replace("_", " ").title())
+
+        base_ylabel = metric.replace("_", " ").title()
+        if metric in metrics_to_normalize_by_input:
+            # Use 'per input^2' as per the normalization comment
+            final_ylabel = base_ylabel + " per input^2"
+        else:
+            final_ylabel = base_ylabel
+        ax.set_ylabel(final_ylabel)
+        
         ax.set_xticks(list(x_index.values()))
         ax.set_xticklabels(input_sizes)
         ax.set_xlim(0, len(input_sizes) - 1)
@@ -927,7 +935,11 @@ output_dir=None, independent_metrics=None, metrics_to_normalize_by_input=None):
         fig.tight_layout()
 
         # --- save ---
-        parts = [date_prefix, data_label, metric + ".png"] if date_prefix else [data_label, metric + ".png"]
+        metric_filename_part = metric
+        if metric in metrics_to_normalize_by_input:
+             metric_filename_part = metric + "_per_input"
+
+        parts = [date_prefix, data_label, metric_filename_part + ".png"] if date_prefix else [data_label, metric_filename_part + ".png"]
         filename = "_".join(p for p in parts if p)
         outdir = output_dir or plots_results_folder_time
         os.makedirs(outdir, exist_ok=True)
