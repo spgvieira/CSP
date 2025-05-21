@@ -82,7 +82,8 @@ thread_markersize = {
 metrics_to_divide_with_input_size = {
     "cache_misses",
     "dtlb_load_misses",
-    "page_faults"
+    "page_faults",
+    "cpu_cycles"
 }
 
 #dictionary to control which perf metrics to plot
@@ -232,17 +233,20 @@ def compute_max_y(parallel_csvs, sequential_csvs=None, metrics=None):
 
     return max_vals if len(metrics) > 1 else max_vals[metrics[0]]
 
-def compute_max_y_norm(parallel_csvs, sequential_csvs=None, metrics=None, metrics_to_normalize=None):
+def compute_max_or_min_y_norm(parallel_csvs, sequential_csvs=None, metrics=None, metrics_to_normalize=None, aggregate_type='max'):
     """
-    Determine maximum grouped mean across parallel and sequential CSV files.
-    Can optionally normalize metrics by input size squared BEFORE finding max.
+    Determine maximum or minimum grouped mean across parallel and sequential CSV files.
+    Can optionally normalize metrics by input size squared BEFORE finding mean.
 
     parallel_csvs: list of file paths
     sequential_csvs: list of file paths (optional)
     metrics: list of column names to consider
     metrics_to_normalize: set or list of metric names to normalize by input**2
-                          BEFORE finding the maximum.
-    Returns: dict of {metric: max_value} or single float if len(metrics)==1
+                          BEFORE finding the mean.
+    aggregate_type: 'max' or 'min' - determines whether to find the maximum or minimum
+                    of the grouped means/normalized means.
+    Returns: dict of {metric: value} or single float if len(metrics)==1
+             Returns {metric: None} for metrics not found or having no data after aggregation.
     """
     if metrics is None:
         metrics = ['avg_time']
@@ -251,12 +255,30 @@ def compute_max_y_norm(parallel_csvs, sequential_csvs=None, metrics=None, metric
     else:
          metrics_to_normalize = set(metrics_to_normalize) # Convert to set
 
-    max_vals = {m: 0 for m in metrics}
+    # Input validation for aggregate_type
+    if aggregate_type not in ['max', 'min']:
+        print(f"Error: Invalid aggregate_type '{aggregate_type}'. Must be 'max' or 'min'.")
+        return None # Or raise an error
 
-    # Helper to update a metric’s max
-    def _update_max(m, value):
-        if value is not None and not np.isnan(value):
-             max_vals[m] = max(max_vals[m], value)
+    # Initialize vals based on aggregate_type
+    initial_val = float('-inf') if aggregate_type == 'max' else float('inf')
+    vals = {m: initial_val for m in metrics}
+    found_any_data = {m: False for m in metrics} # Track if we found *any* valid aggregated value for a metric
+
+    # Helper to update a metric’s value
+    def _update_value(m, new_value):
+        # Ensure new_value is a finite number before comparing
+        if isinstance(new_value, (int, float)) and not np.isnan(new_value) and not np.isinf(new_value):
+             if aggregate_type == 'max':
+                  # Initialize vals[m] if it's still the initial extreme value
+                  if vals[m] == float('-inf') or new_value > vals[m]:
+                     vals[m] = new_value
+                     found_any_data[m] = True
+             else: # aggregate_type == 'min'
+                  # Initialize vals[m] if it's still the initial extreme value
+                  if vals[m] == float('inf') or new_value < vals[m]:
+                     vals[m] = new_value
+                     found_any_data[m] = True
 
 
     # Function to process a single DataFrame (either parallel or sequential)
@@ -267,48 +289,89 @@ def compute_max_y_norm(parallel_csvs, sequential_csvs=None, metrics=None, metric
         # Ensure 'input' column exists if any metric needs normalization
         needs_input_for_norm = any(m in metrics_to_normalize for m in metrics)
         if needs_input_for_norm and 'input' not in df.columns:
-             print(f"Warning: 'input' column missing in file processed by compute_max_y. Cannot normalize metrics.")
-             metrics_to_normalize.clear() # Disable normalization if input is missing
+             print(f"Warning: 'input' column missing in file processed by compute_max_or_min_y_norm. Cannot normalize metrics in this file.")
+             # Don't clear the global metrics_to_normalize, just skip for this df
 
         # Calculate grouped means for each metric
         for m in metrics:
-            if m not in df.columns:
-                continue # Metric not in this file
+            if m not in df.columns or not pd.api.types.is_numeric_dtype(df[m]):
+                continue # Metric not in this file or not numeric
 
-            if m in metrics_to_normalize and 'input' in df.columns:
+            # Determine grouping keys
+            group_keys = ['input']
+            if is_parallel and 'thread' in df.columns:
+                group_keys.append('thread')
+            elif is_parallel and 'thread' not in df.columns: # Parallel file without thread column?
+                 print(f"Warning: Parallel file without 'thread' column. Grouping by input only for metric '{m}'.")
+
+            # Calculate grouped metric value (mean of potentially normalized value)
+            if m in metrics_to_normalize and 'input' in df.columns and (df['input'] != 0).any():
                 # --- Handle normalization before grouping ---
-                # Create a temporary normalized series
+                # Create a temporary normalized series, handle input = 0
                 normalized_series = pd.Series(np.nan, index=df.index)
-                # Avoid division by zero
                 non_zero_input_mask = df['input'] != 0
-                if non_zero_input_mask.any():
+                # Ensure metric column is numeric before division
+                if pd.api.types.is_numeric_dtype(df[m]):
                     normalized_series.loc[non_zero_input_mask] = df.loc[non_zero_input_mask, m] / (df.loc[non_zero_input_mask, 'input'] ** 2)
+                else:
+                    print(f"Warning: Metric '{m}' is not numeric, cannot normalize.")
+                    continue # Skip this metric for this file if not numeric
 
-                # Group the temporary normalized series
-                if is_parallel and 'thread' in df.columns:
-                    # For parallel, group by input and thread
-                    temp_df = df[['input', 'thread']].copy()
+
+                # Group the temporary normalized series and find the mean
+                # The series will be indexed by the group keys. Use mean() after grouping.
+                if group_keys:
+                    temp_df = df[group_keys].copy()
                     temp_df['normalized_metric'] = normalized_series
-                    grp = temp_df.groupby(['input', 'thread'])['normalized_metric'].mean()
-                else: # Sequential or parallel without thread (shouldn't happen for parallel data)
-                    # For sequential, group only by input
-                    temp_df = df[['input']].copy()
-                    temp_df['normalized_metric'] = normalized_series
-                    grp = temp_df.groupby('input')['normalized_metric'].mean()
+                    # Ensure the normalized_metric column is numeric after assignment
+                    temp_df['normalized_metric'] = pd.to_numeric(temp_df['normalized_metric'], errors='coerce')
+                    if not temp_df['normalized_metric'].dropna().empty: # Only group if there's valid data after norm/coerce
+                        grp = temp_df.groupby(group_keys)['normalized_metric'].mean()
+                    else:
+                        grp = pd.Series([], dtype='float64') # Empty Series if no valid data after norm/coerce
+                else: # Should not happen if input exists
+                     # Ensure normalized_series is numeric
+                     normalized_series = pd.to_numeric(normalized_series, errors='coerce')
+                     if not normalized_series.dropna().empty:
+                         grp = normalized_series.mean() # Just take the mean of the column
+                     else:
+                         grp = np.nan # Scalar NaN if no valid data
 
-                # Update max value using the mean of the normalized values
-                if not grp.empty:
-                     _update_max(m, grp.max())
 
-            else:
-                # --- Handle metrics that are NOT normalized ---
-                if is_parallel and 'thread' in df.columns:
-                     grp = df.groupby(['input', 'thread'])[m].mean()
-                else: # Sequential
-                     grp = df.groupby('input')[m].mean()
+            else: # Not normalizing, or cannot normalize in this file
+                # --- Handle metrics that are NOT normalized OR cannot be normalized in this file ---
+                if group_keys:
+                    # Ensure metric column is numeric before mean aggregation
+                    if pd.api.types.is_numeric_dtype(df[m]):
+                         grp = df.groupby(group_keys)[m].mean()
+                    else:
+                         print(f"Warning: Metric '{m}' is not numeric, cannot compute mean.")
+                         continue # Skip this metric for this file if not numeric
+                else: # e.g. no 'input' column for sequential file?
+                     # Ensure metric column is numeric before mean aggregation
+                     if pd.api.types.is_numeric_dtype(df[m]):
+                         grp = df[m].mean() # Just take the mean of the column
+                     else:
+                         print(f"Warning: Metric '{m}' is not numeric, cannot compute mean.")
+                         continue # Skip this metric for this file if not numeric
 
-                if not grp.empty:
-                     _update_max(m, grp.max())
+
+            # Find the overall max or min among the group means
+            overall_agg_value = None # Initialize aggregate value for this metric/file
+
+            if isinstance(grp, pd.Series):
+                 if not grp.empty:
+                      # Ensure we only consider finite numeric values when finding max/min
+                      numeric_values = grp.dropna().replace([np.inf, -np.inf], np.nan).dropna()
+                      if not numeric_values.empty:
+                           overall_agg_value = numeric_values.max() if aggregate_type == 'max' else numeric_values.min()
+            elif isinstance(grp, (int, float)): # Handle scalar result
+                 # Check if scalar is valid before assigning
+                 if not np.isnan(grp) and not np.isinf(grp):
+                      overall_agg_value = grp
+
+            # Update the global min/max for the metric if overall_agg_value is valid
+            _update_value(m, overall_agg_value)
 
 
     # Process parallel CSVs
@@ -316,8 +379,11 @@ def compute_max_y_norm(parallel_csvs, sequential_csvs=None, metrics=None, metric
         try:
             df = pd.read_csv(csv)
             process_df(df, is_parallel=True)
+        except FileNotFoundError:
+             print(f"Warning: File not found: {csv}")
+             continue
         except Exception as e:
-            print(f"Error reading or processing {csv} in compute_max_y: {e}")
+            print(f"Error reading or processing {csv} in compute_max_or_min_y_norm: {e}")
             continue
 
 
@@ -329,21 +395,26 @@ def compute_max_y_norm(parallel_csvs, sequential_csvs=None, metrics=None, metric
                 # Sequential files typically don't have a 'thread' column,
                 # so pass is_parallel=False
                 process_df(df, is_parallel=False)
+            except FileNotFoundError:
+                 print(f"Warning: File not found: {csv}")
+                 continue
             except Exception as e:
-                 print(f"Error reading or processing {csv} in compute_max_y: {e}")
+                 print(f"Error reading or processing {csv} in compute_max_or_min_y_norm: {e}")
                  continue
 
 
-    # Filter out metrics for which no non-NaN max was found (e.g. column missing in all files)
-    final_max_vals = {m: v for m, v in max_vals.items() if v != 0 or all(m not in pd.read_csv(f).columns for f in parallel_csvs + (sequential_csvs or []))}
-
-    # If metrics had initial max_val 0 and weren't present in any file, keep them at 0.
+    # Replace initial_val with None for metrics where no valid data was found
+    # If the initial value is still the extreme one, it means no valid data point updated it.
+    final_vals = {}
     for m in metrics:
-        if m not in final_max_vals and m in max_vals:
-             final_max_vals[m] = max_vals[m]
+        if found_any_data[m]:
+            final_vals[m] = vals[m]
+        else:
+            final_vals[m] = None # Set to None if no valid data was found for this metric
 
 
-    return final_max_vals if len(metrics) > 1 else final_max_vals[metrics[0]]
+    return final_vals if len(metrics) > 1 else final_vals.get(metrics[0], None)
+
 
 def compute_peak_max_y(parallel_csvs, sequential_csvs=None, metrics=None):
     """
@@ -801,64 +872,105 @@ def round_to_nice_step(value, n_intervals=10):
 
     return nice_step
 
-def find_nice_axis_limits(data_min, data_max, nbins=10, min_floor=0.0):
+def find_nice_axis_limits(data_min, data_max, nbins=10, min_floor=0.0, padding_percent_below=15.0, padding_percent_above=5.0):
     """
     Calculates nice, rounded axis limits (y0, y1) that enclose the data range,
-    respect a minimum floor (like 0), and are multiples of a 'nice' step size.
+    respect a minimum floor (like 0), are multiples of a 'nice' step size,
+    and include specified padding percentages above and below the data range.
     Also returns the calculated nice step size.
     """
-    # --- FIX: Add return statement here ---
-    if data_min is None or data_max is None or np.isnan(data_min) or np.isnan(data_max) or np.isinf(data_min) or np.isinf(data_max): # Added checks for inf
-        print("Warning: Invalid data range for nice limits. Using default (0, 100).")
-        default_range = 100.0 - min_floor
+    # Ensure data_min and data_max are treated as numbers, handle None/inf/nan inputs gracefully
+    # Convert potential input types (like None) to a value np.isnan/np.isinf can handle or default
+    data_min_float = float(data_min) if isinstance(data_min, (int, float)) else np.nan
+    data_max_float = float(data_max) if isinstance(data_max, (int, float)) else np.nan
+
+    # Check for invalid inputs after conversion
+    if np.isnan(data_min_float) or np.isnan(data_max_float) or np.isinf(data_min_float) or np.isinf(data_max_float):
+        print(f"Warning: Invalid data range [{data_min}, {data_max}] for nice limits. Using default (min_floor, min_floor + 100).")
+        # Calculate a default step based on a reasonable range
+        default_range = 100.0
         step = round_to_nice_step(default_range, n_intervals=nbins) or 1.0
-        return min_floor, min_floor + 100.0, step # <-- ADDED RETURN
+        return min_floor, min_floor + default_range, step
 
-    # Ensure data_min is not greater than data_max after potential transformations
-    # This might happen if all valid data is one point, but min/max initialization logic handles that
-    if data_min > data_max:
-         data_min, data_max = data_max, data_min # Should not happen with correct min/max init, but safe check
+    # Ensure data_min is not greater than data_max (after handling NaNs/Infs)
+    if data_min_float > data_max_float:
+         print(f"Warning: data_min ({data_min_float}) > data_max ({data_max_float}). Swapping or using default range.")
+         # If max is less than min, default to a sensible small range starting at min_floor
+         # Calculate a minimal range based on the difference or a default if difference is non-positive
+         min_range_needed = (data_min_float - data_max_float) * 1.1 + 1.0
+         if min_range_needed <= 0: min_range_needed = 1.0 # Ensure positive range
+         step = round_to_nice_step(min_range_needed / nbins, n_intervals=nbins) or 1.0 # Step based on minimal range
+         if step <= 0: step = 1.0
+         y0_final = min_floor
+         y1_final = y0_final + step * nbins # Define upper limit based on step and nbins
+         # Ensure y1 is strictly greater than y0
+         if y1_final <= y0_final: y1_final = y0_final + step
+         return y0_final, y1_final, step
 
 
-    # Calculate a suitable step based on the *range* and desired number of intervals
-    # Use max(1.0, ...) to ensure a minimum step size in case of very small ranges
-    # Use the range starting from the floor or the data_min, whichever is higher
-    data_range = data_max - max(min_floor, data_min)
-    if data_range <= 0:
-         # If range is 0 or negative, step should be based on the value itself or a default
-         # Use 10% of the value if positive, otherwise default
-         step = round_to_nice_step(max(data_max, 1.0), n_intervals=nbins)
+    # Calculate the *full* data range that the axis should cover
+    full_data_range = data_max_float - data_min_float
+
+    # If the data range is zero or very small, handle as a special case
+    if full_data_range <= 1e-9: # Use a small tolerance for floating point comparisons
+         # If range is 0 or near zero, step should be based on the value itself or a default
+         # Choose a step based on the magnitude of the value, if non-zero, or a default
+         step_base_value = max(abs(data_max_float), 1.0) # Base for step calculation, use 1.0 if data is 0 or negative
+         step = round_to_nice_step(step_base_value / nbins, n_intervals=nbins) or 1.0
          if step <= 0: step = 1.0 # Ensure step is positive
-         # If range is zero, limits are just below/above the value by the step
-         y0_nice = max(min_floor, data_min - step/2) # Start slightly below
-         y1_nice_padded = data_max + step/2 # End slightly above
-         # Ensure y1 is > y0
-         if y1_nice_padded <= y0_nice: y1_nice_padded = y0_nice + step
 
-         return y0_nice, y1_nice_padded, step
+         # For zero range, center the data point within a range of roughly 2 steps.
+         # Ensure y0 respects min_floor.
+         target_y0_tiny = data_min_float - step # Aim one step below the data point
+         y0_final_tiny = max(min_floor, np.floor(target_y0_tiny / step) * step) # Find nice multiple <= target, >= min_floor
+
+         # Ensure y1 is sufficiently above the data point
+         target_y1_tiny = data_max_float + step # Aim one step above
+         y1_final_tiny = np.ceil(target_y1_tiny / step) * step # Find nice multiple >= target
+
+         # Ensure y1 is strictly greater than y0
+         if y1_final_tiny <= y0_final_tiny:
+             y1_final_tiny = y0_final_tiny + step # Ensure at least one step range
+
+         # Recalculate step based on the final tiny range for consistency? Or just use the step found?
+         # Let's use the step calculated for the tiny range.
+
+         return y0_final_tiny, y1_final_tiny, step
 
 
-    # Calculate the step based on the meaningful range
-    step = round_to_nice_step(data_range, n_intervals=nbins)
+    # Calculate the step based on the meaningful range (when range > 0)
+    # Use padding percentages to adjust the *total* range we want the axis to cover
+    # The padding is relative to the *full_data_range*
+    total_padded_range = full_data_range * (1 + (padding_percent_below + padding_percent_above) / 100.0)
+
+    step = round_to_nice_step(total_padded_range, n_intervals=nbins)
     if step <= 0: step = 1.0 # Ensure step is positive
 
 
-    # Calculate the lower limit: nearest nice multiple <= data_min, but >= min_floor
-    # Find the nearest multiple of step <= data_min
-    y0_candidate = np.floor(data_min / step) * step
-    y0_nice = max(min_floor, y0_candidate) # Ensure it respects min_floor
+    # Calculate the target lower bound: data_min minus padding amount
+    padding_amount_below = full_data_range * padding_percent_below / 100.0
+    target_y0 = data_min_float - padding_amount_below
+    # Ensure the target lower bound respects the minimum floor
+    target_y0 = max(min_floor, target_y0)
 
-    # Calculate the upper limit: nearest nice multiple >= data_max
-    y1_nice = np.ceil(data_max / step) * step
-
-    # Add padding to the upper limit after rounding
-    y1_nice_padded = y1_nice * 1.05
-    # Ensure the padded upper limit is strictly greater than the lower limit if they are the same after rounding
-    if y1_nice_padded <= y0_nice:
-        y1_nice_padded = y0_nice + step # Add one step
+    # Calculate the actual lower limit: nearest nice multiple <= target_y0
+    # If target_y0 is exactly 0, np.floor(0/step)*step is 0, which is correct.
+    y0_final = np.floor(target_y0 / step) * step
 
 
-    return y0_nice, y1_nice_padded, step
+    # Calculate the target upper bound: data_max plus padding amount
+    padding_amount_above = full_data_range * padding_percent_above / 100.0
+    target_y1 = data_max_float + padding_amount_above
+    # Calculate the actual upper limit: nearest nice multiple >= target_y1
+    y1_final = np.ceil(target_y1 / step) * step
+
+    # Ensure the upper limit is strictly greater than the lower limit, especially if range was tiny
+    # This check might be redundant with previous logic but good as a final safeguard
+    if y1_final <= y0_final:
+        y1_final = y0_final + step # Add one step if limits collapsed
+
+
+    return y0_final, y1_final, step
 
 #=== Graph plotting functions ===
 def graph_time(parallel_csv, sequential_csv=None, data_label="", date_prefix="", max_y=None, min_y=None,
@@ -985,7 +1097,7 @@ def graph_time(parallel_csv, sequential_csv=None, data_label="", date_prefix="",
     plt.close(fig)
 
 
-def graph_perf_values(parallel_csv, sequential_csv=None, data_label="", date_prefix="", metrics_dict=None, max_y=None,
+'''def graph_perf_values(parallel_csv, sequential_csv=None, data_label="", date_prefix="", metrics_dict=None, max_y=None,
 output_dir=None, independent_metrics=None, metrics_to_normalize_by_input=None):
     """
     Plots selected perf metrics for parallel (multi-thread) and optional sequential runs.
@@ -1141,7 +1253,7 @@ output_dir=None, independent_metrics=None, metrics_to_normalize_by_input=None):
         #if metric (or is part of the metric list to normalize)
                 #max_y_metric = max_y_metric / 32768 #average of input size
 
-        ax.set_ylim(-1, max_y_metric * 1.05)
+        ax.set_ylim(0, max_y_metric * 1.05)
         ax.yaxis.set_major_locator(ticker.MaxNLocator(nbins=10, prune='both'))
         ax.legend(title="Threads / Seq")
         ax.grid(True, linestyle='--', alpha=0.7)
@@ -1159,7 +1271,284 @@ output_dir=None, independent_metrics=None, metrics_to_normalize_by_input=None):
         outpath = os.path.join(outdir, filename)
         plt.savefig(outpath, dpi=300, bbox_inches='tight')
         plt.close(fig)
-        print(f"saved perf metric plot '{metric}' → {outpath}")
+        print(f"saved perf metric plot '{metric}' → {outpath}")'''
+
+def graph_perf_values(parallel_csv, sequential_csv=None, data_label="", date_prefix="", metrics_dict=None, max_y=None,
+output_dir=None, independent_metrics=None, metrics_to_normalize_by_input=None, min_y=None):
+    """
+    Plots selected perf metrics for parallel (multi-thread) and optional sequential runs.
+
+    Params:
+        parallel_csv (str): path to the parallel perf CSV
+        sequential_csv (str, optional): path to the sequential perf CSV
+        data_label (str): descriptive label (e.g. 'spectral_norm_functional')
+        date_prefix (str): prefix used in filenames (e.g. '30-04')
+        metrics_dict (dict): maps metric names → bool (True to plot)
+        max_y (float or dict, optional): global Y-axis max; if None, computed per metric
+        min_y (float or dict, optional): global Y-axis min; if None, computed per metric
+        output_dir (str, optional): where to save each plot (defaults to plots_time folder)
+    """
+
+    # 1) default to global perf_metrics_collection if none passed
+    if metrics_dict is None:
+        metrics_dict = perf_metrics_collection
+
+    # 2) load and sanitize
+    try:
+        df_par = pd.read_csv(parallel_csv)
+        df_par.columns = df_par.columns.str.strip()
+    except Exception as e:
+        print(f"Error reading parallel perf CSV {parallel_csv}: {e}")
+        return # Cannot proceed without parallel data
+
+    df_seq = None
+    if sequential_csv:
+        try:
+            df_seq = pd.read_csv(sequential_csv)
+            df_seq.columns = df_seq.columns.str.strip()
+        except Exception as e:
+            print(f"Error reading sequential perf CSV {sequential_csv}: {e}")
+            df_seq = None # Continue without sequential data
+
+
+    #normalization!
+    if metrics_to_normalize_by_input:
+        # Updated print statement to reflect division by input^2
+        print(f"Normalizing metrics by 'input'^2 size: {metrics_to_normalize_by_input}")
+
+        # Normalize parallel data
+        if 'input' not in df_par.columns:
+                print("Error: 'input' column not found in parallel CSV. Cannot normalize parallel data.")
+                # Decide how to handle: continue without normalizing or return? Let's continue but skip normalization.
+        else:
+            # Check for division by zero before attempting division (input=0)
+            if (df_par['input'] == 0).any():
+                    print("Warning: Division by zero encountered in parallel data 'input' column. Skipping normalization for rows with input=0.")
+                    # Create a mask to select only rows where input is not zero
+                    non_zero_input_mask_par = df_par['input'] != 0
+            else:
+                    non_zero_input_mask_par = pd.Series(True, index=df_par.index) # All inputs are non-zero
+
+            for metric in metrics_to_normalize_by_input:
+                if metric in df_par.columns and pd.api.types.is_numeric_dtype(df_par[metric]):
+                    # Perform division only for rows where input is non-zero
+                    # === CHANGE IS HERE: Divide by input squared ===
+                    df_par.loc[non_zero_input_mask_par, metric] = df_par.loc[non_zero_input_mask_par, metric] / (df_par.loc[non_zero_input_mask_par, 'input'] ** 2)
+                # else:
+                    # print(f"Warning: Metric '{metric}' specified for normalization not found or not numeric in parallel data.") # Optional warning
+
+        # Normalize sequential data if it exists
+        if df_seq is not None:
+            if 'input' not in df_seq.columns:
+                    print("Error: 'input' column not found in sequential CSV. Cannot normalize sequential data.")
+                    # Continue, but sequential data won't be normalized
+            else:
+                # Check for division by zero before attempting division (input=0)
+                if (df_seq['input'] == 0).any():
+                    print("Warning: Division by zero encountered in sequential data 'input' column. Skipping normalization for rows with input=0.")
+                    # Create a mask to select only rows where input is non-zero
+                    non_zero_input_mask_seq = df_seq['input'] != 0
+                else:
+                    non_zero_input_mask_seq = pd.Series(True, index=df_seq.index) # All inputs are non-zero
+
+                for metric in metrics_to_normalize_by_input:
+                     if metric in df_seq.columns and pd.api.types.is_numeric_dtype(df_seq[metric]):
+                            # Perform division only for rows where input is non-zero
+                            # === CHANGE IS HERE: Divide by input squared ===
+                            df_seq.loc[non_zero_input_mask_seq, metric] = df_seq.loc[non_zero_input_mask_seq, metric] / (df_seq.loc[non_zero_input_mask_seq, 'input'] ** 2)
+                     # else:
+                         # print(f"Warning: Metric '{metric}' specified for normalization not found or not numeric in sequential data.") # Optional warning
+
+
+    # 3) pick only the metrics one has defined up in the about and actually exist
+    metrics_to_plot = [
+        m for m, enabled in metrics_dict.items()
+        if enabled and ((m in df_par.columns) or (df_seq is not None and m in df_seq.columns))
+    ]
+    if not metrics_to_plot:
+        print("⚠️  No perf metrics to plot for:", parallel_csv, "(or missing columns)")
+        return
+
+    # 4) build categorical x-axis (all input sizes seen in either file)
+    inputs_par = set(df_par['input'].unique())
+    inputs_seq = set(df_seq['input'].unique()) if df_seq is not None else set()
+    input_sizes = sorted(inputs_par | inputs_seq)
+    x_index = {size: i for i, size in enumerate(input_sizes)}
+
+    # 5) know thread counts for parallel
+    # Ensure 'thread' column exists before trying to get unique values
+    thread_counts = sorted(df_par['thread'].unique()) if 'thread' in df_par.columns else []
+
+
+    # 6) for each metric, make one plot
+    for metric in metrics_to_plot:
+        # Determine max_y_metric
+        max_y_metric_val = None # Initialize
+
+        if independent_metrics and metric in independent_metrics:
+            # For independent metrics, compute max locally
+            local_max_result = compute_max_or_min_y_norm(
+                [parallel_csv],
+                [sequential_csv] if sequential_csv else None,
+                metrics=[metric],
+                metrics_to_normalize=metrics_to_normalize_by_input,
+                aggregate_type='max'
+            )
+            # Safely get the scalar value from local_max_result
+            if isinstance(local_max_result, dict):
+                 max_y_metric_val = local_max_result.get(metric)
+            elif isinstance(local_max_result, (int, float)) or local_max_result is None:
+                 max_y_metric_val = local_max_result
+
+
+        # If max_y_metric_val is still None (or invalid), try the externally provided max_y
+        if max_y_metric_val is None or not isinstance(max_y_metric_val, (int, float)) or np.isnan(max_y_metric_val) or np.isinf(max_y_metric_val):
+             if isinstance(max_y, dict):
+                 max_y_metric_val = max_y.get(metric)
+             elif isinstance(max_y, (int, float)):
+                 max_y_metric_val = max_y
+             # If external max_y is also not suitable, max_y_metric_val remains None
+
+
+        # --- Determine min_y_metric - Use external min_y if provided, otherwise compute ---
+        min_y_metric_val = None # Initialize
+
+        if isinstance(min_y, dict):
+            # If min_y is a dict, try to get the metric-specific min
+            min_y_metric_val = min_y.get(metric)
+        elif isinstance(min_y, (int, float)):
+            # If min_y is a scalar, use that scalar for this metric
+            min_y_metric_val = min_y
+        # If min_y is None or not a valid type, min_y_metric_val remains None
+
+
+        # If min_y_metric_val is still None (or invalid), compute it internally
+        if min_y_metric_val is None or not isinstance(min_y_metric_val, (int, float)) or np.isnan(min_y_metric_val) or np.isinf(min_y_metric_val):
+             # Compute internally using the new function for min
+             computed_min_result = compute_max_or_min_y_norm(
+                  [parallel_csv],
+                  [sequential_csv] if sequential_csv else None,
+                  metrics=[metric],
+                  metrics_to_normalize=metrics_to_normalize_by_input,
+                  aggregate_type='min'
+             )
+             # Safely get the scalar value from computed_min_result (could be scalar, dict, or None)
+             if isinstance(computed_min_result, dict):
+                 min_y_metric_val = computed_min_result.get(metric)
+             elif isinstance(computed_min_result, (int, float)) or computed_min_result is None:
+                 min_y_metric_val = computed_min_result
+             # Else: computed_min_result is some unexpected type, min_y_metric_val remains None
+
+
+        # Use find_nice_axis_limits to get rounded, padded limits and step
+        # Pass the determined *scalar* min_y_metric_val and max_y_metric_val
+        # find_nice_axis_limits will handle the None/NaN/Inf case with a default range
+        # Note: The min_floor is set to 0.0 explicitly here.
+        y0_final, y1_final, step = find_nice_axis_limits(min_y_metric_val, max_y_metric_val, nbins=10, min_floor=0.0, padding_percent_below=15.0, padding_percent_above=5.0)
+
+
+        # Add a print for debugging/info
+        # print(f"Metric: '{metric}' - Data range basis [{min_y_metric_val}, {max_y_metric_val}] -> Axis limits [{y0_final:.2f}, {y1_final:.2f}] with step {step:.2f}")
+
+
+        fig, ax = plt.subplots(figsize=(12, 7))
+        # --- parallel ---
+        # Ensure only columns needed for groupby and the metric are selected for performance/safety
+        if metric in df_par.columns and not df_par.empty: # Only attempt to plot if metric exists and df is not empty
+             # Need to align parallel data with all input sizes for consistent x-axis
+             grp_par = df_par.groupby(['input', 'thread'])[metric].mean().reset_index()
+             # Create a DataFrame with all possible input/thread combinations
+             all_inputs_threads = pd.MultiIndex.from_product([input_sizes, thread_counts], names=['input', 'thread']).to_frame(index=False)
+             # Merge the grouped data with the full set of inputs/threads to include missing inputs
+             # Use pd.concat if grp_par might be empty, then groupby again if needed? No, merge should handle empty grp_par fine (resulting in all NaNs).
+             merged_par = pd.merge(all_inputs_threads, grp_par, on=['input', 'thread'], how='left')
+
+             for thr in thread_counts:
+                 # Filter the merged data for this thread
+                 sub = merged_par[merged_par['thread'] == thr].sort_values('input')
+                 x_vals = sub['input'].map(x_index)
+                 ax.plot(x_vals, sub[metric],
+                         marker=thread_markers.get(thr, '.'),
+                         linestyle='--',
+                         linewidth=2,
+                         markersize=thread_markersize.get(thr, 8),
+                         color=thread_colors.get(thr, 'black'),
+                         label=f"{thr} threads")
+        elif metric not in df_par.columns:
+             print(f"Warning: Metric '{metric}' not found in parallel data for plotting.")
+
+
+        # --- sequential ---
+        if df_seq is not None and metric in df_seq.columns and not df_seq.empty: # Only attempt to plot if sequential data exists, metric is in columns, and df is not empty
+            # Need to align sequential data with all input sizes
+            grp_seq = df_seq.groupby('input')[metric].mean().reset_index()
+            # Create a DataFrame with all possible input sizes
+            all_inputs = pd.DataFrame({'input': input_sizes})
+            # Merge the grouped data with the full set of inputs to include missing inputs
+            merged_seq = pd.merge(all_inputs, grp_seq, on='input', how='left').sort_values('input')
+
+            x_vals = merged_seq['input'].map(x_index)
+            ax.plot(x_vals, merged_seq[metric],
+                    marker='x', linestyle='--', linewidth=2,
+                    markersize=8, color='black',
+                    label="Sequential")
+        elif df_seq is not None and metric not in df_seq.columns: # Sequential data exists, but metric is missing
+             print(f"Warning: Metric '{metric}' not found in sequential data for plotting.")
+
+
+        # --- labels & styling ---
+        ax.set_xlabel("Input Size")
+
+        base_ylabel = metric.replace("_", " ").title()
+        if metric in metrics_to_normalize_by_input:
+            # Use 'per input^2' as per the normalization comment
+            final_ylabel = base_ylabel + " per input^2"
+        else:
+            final_ylabel = base_ylabel
+        ax.set_ylabel(final_ylabel)
+
+        # Ensure x_index is not empty before setting x-ticks and x-limits
+        if x_index:
+             ax.set_xticks(list(x_index.values()))
+             ax.set_xticklabels(input_sizes)
+             ax.set_xlim(left=min(x_index.values()), right=max(x_index.values()))
+        else:
+             # If no input sizes found, set empty ticks/labels and a default x-range
+             ax.set_xticks([])
+             ax.set_xticklabels([])
+             ax.set_xlim(0, 1) # Default tiny range
+
+
+        # Set y-axis limits using the nice limits calculated
+        ax.set_ylim(y0_final, y1_final)
+
+        # Use MultipleLocator to place ticks at multiples of the nice step size
+        ax.yaxis.set_major_locator(ticker.MultipleLocator(step))
+        # Use ScalarFormatter for y-axis ticks
+        fmt = ticker.ScalarFormatter(useOffset=False, useMathText=False)
+        ax.yaxis.set_major_formatter(fmt)
+
+        ax.legend(title="Threads / Seq")
+        ax.grid(True, linestyle='--', alpha=0.7)
+        fig.tight_layout()
+
+        # --- save ---
+        metric_filename_part = metric
+        if metric in metrics_to_normalize_by_input:
+             metric_filename_part = metric + "_per_input"
+
+        parts = [date_prefix, data_label, metric_filename_part + ".png"] if date_prefix else [data_label, metric_filename_part + ".png"]
+        filename = "_".join(p for p in parts if p)
+        outdir = output_dir or plots_results_folder_perf
+        os.makedirs(outdir, exist_ok=True)
+        outpath = os.path.join(outdir, filename)
+        try:
+            plt.savefig(outpath, dpi=300, bbox_inches='tight')
+            print(f"saved perf metric plot '{metric}' → {outpath}")
+        except Exception as e:
+             print(f"Error saving plot {outpath}: {e}")
+
+        plt.close(fig)
 
 def graph_sys_mem(parallel_csv, sequential_csv=None, data_label="", date_prefix="", metrics_dict=None, max_y=None, min_y=None,
 output_dir=None, baseline_mem=None):
@@ -1624,11 +2013,18 @@ if imp_par_list and func_par_list:
     combined_par = imp_par_list + func_par_list
     combined_seq = imp_seq_list + func_seq_list
     # compute_max_y with multiple metrics returns a dict {metric: max_val}
-    max_y_perf = compute_max_y_norm(combined_par, combined_seq, metrics=metrics_list, metrics_to_normalize = metrics_to_divide_with_input_size)
+    max_y_perf = compute_max_or_min_y_norm(combined_par, combined_seq, 
+                                           metrics=metrics_list, 
+                                           metrics_to_normalize = metrics_to_divide_with_input_size,
+                                           aggregate_type='max')
+    min_y_perf = compute_max_or_min_y_norm(combined_par, combined_seq, 
+                                           metrics=metrics_list, 
+                                           metrics_to_normalize = metrics_to_divide_with_input_size,
+                                           aggregate_type='min')
 else:
     # fallback to per‐style: here we only need two separate dicts
-    max_y_imp  = compute_max_y_norm(imp_par_list,  imp_seq_list,  metrics=metrics_list, metrics_to_normalize = metrics_to_divide_with_input_size) if imp_par_list else {}
-    max_y_func = compute_max_y_norm(func_par_list, func_seq_list, metrics=metrics_list, metrics_to_normalize = metrics_to_divide_with_input_size) if func_par_list else {}
+    max_y_imp  = compute_max_or_min_y_norm(imp_par_list,  imp_seq_list,  metrics=metrics_list, metrics_to_normalize = metrics_to_divide_with_input_size, aggregate_type='max') if imp_par_list else {}
+    max_y_func = compute_max_or_min_y_norm(func_par_list, func_seq_list, metrics=metrics_list, metrics_to_normalize = metrics_to_divide_with_input_size, aggregate_type='max') if func_par_list else {}
     # Then pick the right dict for each style:
     #   for imp call → max_y_imp
     #   for func call → max_y_func
@@ -1643,7 +2039,8 @@ if perf_files_by_style['imperative']:
         max_y = max_y_perf if (imp_par_list and func_par_list) else max_y_imp,
         output_dir = plots_results_folder_perf,
         independent_metrics = indep,
-        metrics_to_normalize_by_input = metrics_to_divide_with_input_size
+        metrics_to_normalize_by_input = metrics_to_divide_with_input_size,
+        min_y = min_y_perf
     )
 
 # functional
@@ -1656,7 +2053,8 @@ if perf_files_by_style['functional']:
         date_prefix = parallel_date,
         output_dir = plots_results_folder_perf,
         independent_metrics = indep,
-        metrics_to_normalize_by_input = metrics_to_divide_with_input_size
+        metrics_to_normalize_by_input = metrics_to_divide_with_input_size,
+        min_y = min_y_perf
     )
 
 #=== Plotting sys mem versus inputsize ===
