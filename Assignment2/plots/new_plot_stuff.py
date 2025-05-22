@@ -81,9 +81,9 @@ thread_markersize = {
 
 metrics_to_divide_with_input_size = {
     "cache_misses",
-    "dtlb_load_misses",
-    "page_faults",
-    "cpu_cycles"
+    #"dtlb_load_misses",
+    #"page_faults",
+    #"cpu_cycles"
 }
 
 #dictionary to control which perf metrics to plot
@@ -125,7 +125,7 @@ baseline_mem_spec_18_05 = round(50058742.58427)
 baseline_mem_spec_19_05 = round(46986934.368715)
 
 #enable log scale for wall_time?:
-log_scale = True
+log_scale = False
 #change log base to something else, e.g 2, 4, 6, etc.
 log_base = 10
 
@@ -1033,7 +1033,10 @@ def graph_time(parallel_csv, sequential_csv=None, data_label="", date_prefix="",
 
     # labels & grid
     ax.set_xlabel('Input Size')
-    ax.set_ylabel('Wall Time Log Scale (ms)')
+    if (log_scale):
+        ax.set_ylabel('Wall Time Log Scale (ms)') 
+    else:
+        ax.set_ylabel('Wall Time (ms)') 
     ax.set_xticks(x_positions)
     ax.set_xticklabels(input_sizes)
     ax.set_xlim(left=min(x_positions), right=max(x_positions))
@@ -1444,7 +1447,7 @@ output_dir=None, independent_metrics=None, metrics_to_normalize_by_input=None, m
         # Pass the determined *scalar* min_y_metric_val and max_y_metric_val
         # find_nice_axis_limits will handle the None/NaN/Inf case with a default range
         # Note: The min_floor is set to 0.0 explicitly here.
-        y0_final, y1_final, step = find_nice_axis_limits(min_y_metric_val, max_y_metric_val, nbins=10, min_floor=0.0, padding_percent_below=15.0, padding_percent_above=5.0)
+        y0_final, y1_final, step = find_nice_axis_limits(min_y_metric_val, max_y_metric_val, nbins=10, min_floor=-0.25, padding_percent_below=15.0, padding_percent_above=5.0)
 
 
         # Add a print for debugging/info
@@ -1672,7 +1675,7 @@ output_dir=None, baseline_mem=None):
         # --- labels & styling ---
         ax.set_xlabel("Input Size")
 
-        ylabel_text = metric.replace("_", " ").title()
+        ylabel_text = "RSS"
         if metric == "free_mem" and baseline_subtract_true:
              ylabel_text = "Memory Used (Baseline - Free Mem)" # Or similar descriptive label
         ylabel_text += " (MB)" # Add units
