@@ -35,7 +35,7 @@ This script parses performance and wall time data files, merges them into a CSV,
 **Example:**
 In the Assigment1 directory, run:
 ```bash
-python ./data_analysis_tools/plot_script_v2.py ./results/indep_21_05.txt ./results/indep_21_05_time.txt
+python ./data_analysis_tools/csv_and_plot.py ./results/indep_21_05.txt ./results/indep_21_05_time.txt
 ```
 
 This processes the specified performance and time files, creates an output CSV, and generates plots comparing different metrics against Hashbits.
