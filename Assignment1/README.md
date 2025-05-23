@@ -32,15 +32,6 @@ This script parses performance and wall time data files, merges them into a CSV,
 
 **1. Running the script:**
 
-Execute the script from your terminal using the following command structure:
-
-```bash
-python plot_script_v2.py <perf_file> <time_file>
-```
-
-*   `<perf_file>`: Required. The path to the performance counter results text file (e.g., `perf_indep_21_05.txt`). The script extracts the date (e.g., `21_05`) and program type (e.g., `indep`, `conc`) from this filename to name output files.
-*   `<time_file>`: Required. The path to the wall time results text file (e.g., `time_indep_21_05.txt`). This file should correspond to the same experiment as the performance file.
-
 **Example:**
 In the Assigment1 directory, run:
 ```bash
@@ -48,6 +39,8 @@ python ./data_analysis_tools/plot_script_v2.py ./results/indep_21_05.txt ./resul
 ```
 
 This processes the specified performance and time files, creates an output CSV, and generates plots comparing different metrics against Hashbits.
+*   `<perf_file>`: Required. The path to the performance counter results text file (e.g., `indep_21_05.txt.txt`). The script extracts the date (e.g., `21_05`) and program type (e.g., `indep`, `conc`) from this filename to name output files.
+*   `<time_file>`: Required. The path to the wall time results text file (e.g., `indep_21_05_time.txt`). This file should correspond to the same experiment as the performance file.
 
 **2. Configuration Settings for csv_and_plot.py:**
 
