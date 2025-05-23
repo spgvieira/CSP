@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.stream.IntStream;
 
+// Code made by Su Mei Gwen Ho, Sara Vieira & Sophus Kaae Merved, with inspiration from Google's Gemini LLM
+
 public class FunctionalSequentialMandelbrot {
     public static void main(String[] args) throws IOException {
         int size = args.length >= 1 ? Integer.parseInt(args[0]) : 200;

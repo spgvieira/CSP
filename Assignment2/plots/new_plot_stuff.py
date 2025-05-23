@@ -6,7 +6,9 @@ import os
 import re #for naming output files
 from datetime import datetime #for naming output files
 import matplotlib.ticker as ticker #for more stylish/even numbered tickers along y-axis
+
 #Code made by Su Mei Gwen Ho, Sara Vieira & Sophus Kaae Merved, with inspiration from Google's Gemini LLM
+
 #=== Arguments ===
 #argument handling
 if len(sys.argv) < 2 or sys.argv[1] not in ['spec', 'mand']:
