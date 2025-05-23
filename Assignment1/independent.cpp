@@ -1,3 +1,7 @@
+
+// Code made by Su Mei Gwen Ho (suho@itu.dk), Sara Vieira (sapi@itu.dk) & Sophus Kaae Merved (some@itu.dk)
+
+
 #include <iostream>
 #include <cmath>
 #include <thread>

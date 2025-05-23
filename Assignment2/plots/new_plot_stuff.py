@@ -7,7 +7,7 @@ import re #for naming output files
 from datetime import datetime #for naming output files
 import matplotlib.ticker as ticker #for more stylish/even numbered tickers along y-axis
 
-#Code made by Su Mei Gwen Ho, Sara Vieira & Sophus Kaae Merved, with inspiration from Google's Gemini LLM
+# Code made by Su Mei Gwen Ho (suho@itu.dk), Sara Vieira (sapi@itu.dk) & Sophus Kaae Merved (some@itu.dk) with inspiration from Google's Gemini LLM
 
 #=== Arguments ===
 #argument handling

@@ -2,6 +2,8 @@
 
 This project automates the benchmarking of multiple programs using Linux perf tool to gather performance metrics. It evaluates different threading and hash bit configurations under various scheduling and core affinity settings.
 
+Project made by Su Mei Gwen Ho (suho@itu.dk), Sara Vieira (sapi@itu.dk) & Sophus Kaae Merved (some@itu.dk)
+
 ## Prerequisites
 Ensure the following are installed on your system:
 * perf (Linux Performance Counters tool)

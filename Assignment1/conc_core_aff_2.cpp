@@ -3,6 +3,8 @@
 //pins each thread to the consecutive core in the same NUMA node (we are only using even nr cores in NUMA node 0)
 //comment out print statments when running the experiment!
 
+// Code made by Su Mei Gwen Ho (suho@itu.dk), Sara Vieira (sapi@itu.dk) & Sophus Kaae Merved (some@itu.dk)
+
 #include <iostream>
 #include <cmath>
 #include <thread>

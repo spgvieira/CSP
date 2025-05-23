@@ -1,6 +1,7 @@
 # Assignment 2: Imperative Vs Functional Paradimg in Java
 
 This project requires a Java version equal or higher than 14
+Project made by Su Mei Gwen Ho (suho@itu.dk), Sara Vieira (sapi@itu.dk) & Sophus Kaae Merved (some@itu.dk)
 
 ## Running the Experiment
 
