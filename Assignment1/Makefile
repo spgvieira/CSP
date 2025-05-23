@@ -17,16 +17,6 @@ EXECUTABLES = concurrent independent indep_core_aff_1 indep_core_aff_2 conc_core
 # Default target
 all: $(EXECUTABLES)
 
-# Run with $sudo make clean
-# clean:
-# 	@echo "Cleaning build artifacts..."
-# 	rm -f $(EXECUTABLES)
-# 	@echo "Clearing system cache (requires sudo)..."
-# 	# sudo sh -c "sync; echo 3 > /proc/sys/vm/drop_caches"
-# 	@echo "Clean complete."
-
-# Warm-up
-
 # Independent target
 independent:
 	@echo "Independent"

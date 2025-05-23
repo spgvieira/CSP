@@ -6,10 +6,6 @@
 #include <time.h>
 #include <atomic>
 
-// TODO: 
-// re read code and clean not used
-// re evaluate which variables should be public
-// missing affinity
 using Partition = std::vector<std::tuple<int64_t, int64_t>>;
 tuple<int64_t, int64_t>* input;
 
