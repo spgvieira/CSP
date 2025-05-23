@@ -249,15 +249,6 @@ tasks.register("runPerfMandelbrot") {
     group = "performance"
 }
 
-tasks.register("bigExperiment") {
-    dependsOn("recordBaselineMemory",
-    "perfImperativeSequentialMandelbrot", "perfImperativeParallelMandelbrot", "perfFunctionalSequentialMandelbrot", "perfFunctionalParallelMandelbrot",
-    "memoryImperativeSequentialMandelbrot", "memoryImperativeParallelMandelbrot", "memoryFunctionalSequentialMandelbrot", "memoryFunctionalParallelMandelbrot",
-    "perfImperativeSequentialSpectralNorm", "perfImperativeParallelSpectralNorm", "perfFunctionalSequentialSpectralNorm", "perfFunctionalParallelSpectralNorm",
-    "memoryImperativeSequentialSpectralNorm", "memoryImperativeParallelSpectralNorm", "memoryFunctionalSequentialSpectralNorm", "memoryFunctionalParallelSpectralNorm")
-    group = "performance"
-}
-
 tasks.register("runAllSpectralNorm") {
     dependsOn(
     "perfImperativeSequentialSpectralNorm", "perfImperativeParallelSpectralNorm", "perfFunctionalSequentialSpectralNorm", "perfFunctionalParallelSpectralNorm",
@@ -265,7 +256,7 @@ tasks.register("runAllSpectralNorm") {
     group = "performance"
 }
 
-tasks.register("bigAllMandelbrot") {
+tasks.register("runAllMandelbrot") {
     dependsOn(
     "perfImperativeSequentialMandelbrot", "perfImperativeParallelMandelbrot", "perfFunctionalSequentialMandelbrot", "perfFunctionalParallelMandelbrot",
     "memoryImperativeSequentialMandelbrot", "memoryImperativeParallelMandelbrot", "memoryFunctionalSequentialMandelbrot", "memoryFunctionalParallelMandelbrot")
