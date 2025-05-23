@@ -17,7 +17,8 @@ project_dir = os.path.dirname(current_dir)
 
 #change or add folders here you'd like plots to be written to.
 csv_results_folder = os.path.join(project_dir, 'csv')
-plots_results_folder = os.path.join(project_dir, 'plots/18_04_graphs_symbols_no_title')
+plots_results_folder = os.path.join(project_dir, 'plots/graphs_symbols_no_title') #graphs_with_symbols_no_title
+os.makedirs(plots_results_folder, exist_ok=True)
 
 #define mapping of thread counts to colors (used in both plots)
 thread_colors = {
@@ -152,11 +153,11 @@ def plot_hashbits_versus_perf_vals(merged_df, date, programName):
 
     #list of metrics to plot and corresponding labels
     metrics = [
-        ('cpu-cycles per Tuple', 'CPU Cycles per Tuple'),
-        ('cache-misses per Tuple', 'Cache Misses per Tuple'),
-        ('page-faults per Tuple', 'Page Faults per Tuple'),
-        ('cpu-migrations', 'CPU Migrations'),
-        ('dTLB-load-misses per Tuple', 'dTLB Load Misses per Tuple'),
+        #('cpu-cycles per Tuple', 'CPU Cycles per Tuple'),
+        #('cache-misses per Tuple', 'Cache Misses per Tuple'),
+        #('page-faults per Tuple', 'Page Faults per Tuple'),
+        #('cpu-migrations', 'CPU Migrations'),
+        #('dTLB-load-misses per Tuple', 'dTLB Load Misses per Tuple'),
         ('context-switches', 'Context Switches')
     ]
 
@@ -167,16 +168,16 @@ def plot_hashbits_versus_perf_vals(merged_df, date, programName):
             'cache-misses per Tuple': (7, 1),
             'page-faults per Tuple': (0.020, 0.002),
             'cpu-migrations': (35, 5),
-            'dTLB-load-misses per Tuple': (2.2, 0.2)
-            #'context-switches per Tuple': (0.001, 0.0001)
+            'dTLB-load-misses per Tuple': (2.2, 0.2),
+            'context-switches': (70000, 10000)
         },
         "conc": {
             'cpu-cycles per Tuple': (7500, 250),
             'cache-misses per Tuple': (7, 1),
             'page-faults per Tuple': (0.10, 0.02),
             'cpu-migrations': (35, 5),
-            'dTLB-load-misses per Tuple': (2.4, 0.2)
-            #'context-switches per Tuple': (0.0005, 0.0001)
+            'dTLB-load-misses per Tuple': (2.4, 0.2),
+            'context-switches': (700, 50)
         }
     }
 
@@ -218,7 +219,10 @@ def plot_hashbits_versus_perf_vals(merged_df, date, programName):
         if y_config and col in y_config:
             max_y, tick_interval = y_config[col]
             rounded_min_y = round_down(min_y_value, tick_interval)
-            ax.set_ylim(bottom=min_y_value, top=max_y)
+            if "indep" in programName and ylabel =='Context Switches':
+                ax.set_ylim(bottom=-5000, top=max_y)
+            else:
+                ax.set_ylim(bottom=min_y_value, top=max_y)
             ax.set_yticks(np.arange(rounded_min_y, max_y + tick_interval, tick_interval))
             
         plt.tight_layout()
