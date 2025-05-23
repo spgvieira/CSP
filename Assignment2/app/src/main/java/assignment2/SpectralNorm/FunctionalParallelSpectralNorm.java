@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream; 
 
-// Code made by Su Mei Gwen Ho, Sara Vieira & Sophus Kaae Merved, with inspiration from Google's Gemini LLM
+// Code made by Su Mei Gwen Ho (suho@itu.dk), Sara Vieira (sapi@itu.dk) & Sophus Kaae Merved (some@itu.dk) with inspiration from Google's Gemini LLM
 
 public class FunctionalParallelSpectralNorm {
     private static final NumberFormat formatter = new DecimalFormat("#.000000000");
